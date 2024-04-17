@@ -1,0 +1,11 @@
+.lib "BlitzHash.dll"
+
+BlitzHashDigestSHA1$( string$ ):"_BlitzHashDigestSHA1@4"
+BlitzHashDigestSHA224$( string$ ):"_BlitzHashDigestSHA224@4"
+BlitzHashDigestSHA256$( string$ ):"_BlitzHashDigestSHA256@4"
+BlitzHashDigestSHA384$( string$ ):"_BlitzHashDigestSHA384@4"
+BlitzHashDigestSHA512$( string$ ):"_BlitzHashDigestSHA512@4"
+BlitzHashDigestSHA3_224$( string$ ):"_BlitzHashDigestSHA3_224@4"
+BlitzHashDigestSHA3_256$( string$ ):"_BlitzHashDigestSHA3_256@4"
+BlitzHashDigestSHA3_384$( string$ ):"_BlitzHashDigestSHA3_384@4"
+BlitzHashDigestSHA3_512$( string$ ):"_BlitzHashDigestSHA3_512@4"

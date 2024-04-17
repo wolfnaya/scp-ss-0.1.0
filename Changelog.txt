@@ -1,0 +1,220 @@
+v0.1.0
+
+~ Some additions to Saving System.
+~ Optimized Reactor area.
+~ Fixed some issues caused by chapters.
+~ Nerfed EMR-P's jamming.
+
+v0.1.0_DEV
+
+~ Major Update! * Fully reworked weapon and attachment systems.
+~ Major Update! * Remade all weapon and attachment models, textures, sounds and animations.
+~ Major Update! * Fully reworked inventory system.
+~ Major Update! * Remade major events.
+~ Major Update! * Remade some NPC's AI.
+
+* Added new subtitles system.
+* Changed loading features.
+* Chaos Insurgents now drop grenades when killed at 50\50 chance.
+* Game was ported to the newest SCP-NTF build.
+
+v0.0.6 (UNRELEASED)
+
+* Added 2d menu.
+* Added new feature in main menu - Facility News.
+* Fixed players couldn't finish the game cause of Counsil O5 room.
+* Fixed overlaping of some strings in Main Menu.
+* Fixed some problems with inventory.
+* Removed points shop.
+
+v0.0.5_DEV_Patch#2
+
+* Fixed crash occured in Multiplayer.
+* Fixed infinite loading screen at SCP-049's chamber.
+* Optimized code a little bit.
+
+v0.0.5_DEV_Patch#1
+
+* Changed SCP-513's bell sounds.
+* Increased map size back to 18 instead of 12.
+* Fixed crash when entering HCZ.
+* Fixed Player couldn't pass to Core as NTF or Guard.
+
+v0.0.5_DEV
+
+* Added feature where MTF and Guard zombies can now shoot the player in Singleplayer.
+* Added language selection system.
+* Added more save screens in HCZ.
+* Added new logo to main menu.
+* Added more logos which will change depending on date.
+* Added tooth icon to SCP-127 UI.
+* Added more rooms.
+* Added SCRAMBLE Gear to NTF helmet (Singleplayer only).
+* Added ammo crates to Singleplayer.
+* Added intercom system.
+* Added random D class number.
+* Added infinite ammo box in Area_076.
+* Added a feature that HDS will now explode if it has 0 HP.
+* Added new step sounds when player has Vest or HDS on.
+* Changed Core2 rooms to Checkpoints.
+* Changed airlock event for Checkpoints and Core rooms.
+* Changed radio controls. (now you need to use your mouse wheel)
+* Changed Messages system.
+* Fixed the way endings appeared.
+* Fixed XM29's grenades.
+* Fixed (Error reading file "") when loading to the main menu.
+* Fixed player couldn't complete the game after Area_076.
+* Fixed elevator door disappeared in Room3_CT after loading a save.
+* Fixed player could select story mode chapter as game mode for other characters.
+* Fixed scp-096 didn't rage.
+* Fixed wallet.
+* Fixed kevlar and helmet damage.
+* Fixed player couldn't fall in Room3_CT and Room2_Maintenance.
+* Fixed Room3_CT top area disappeared when player entered elevator.
+* Fixed elevator pannel appered on 3 floor elevators.
+* Fixed beretta's reload animation was "snapping".
+* Fixed msg with no ammo when you pick up weapon appeared if you have 0 ammo only.
+* Fixed some story events appeared in game modes.
+* Fixed some issues regarding RenderSecurityCams() Function.
+* Fixed player could pick up EMR-P ammo before EMR-P itself and it will disappear.
+* Fixed some broken textures on zombie in caves.
+* Fixed Gate C Ending didn't let player to see credits.
+* Fixed NTF NVG was useless in NTF game mode.
+* Fixed some wrongly typed messages.
+* Fixed and optimized Oficess MP Map.
+* Fixed constant texture loading for NTF.
+* Fixed you could make SCP-173 idle with HDS Suit.
+* Improved Glock-20C, now it has 2 firemodes.
+* Improved Area_076.
+* Improved and optimized S-NAV Navigators.
+* Improved some ingame events.
+* Improved some textures.
+* Improved menu.
+* Improved hazmat suit.
+* Moved Testroom_860 from Ez to LCz.
+* Optimized the game massivly.
+* Optimized and improved Reactor complex.
+* Optimized localization.
+* Optimized attachment system.
+* Organized some assets in folders.
+* Remade hand texture swap system.(laggy system from v.0.0.1)
+* Replaced Digital font with new one.
+* Remixed Menu5 music.
+* Removed guns for optimization: UMP, M16, HK433, LR-300, G36C, XM8, M249, R870, XM1014.
+* Renamed Classic mode to Game modes.
+* Removed subtitles.
+* Shrunk credits rooms.
+
+v0.0.4
+
+* Added console.
+* Added new weapon: H&K P30L.
+* Added more elevator music tracks.
+* Added dead body close to SCP-035(Item).
+* Added 2nd texture to NTF zombie(zombie medic) and Guard zombie.
+* Added 2nd model for Guard zombie in singleplayer.
+* Added 2nd model for cave zombie in singleplayer.
+* Added SCP-2935(Entrance area).
+* Added more details to Reactor complex.
+* Added missing doors to Room3_CT.
+* Added a few grenades to spawn and extended magazine attachment.
+* Added ability to unlock SCP-127 in Room2C_HWS.
+* Added Black Mesa Theme as option is Main Menu.
+* Adjusted facility reactor event.
+* Changed points shop sounds.
+* Fixed caves storage area didn't let players finish the game.
+* Fixed a lot of bugs caused by chapter system.
+* Fixed a lot of major issues in classic mode.
+* Fixed SCP-035(Item) spawned in classic mode.
+* Fixed rotation of laser sight for every handgun.
+* Fixed some endings just killed player.
+* Fixed helmet couldn't be normally put off.
+* Fixed helmet points restored everytime player put it back on.
+* Fixed player could fall into the voin in room2_3_bcz.
+* Fixed waypoints in SCP-076-2's Containment.
+* Fixed "Texture GFX\Weapons\hands not found" error in multiplayer.
+* Fixed frame drop in personnel_offices room.
+* Fixed helmet wasn't put on after zone transition.
+* Fixed error with texture in Surveilance room.
+* Fixed Five-Seven's suppressor position.
+* Fixed Surveilance mission assignment to chapters after the 1st one.
+* Fixed player teleported to random room during zome transitions, if player have chosen chapter in main menu.
+* Fixed player couldn't type letter used for attachments menu in multiplayer chat.
+* Fixed client didn't have NTF arms texture in waves.
+* Improved room lights in all rooms.(Took me a lot of time XD)
+* Improved some textures, and removed unnecessary ones.
+* Improved NTF intro.
+* Improved 3D menu rooms.
+* Improved weapon system, now after full reload you can reload again to insert additional round.
+* Improved ammo system, now if you pick up the gun, you already have, instead of 1 magazine, it will give you as much ammo, as stored in this gun.
+* Increased chance to spawn NTF zombies in multiplayer waves.
+* Optimized Reactor complex.
+* Repalced skip intro button with tick box in main menu.
+* Replaced ammo boxes' moddels in Multiplayer.
+* Replaced H&K 417 with H&K 416.
+* Replaced G36 from spawn with H&K 416 in classic mode as NTF.
+* Removed SCP-457's Containment from spawn.
+* Removed character from Chumnaya's room.
+* Removed Lost HCZ map from multiplayer.
+
+v0.0.3
+
+* Added Chapter Selection system (saves values even if player will delete save file).
+* Added Points Shop for chapters.(you earn points by unlocking new chapters).
+* Added (Fake) Ray-tracing light effect in cave areas in Room1_Start.
+* Added new door to Room1_O5.
+* Added wallet.
+* Changed Map grid size.(WARNING! This is an experemental feature, if game stucks somewhere, please report it)
+* Changed launcher design.
+* Corrected credits.
+* Console now available only after completing the game.
+* Fixed some RCZ rooms.
+* Fixed "Texture not found" error in Multiplayer Waves, Offices.
+* Fixed 0 HP HUD at Gate-A Ending.
+* Fixed doors in Checkpoint_DCZ.
+* Fixed chapter 5 text didn't appear.
+* Fixed completing the task about finding area 076 when coing to RCZ.
+* Fixed guard in Area_076_Entrance didn't talk.
+* Fixed broken "Mission Failed" text when killing the guard.
+* Fixed broken chapter text on topside.
+* Fixed janitor in Room1_O5 wasn't following the players movement.
+* Fixed some items were incompatible with clipboard.
+* Fixed SCP-714's effect was still applied after trading the ring with SCP-1162.
+* Fixed game was unbeatable.
+* Fixed game huge framerate dropdown while CIs' spawn.
+* Fixed player wasn't able to use weapons after intro sequence.
+* Fixed weapons upgraded in SCP-914 had only 1 bullet in mag.
+* Fixed -1 reload ammo bullets in Multiplayer.
+* Fixed Remington 870's max ammo count.
+* Fixed event in Room2_Closets.
+* Fixed classic mode text appeared only on a corner of a button.
+* Fixed SCP-173 appearing in elevators in Room2_Maintenance.
+* Fixed SCP-173 appearing in elevators in Room3_CT.
+* Fixed Cont_106 appearing in the HCZ.
+* Removed unused fusebox in Room3_CT.
+* Replaced SPAS-12 with Remington 870 for Class-Ds.
+
+v0.0.2
+
+* Added new weapon: Remington 870.
+* Added new elevator in the intro sequence.
+* Currently removed FPS hands texture change feature (for better optimization).
+* Fixed Framerate dropdown to 1\2 fps in the game.
+* Fixed (void) areas in facility_reactor.
+* Fixed (void) area in Testroom_2B.
+* Fixed MP Lost HCZ Zombies got stuck in spawn areas.
+* Fixed Catastrophic error when trying to play Guard Classic Mode.
+* Fixed Attachment menu not appearing in some events.
+* Fixed weird monitor sprite appearing on the monitors in Surveil_Room.
+* Fixed errors with UpdateSecurityCams function.
+* Fixed Note From Maynard appearing in random room instead of Cont_005.
+* Optimized code a bit.
+* Small fixes around the game.
+
+v0.0.1
+
+First Release!
+
+- This mod has been in development for 3 years, I really hope you will find it interesting, althought, I assume there might be some errors still, but I hope not. Anyway, I really love this project, thanks to everyone who supported it all that time!
+
+----------------------------------------------------------------------------------
