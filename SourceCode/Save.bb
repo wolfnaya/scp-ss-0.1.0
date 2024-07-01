@@ -23,12 +23,24 @@ Function SaveGame(File$, Auto% = False, NewZone%= -1)
 	WriteString f, CurrentDate()
 	WriteByte f, gopt\GameMode + 1
 	WriteInt f, ClassDNumber
-	If NewZone > -1 Then
-		WriteInt f, NewZone
-	Else
-		WriteInt f, gopt\CurrZone
-	EndIf
 	WriteString f, gopt\CurrZoneString
+	
+	WriteInt f, PlayTime
+	WriteFloat f, EntityX(Collider)
+	WriteFloat f, EntityY(Collider)
+	WriteFloat f, EntityZ(Collider)
+	
+	WriteFloat f, EntityX(Head)
+	WriteFloat f, EntityY(Head)
+	WriteFloat f, EntityZ(Head)
+	
+	WriteFloat f, EntityPitch(Collider)
+	WriteFloat f, EntityYaw(Collider)
+	
+	; ~ Player
+	;[Block]
+	Local x#, y#, z#, i%, j%, temp%, temp2%, strtemp$, npv%
+	Local g.Guns, itt.ItemTemplates, it2.Items, it.Items, t.NewTask, n.NPCs
 	
 	WriteByte f, ecst\SuccessRocketLaunch
 	WriteByte f, ecst\EzDoorOpened
@@ -54,9 +66,9 @@ Function SaveGame(File$, Auto% = False, NewZone%= -1)
 	WriteByte f, ecst\UnlockedAirlock
 	
 	WriteByte f, ecst\UnlockedWolfnaya
-	WriteByte f, ecst\ChanceToSpawnWolfNote
+	WriteInt f, ecst\ChanceToSpawnWolfNote
 	
-	WriteFloat f, ecst\FusesAmount
+	WriteInt f, ecst\FusesAmount
 	
 	WriteByte f, ecst\UnlockedEMRP
 	WriteByte f, ecst\UnlockedHDS
@@ -74,50 +86,11 @@ Function SaveGame(File$, Auto% = False, NewZone%= -1)
 	
 	WriteByte f, ecst\OmegaWarheadActivated
 	WriteByte f, ecst\OmegaWarheadDetonate
-	WriteFloat f, ecst\OmegaWarheadTimer
+	WriteFloat f, ecst\OmegaWarheadTimer	
 	
-	WriteInt f, PlayTime
-	WriteFloat f, EntityX(Collider)
-	WriteFloat f, EntityY(Collider)
-	WriteFloat f, EntityZ(Collider)
-	
-	WriteFloat f, EntityX(Head)
-	WriteFloat f, EntityY(Head)
-	WriteFloat f, EntityZ(Head)
-	
-	WriteFloat f, EntityPitch(Collider)
-	WriteFloat f, EntityYaw(Collider)
-	
-	SavePlayerData(File, f)
-	
-	CloseFile f
-	
-	SaveZoneData(File)
-	
-	If (Not Auto) Then
-		If Not MenuOpen Then
-			If SelectedDifficulty\SaveType = SAVEONSCREENS Then
-				PlaySound_Strict(LoadTempSound("SFX\General\Save2.ogg"))
-			Else
-				PlaySound_Strict(LoadTempSound("SFX\General\Save1.ogg"))
-			EndIf
-			
-			CreateHintMsg(GetLocalString("Menu", "progress_saved"))
-		EndIf
-	Else
-		CreateAutoSaveMsg()
-	EndIf
-	
-	CatchErrors("Uncaught (SaveGame(" + File + ", " + NewZone + "))")
-End Function
-
-Function SavePlayerData(File$, f%)
-	Local i%, j%, npv%
-	Local it.Items, itt.ItemTemplates, g.Guns, t.NewTask, n.NPCs
-	
-	For i = 0 To 3
-		WriteString f, Str(AccessCode[i])
-	Next
+;	For i = 0 To 3
+;		WriteString f, Int(AccessCode[i])
+;	Next
 	WriteFloat f, BlinkTimer
 	WriteFloat f, BlinkEffect
 	WriteFloat f, BlinkEffectTimer
@@ -141,11 +114,11 @@ Function SavePlayerData(File$, f%)
 			WriteByte f, g\HasToggledAttachments[i]
 			WriteByte f, g\HasPickedAttachments[i]
 		Next
-		WriteFloat f, g\BarrelAttachments
-		WriteFloat f, g\MountAttachments
-		WriteFloat f, g\GripAttachments
-		WriteFloat f, g\MagazineAttachments
-		WriteFloat f, g\MiscAttachments
+		WriteInt f, g\BarrelAttachments
+		WriteInt f, g\MountAttachments
+		WriteInt f, g\GripAttachments
+		WriteInt f, g\MagazineAttachments
+		WriteInt f, g\MiscAttachments
 	Next
 	WriteByte f, AttachmentMenuOpen
 	WriteInt f, g_I\HoldingGun
@@ -180,7 +153,7 @@ Function SavePlayerData(File$, f%)
 	WriteByte f, Crouch
 	
 	WriteFloat f, Stamina
-	WriteFloat f, StaminaEffect	
+	WriteFloat f, StaminaEffect
 	WriteFloat f, StaminaEffectTimer
 	
 	WriteFloat f, EyeStuck
@@ -202,9 +175,9 @@ Function SavePlayerData(File$, f%)
 	WriteFloat f, I_198\VomitTimer
 	WriteFloat f, I_198\Injuries
 	WriteInt f, I_109\Used
-	WriteFloat f, I_109\Timer
+    WriteFloat f, I_109\Timer
 	WriteByte f, I_268\Using
-	WriteFloat f, I_268\Timer
+    WriteFloat f, I_268\Timer
 	WriteByte f, I_1033RU\Using
 	WriteInt f, I_1033RU\HP
 	WriteInt f, I_1033RU\DHP
@@ -220,16 +193,16 @@ Function SavePlayerData(File$, f%)
 			WriteByte f, i
 			
 			If (i = ESOTERIC) Then
-				WriteByte f,SelectedDifficulty\AggressiveNPCs
-				;WriteByte f,SelectedDifficulty\Realism
-				WriteByte f,SelectedDifficulty\SaveType
-				WriteByte f,SelectedDifficulty\OtherFactors
+				SelectedDifficulty\AggressiveNPCs = ReadByte(f)
+				SelectedDifficulty\PermaDeath = ReadByte(f)
+				SelectedDifficulty\SaveType	= ReadByte(f)
+				SelectedDifficulty\OtherFactors = ReadByte(f)
 			EndIf
 		EndIf
 	Next
 	
 	WriteFloat f, CameraFogFar
-	WriteFloat f, StoredCameraFogFar
+    WriteFloat f, StoredCameraFogFar
 	
 	WriteFloat f, Sanity
 	
@@ -249,8 +222,6 @@ Function SavePlayerData(File$, f%)
 	WriteByte f, SuperMan
 	WriteFloat f, SuperManTimer
 	WriteByte f, LightsOn
-	
-	WriteString f, RandomSeed
 	
 	WriteFloat f, SecondaryLightOn
 	WriteFloat f, PrevSecondaryLightOn
@@ -293,7 +264,7 @@ Function SavePlayerData(File$, f%)
 		If (n\NPCtype = NPC_NTF And n\HP > 0) Lor (n\NPCtype = NPC_SCP_173 And n\Idle = SCP173_BOXED) Then
 			WriteByte f, 1
 			
-			DebugLog("Saving NPC " +n\NVName+ " (ID "+n\ID+")")
+			;debuglog("Saving NPC " +n\NVName+ " (ID "+n\ID+")")
 			
 			WriteByte f, n\NPCtype
 			
@@ -378,7 +349,33 @@ Function SavePlayerData(File$, f%)
 	Next
 	
 	WriteByte f, UsedConsole
+	;[End Block]
 	
+	If NewZone > -1 Then
+		WriteInt f, NewZone
+	Else
+		WriteInt f, gopt\CurrZone
+	EndIf
+	
+	CloseFile f
+	
+	SaveZoneData(File)
+	
+	If (Not Auto) Then
+		If Not MenuOpen Then
+			If SelectedDifficulty\SaveType = SAVEONSCREENS Then
+				PlaySound_Strict(LoadTempSound("SFX\General\Save2.ogg"))
+			Else
+				PlaySound_Strict(LoadTempSound("SFX\General\Save1.ogg"))
+			EndIf
+			
+			CreateHintMsg(GetLocalString("Menu", "progress_saved"))
+		EndIf
+	Else
+		CreateAutoSaveMsg()
+	EndIf
+	
+	CatchErrors("Uncaught (SaveGame(" + File + ", " + NewZone + "))")
 End Function
 
 Function SaveZoneData(file$)
@@ -391,6 +388,8 @@ Function SaveZoneData(file$)
 	
 	f% = WriteFile(file + "\" + gopt\CurrZone + ".sav")
 	
+	WriteString f, RandomSeed
+	
 	temp = 0
 	For  n.NPCs = Each NPCs
 		If (n\NPCtype <> NPC_NTF Lor n\HP <= 0) And (n\NPCtype <> NPC_SCP_173 Lor n\Idle <> SCP173_BOXED) Then
@@ -401,7 +400,7 @@ Function SaveZoneData(file$)
 	WriteInt f, temp
 	For n.NPCs = Each NPCs
 		If (n\NPCtype <> NPC_NTF Lor n\HP <= 0) And (n\NPCtype <> NPC_SCP_173 Lor n\Idle <> SCP173_BOXED) Then
-			DebugLog("Saving NPC " +n\NVName+ " (ID "+n\ID+")")
+			;debuglog("Saving NPC " +n\NVName+ " (ID "+n\ID+")")
 			
 			WriteByte f, n\NPCtype
 			WriteFloat f, EntityX(n\Collider,True)
@@ -658,14 +657,58 @@ Function SaveZoneData(file$)
 End Function
 
 Function LoadPlayerData(file$, f%)
-	Local version$ = ""
-	
 	Local x#, y#, z#, i%, j%, temp%, temp2%, strtemp$, npv%
 	Local g.Guns, itt.ItemTemplates, it2.Items, it.Items, t.NewTask, n.NPCs
 	
-	For i = 0 To 3
-		AccessCode[i] = Int(ReadString(f))
-	Next
+	ecst\SuccessRocketLaunch = ReadByte(f)
+	ecst\EzDoorOpened = ReadByte(f)
+	ecst\WasInHCZ = ReadByte(f)
+	ecst\NewCavesEvent = ReadByte(f)
+	ecst\CIArrived = ReadByte(f)
+	ecst\WasInRoom2_SL = ReadByte(f)
+	ecst\WasInLCZCore = ReadByte(f)
+	ecst\UnlockedGateDoors = ReadByte(f)
+	ecst\NTFArrived = ReadByte(f)
+	ecst\WasInO5 = ReadByte(f)
+	ecst\WasIn076 = ReadByte(f)
+	ecst\After076Timer = ReadFloat(f)
+	ecst\WasInCaves = ReadByte(f)
+	ecst\WasInO5Again = ReadByte(f)
+	ecst\WasInPO = ReadByte(f)
+	ecst\WasInReactor = ReadByte(f)
+	ecst\WasInBCZ = ReadByte(f)
+	ecst\Contained008 = ReadByte(f)
+	ecst\Contained049 = ReadByte(f)
+	ecst\Contained409 = ReadByte(f)
+	
+	ecst\UnlockedAirlock = ReadByte(f)
+	
+	ecst\UnlockedWolfnaya = ReadByte(f)
+	ecst\ChanceToSpawnWolfNote = ReadInt(f)
+	
+	ecst\FusesAmount = ReadInt(f)
+	
+	ecst\UnlockedEMRP = ReadByte(f)
+	ecst\UnlockedHDS = ReadByte(f)
+	
+	ecst\WasInLWS = ReadByte(f)
+	ecst\WasInWS = ReadByte(f)
+	ecst\WasInEWS = ReadByte(f)
+	ecst\WasInHWS = ReadByte(f)
+	ecst\WasInSWS = ReadByte(f)
+	ecst\WasInAllSupplies = ReadByte(f)
+	
+	ecst\IntercomEnabled = ReadByte(f)
+	ecst\IntercomIsReady = ReadByte(f)
+	ecst\IntercomTimer = ReadFloat(f)
+	
+	ecst\OmegaWarheadActivated = ReadByte(f)
+	ecst\OmegaWarheadDetonate = ReadByte(f)
+	ecst\OmegaWarheadTimer = ReadFloat(f)
+	
+;	For i = 0 To 3
+;		AccessCode[i] = Int(ReadString(f))
+;	Next
 	BlinkTimer = ReadFloat(f)
 	BlinkEffect = ReadFloat(f)
 	BlinkEffectTimer = ReadFloat(f)
@@ -703,11 +746,11 @@ Function LoadPlayerData(file$, f%)
 				EndIf
 			EndIf
 		Next
-		g\BarrelAttachments = ReadFloat(f)
-		g\MountAttachments = ReadFloat(f)
-		g\GripAttachments = ReadFloat(f)
-		g\MagazineAttachments = ReadFloat(f)
-		g\MiscAttachments = ReadFloat(f)
+		g\BarrelAttachments = ReadInt(f)
+		g\MountAttachments = ReadInt(f)
+		g\GripAttachments = ReadInt(f)
+		g\MagazineAttachments = ReadInt(f)
+		g\MiscAttachments = ReadInt(f)
 	Next
 	AttachmentMenuOpen = ReadByte(f)
 	g_I\HoldingGun = ReadInt(f)
@@ -753,56 +796,26 @@ Function LoadPlayerData(file$, f%)
 	
 	m_msg\DeathTxt = ReadString(f)
 	
-;	For i = 0 To 5
-;		WriteFloat f, I_1025\State[i]
-;	Next
-	
 	I_005\ChanceToSpawn = ReadInt(f)
-	
-	;I_016\Timer = ReadFloat(f)
-	
 	I_035\Possessed = ReadByte(f)
-	
-	;I_059\Timer = ReadFloat(f)
-	;I_059\Using = ReadByte(f)
-	
-	;I_402\Timer = ReadFloat(f)
-	;I_402\Using = ReadByte(f)
-	
-	;I_357\Timer = ReadFloat(f)
-	;I_357\Using = ReadByte(f)
-	
 	I_207\Limit = ReadByte(f)
-	
 	I_500\Limit = ReadByte(f)
-	
-;	I_1079\Foam = ReadFloat(f)
-;	I_1079\Trigger = ReadByte(f)
-;	I_1079\Take = ReadByte(f)
-;	I_1079\Limit = ReadByte(f)
-	
 	I_008\Timer = ReadFloat(f)
 	I_207\Timer = ReadFloat(f)
 	I_207\DeathTimer = ReadFloat(f)
 	I_207\Factor = ReadFloat(f)
-	
 	I_198\Timer = ReadFloat(f)
 	I_198\DeathTimer = ReadFloat(f)
 	I_198\Vomit = ReadFloat(f)
 	I_198\VomitTimer = ReadFloat(f)
 	I_198\Injuries = ReadFloat(f)
-	
 	I_109\Used = ReadInt(f)
     I_109\Timer = ReadFloat(f)
-	
 	I_268\Using = ReadByte(f)
     I_268\Timer = ReadFloat(f)
 	I_1033RU\Using = ReadByte(f)
 	I_1033RU\HP = ReadInt(f)
 	I_1033RU\DHP = ReadInt(f)
-	;I_1102RU\IsInside = ReadByte(f)
-	;I_1102RU\State = ReadFloat(f)
-	
 	I_330\Taken = ReadFloat(f)
 	I_330\Timer = ReadFloat(f)
 	
@@ -825,8 +838,6 @@ Function LoadPlayerData(file$, f%)
 		CameraFogFar = 6
 	EndIf
 	
-	;MonitorTimer = ReadFloat(f)
-	
 	Sanity = ReadFloat(f)
 	
 	IsCutscene = ReadByte(f)
@@ -845,8 +856,6 @@ Function LoadPlayerData(file$, f%)
 	SuperMan = ReadByte(f)
 	SuperManTimer = ReadFloat(f)
 	LightsOn = ReadByte(f)
-	
-	RandomSeed = ReadString(f)
 	
 	SecondaryLightOn = ReadFloat(f)
 	PrevSecondaryLightOn = ReadFloat(f)
@@ -945,7 +954,7 @@ Function LoadPlayerData(file$, f%)
 		ForceSetNPCID(n, ReadInt(f))
 		n\TargetID = ReadInt(f)
 		
-		DebugLog("Loading NPC " +n\NVName+ " (ID "+n\ID+")")
+		;debuglog("Loading NPC " +n\NVName+ " (ID "+n\ID+")")
 		
 		n\EnemyX = ReadFloat(f)
 		n\EnemyY = ReadFloat(f)
@@ -1034,6 +1043,8 @@ Function LoadPlayerData(file$, f%)
 	
 	UsedConsole = ReadByte(f)
 	
+	gopt\CurrZone = ReadInt(f)
+	
 End Function
 
 Function LoadDataForZones(file$)
@@ -1044,54 +1055,7 @@ Function LoadDataForZones(file$)
 	ReadString(f)
 	gopt\GameMode = ReadByte(f) - 1
 	ClassDNumber = ReadInt(f)
-	gopt\CurrZone = ReadInt(f)
 	gopt\CurrZoneString = ReadString(f)
-	
-	ecst\SuccessRocketLaunch = ReadByte(f)
-	ecst\EzDoorOpened = ReadByte(f)
-	ecst\WasInHCZ = ReadByte(f)
-	ecst\NewCavesEvent = ReadByte(f)
-	ecst\CIArrived = ReadByte(f)
-	ecst\WasInRoom2_SL = ReadByte(f)
-	ecst\WasInLCZCore = ReadByte(f)
-	ecst\UnlockedGateDoors = ReadByte(f)
-	ecst\NTFArrived = ReadByte(f)
-	ecst\WasInO5 = ReadByte(f)
-	ecst\WasIn076 = ReadByte(f)
-	ecst\After076Timer = ReadFloat(f)
-	ecst\WasInCaves = ReadByte(f)
-	ecst\WasInO5Again = ReadByte(f)
-	ecst\WasInPO = ReadByte(f)
-	ecst\WasInReactor = ReadByte(f)
-	ecst\WasInBCZ = ReadByte(f)
-	ecst\Contained008 = ReadByte(f)
-	ecst\Contained049 = ReadByte(f)
-	ecst\Contained409 = ReadByte(f)
-	
-	ecst\UnlockedAirlock = ReadByte(f)
-	
-	ecst\UnlockedWolfnaya = ReadByte(f)
-	ecst\ChanceToSpawnWolfNote = ReadByte(f)
-	
-	ecst\FusesAmount = ReadFloat(f)
-	
-	ecst\UnlockedEMRP = ReadByte(f)
-	ecst\UnlockedHDS = ReadByte(f)
-	
-	ecst\WasInLWS = ReadByte(f)
-	ecst\WasInWS = ReadByte(f)
-	ecst\WasInEWS = ReadByte(f)
-	ecst\WasInHWS = ReadByte(f)
-	ecst\WasInSWS = ReadByte(f)
-	ecst\WasInAllSupplies = ReadByte(f)
-	
-	ecst\IntercomEnabled = ReadByte(f)
-	ecst\IntercomIsReady = ReadByte(f)
-	ecst\IntercomTimer = ReadFloat(f)
-	
-	ecst\OmegaWarheadActivated = ReadByte(f)
-	ecst\OmegaWarheadDetonate = ReadByte(f)
-	ecst\OmegaWarheadTimer = ReadFloat(f)
 	
 	PlayTime = ReadInt(f)
 	
@@ -1113,7 +1077,7 @@ End Function
 
 Function LoadGame(File$, ZoneToLoad% = -1)
 	CatchErrors("LoadGame(" + File + ")")
-	DebugLog "---------------------------------------------------------------------------"
+	;debuglog "---------------------------------------------------------------------------"
 	Local version$ = ""
 	
 	DropSpeed=0.0
@@ -1131,71 +1095,20 @@ Function LoadGame(File$, ZoneToLoad% = -1)
 	strtemp = ReadString(f)
 	gopt\GameMode = ReadByte(f) - 1
 	ClassDNumber = ReadInt(f)
-	If ZoneToLoad > -1 Then
-		gopt\CurrZone = ZoneToLoad
-	Else
-		gopt\CurrZone = ReadInt(f)
-	EndIf
 	gopt\CurrZoneString = ReadString(f)
-	
-	ecst\SuccessRocketLaunch = ReadByte(f)
-	ecst\EzDoorOpened = ReadByte(f)
-	ecst\WasInHCZ = ReadByte(f)
-	ecst\NewCavesEvent = ReadByte(f)
-	ecst\CIArrived = ReadByte(f)
-	ecst\WasInRoom2_SL = ReadByte(f)
-	ecst\WasInLCZCore = ReadByte(f)
-	ecst\UnlockedGateDoors = ReadByte(f)
-	ecst\NTFArrived = ReadByte(f)
-	ecst\WasInO5 = ReadByte(f)
-	ecst\WasIn076 = ReadByte(f)
-	ecst\After076Timer = ReadFloat(f)
-	ecst\WasInCaves = ReadByte(f)
-	ecst\WasInO5Again = ReadByte(f)
-	ecst\WasInPO = ReadByte(f)
-	ecst\WasInReactor = ReadByte(f)
-	ecst\WasInBCZ = ReadByte(f)
-	ecst\Contained008 = ReadByte(f)
-	ecst\Contained049 = ReadByte(f)
-	ecst\Contained409 = ReadByte(f)
-	
-	ecst\UnlockedAirlock = ReadByte(f)
-	
-	ecst\UnlockedWolfnaya = ReadByte(f)
-	ecst\ChanceToSpawnWolfNote = ReadByte(f)
-	
-	ecst\FusesAmount = ReadFloat(f)
-	
-	ecst\UnlockedEMRP = ReadByte(f)
-	ecst\UnlockedHDS = ReadByte(f)
-	
-	ecst\WasInLWS = ReadByte(f)
-	ecst\WasInWS = ReadByte(f)
-	ecst\WasInEWS = ReadByte(f)
-	ecst\WasInHWS = ReadByte(f)
-	ecst\WasInSWS = ReadByte(f)
-	ecst\WasInAllSupplies = ReadByte(f)
-	
-	ecst\IntercomEnabled = ReadByte(f)
-	ecst\IntercomIsReady = ReadByte(f)
-	ecst\IntercomTimer = ReadFloat(f)
-	
-	ecst\OmegaWarheadActivated = ReadByte(f)
-	ecst\OmegaWarheadDetonate = ReadByte(f)
-	ecst\OmegaWarheadTimer = ReadFloat(f)
 	
 	PlayTime = ReadInt(f)
 	
 	x = ReadFloat(f)
 	y = ReadFloat(f)
 	z = ReadFloat(f)	
-	PositionEntity(Collider, x, y + 0.05, z)
+	PositionEntity(Collider, x, y+0.05, z)
 	ResetEntity(Collider)
 	
 	x = ReadFloat(f)
 	y = ReadFloat(f)
 	z = ReadFloat(f)	
-	PositionEntity(Head, x, y + 0.05, z)
+	PositionEntity(Head, x, y+0.05, z)
 	ResetEntity(Head)
 	
 	x = ReadFloat(f)
@@ -1204,9 +1117,15 @@ Function LoadGame(File$, ZoneToLoad% = -1)
 	
 	LoadPlayerData(File, f)
 	
+	If ZoneToLoad > -1 Then
+		gopt\CurrZone = ZoneToLoad
+	EndIf
+	
 	CloseFile f
 	
 	f = ReadFile(File + gopt\CurrZone + ".sav")
+	
+	RandomSeed = ReadString(f)
 	
 	temp = ReadInt(f)
 	For i = 1 To temp
@@ -1249,7 +1168,7 @@ Function LoadGame(File$, ZoneToLoad% = -1)
 		ForceSetNPCID(n, ReadInt(f))
 		n\TargetID = ReadInt(f)
 		
-		DebugLog("Loading NPC " +n\NVName+ " (ID "+n\ID+")")
+		;debuglog("Loading NPC " +n\NVName+ " (ID "+n\ID+")")
 		
 		n\EnemyX = ReadFloat(f)
 		n\EnemyY = ReadFloat(f)
@@ -1452,7 +1371,7 @@ Function LoadGame(File$, ZoneToLoad% = -1)
 		EntityBlend d\obj, d\blendmode
 		EntityFX d\obj, d\fx
 		
-		DebugLog "Created Decal @"+x+","+y+","+z
+		;debuglog "Created Decal @"+x+","+y+","+z
 	Next
 	UpdateDecals()
 	
@@ -1680,9 +1599,9 @@ Function LoadGame(File$, ZoneToLoad% = -1)
 	CatchErrors("Uncaught (LoadGame(" + File + "))")
 End Function
 
-Function LoadGameQuick(file$)
+Function LoadGameQuick(file$, showmsg%=True)
 	CatchErrors("LoadGameQuick(" + file + ")")
-	DebugLog "---------------------------------------------------------------------------"
+	;debuglog "---------------------------------------------------------------------------"
 	Local version$ = ""
 	
 	DebugHUD = False
@@ -1708,54 +1627,7 @@ Function LoadGameQuick(file$)
 	strtemp = ReadString(f)
 	gopt\GameMode = ReadByte(f) - 1
 	ClassDNumber = ReadInt(f)
-	gopt\CurrZone = ReadInt(f)
 	gopt\CurrZoneString = ReadString(f)
-	
-	ecst\SuccessRocketLaunch = ReadByte(f)
-	ecst\EzDoorOpened = ReadByte(f)
-	ecst\WasInHCZ = ReadByte(f)
-	ecst\NewCavesEvent = ReadByte(f)
-	ecst\CIArrived = ReadByte(f)
-	ecst\WasInRoom2_SL = ReadByte(f)
-	ecst\WasInLCZCore = ReadByte(f)
-	ecst\UnlockedGateDoors = ReadByte(f)
-	ecst\NTFArrived = ReadByte(f)
-	ecst\WasInO5 = ReadByte(f)
-	ecst\WasIn076 = ReadByte(f)
-	ecst\After076Timer = ReadFloat(f)
-	ecst\WasInCaves = ReadByte(f)
-	ecst\WasInO5Again = ReadByte(f)
-	ecst\WasInPO = ReadByte(f)
-	ecst\WasInReactor = ReadByte(f)
-	ecst\WasInBCZ = ReadByte(f)
-	ecst\Contained008 = ReadByte(f)
-	ecst\Contained049 = ReadByte(f)
-	ecst\Contained409 = ReadByte(f)
-	
-	ecst\UnlockedAirlock = ReadByte(f)
-	
-	ecst\UnlockedWolfnaya = ReadByte(f)
-	ecst\ChanceToSpawnWolfNote = ReadByte(f)
-	
-	ecst\FusesAmount = ReadFloat(f)
-	
-	ecst\UnlockedEMRP = ReadByte(f)
-	ecst\UnlockedHDS = ReadByte(f)
-	
-	ecst\WasInLWS = ReadByte(f)
-	ecst\WasInWS = ReadByte(f)
-	ecst\WasInEWS = ReadByte(f)
-	ecst\WasInHWS = ReadByte(f)
-	ecst\WasInSWS = ReadByte(f)
-	ecst\WasInAllSupplies = ReadByte(f)
-	
-	ecst\IntercomEnabled = ReadByte(f)
-	ecst\IntercomIsReady = ReadByte(f)
-	ecst\IntercomTimer = ReadFloat(f)
-	
-	ecst\OmegaWarheadActivated = ReadByte(f)
-	ecst\OmegaWarheadDetonate = ReadByte(f)
-	ecst\OmegaWarheadTimer = ReadFloat(f)
 	
 	DropSpeed = -0.1
 	HeadDropSpeed = 0.0
@@ -1811,7 +1683,9 @@ Function LoadGameQuick(file$)
 	
 	f = ReadFile(file + gopt\CurrZone + ".sav")
 	
-	CreateHintMsg(GetLocalString("Menu", "game_loaded"))
+	If showmsg Then CreateHintMsg(GetLocalString("Menu", "game_loaded"))
+	
+	RandomSeed = ReadString(f)
 	
 	temp = ReadInt(f)
 	For i = 1 To temp
@@ -2062,7 +1936,7 @@ Function LoadGameQuick(file$)
 		EntityBlend d\obj, d\blendmode
 		EntityFX d\obj, d\fx
 		
-		DebugLog "Created Decal @"+x+","+y+","+z
+		;debuglog "Created Decal @"+x+","+y+","+z
 	Next
 	UpdateDecals()
 	
@@ -2255,7 +2129,6 @@ Type Save
 	Field Version$
 	Field Gamemode%
 	Field DNumber#
-	Field Zone%
 	Field ZoneString$
 End Type
 
@@ -2298,7 +2171,6 @@ Function LoadSaveGames()
 					NEW_SAV\Date = ReadString(f)
 					NEW_SAV\Gamemode = ReadByte(f) - 1
 					NEW_SAV\DNumber = ReadInt(f)
-					NEW_SAV\Zone = ReadInt(f)
 					NEW_SAV\ZoneString = ReadString(f)
 					CloseFile f
 					If m_I <> Null And m_I\CurrentSave = file Then

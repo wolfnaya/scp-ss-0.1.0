@@ -385,7 +385,7 @@ Function CreateNPC.NPCs(NPCtype%, x#, y#, z#, model%=-1)
 		mp_I\CurrNPCID = mp_I\CurrNPCID + 1
 	EndIf
 	
-	DebugLog ("Created NPC "+n\NVName+" (ID: "+n\ID+")")
+	;debuglog ("Created NPC "+n\NVName+" (ID: "+n\ID+")")
 	
 	NPCSpeedChange(n)
 	
@@ -956,9 +956,9 @@ Function UpdateNPCs()
 											;in view -> nope, keep searching for a more suitable cell
 											If EntityInView(n\Collider, Camera) Then
 												PositionEntity n\Collider, 0, -110, 0
-												DebugLog("spawned monster in view -> hide")
+												;debuglog("spawned monster in view -> hide")
 											Else ; not in view -> all good
-												DebugLog("spawned monster successfully")
+												;debuglog("spawned monster successfully")
 												
 												PositionEntity n\Collider, TFormedX(), EntityY(fr\Forest_Pivot,True)+2.3, TFormedZ()
 												
@@ -1109,7 +1109,7 @@ Function UpdateNPCs()
 											
 											PositionEntity n\Collider, TFormedX(), EntityY(fr\Forest_Pivot,True)+1.0,TFormedZ()
 											
-											DebugLog(TFormedX()+", "+TFormedZ())
+											;debuglog(TFormedX()+", "+TFormedZ())
 											
 											If EntityInView(n\Collider, Camera) Then
 												BlinkTimer=-10
@@ -1266,7 +1266,7 @@ Function UpdateNPCs()
 			Local p.Particles
 			
 			If n\HeadShot And n <> Null Then
-				DebugLog "bleeding"
+				;debuglog "bleeding"
 				p.Particles = CreateParticle(EntityX(FindChild(n\obj,headbonename$),True),EntityY(FindChild(n\obj,headbonename$),True),EntityZ(FindChild(n\obj,headbonename$),True),5,0.01,-0.005,150)
 			EndIf
 		EndIf
@@ -1979,7 +1979,7 @@ Function FindNextElevator(n.NPCs)
 								If EntityDistanceSquared(eo2\obj,n\Collider)<EntityDistanceSquared(eo\obj,n\Collider)
 									n\PathStatus = FindPath(n, EntityX(eo2\obj,True),EntityY(eo2\obj,True),EntityZ(eo2\obj,True))
 									n\CurrElevator = eo2
-									DebugLog "eo2 found for "+n\NPCtype
+									;debuglog "eo2 found for "+n\NPCtype
 									Exit
 								EndIf
 							EndIf
@@ -1989,11 +1989,11 @@ Function FindNextElevator(n.NPCs)
 				If n\CurrElevator = Null
 					n\PathStatus = FindPath(n, EntityX(eo\obj,True),EntityY(eo\obj,True),EntityZ(eo\obj,True))
 					n\CurrElevator = eo
-					DebugLog "eo found for "+n\NPCtype
+					;debuglog "eo found for "+n\NPCtype
 				EndIf
 				If n\PathStatus <> 1
 					n\CurrElevator = Null
-					DebugLog "Unable to find elevator path: Resetting CurrElevator"
+					;debuglog "Unable to find elevator path: Resetting CurrElevator"
 				EndIf
 				Exit
 			EndIf
@@ -2022,14 +2022,14 @@ Function GoToElevator(n.NPCs)
 		If n\CurrElevator\door\open
 			If (distsquared > PowTwo(0.4) And distsquared < PowTwo(0.7)) And inside%
 				UseDoor(n\CurrElevator\door,False)
-				DebugLog n\NPCtype+" used elevator"
+				;debuglog n\NPCtype+" used elevator"
 			EndIf
 		Else
 			If distsquared < PowTwo(0.7)
 				n\CurrSpeed = 0.0
 				If n\CurrElevator\door\NPCCalledElevator=False
 					n\CurrElevator\door\NPCCalledElevator = True
-					DebugLog n\NPCtype+" called elevator"
+					;debuglog n\NPCtype+" called elevator"
 				EndIf
 			EndIf
 		EndIf
@@ -2066,7 +2066,7 @@ Function IsNPCStuck(n.NPCs,time#)
 	Local timer#
 	
 	timer=Max(timer-FPSfactor,0.0)
-	DebugLog("Stuck Timer: "+timer)
+	;debuglog("Stuck Timer: "+timer)
 	If timer<=0.0 Then
 		If EntityX(n\Collider)=x Then
 			If EntityZ(n\Collider)=z Then

@@ -311,13 +311,13 @@ Function UpdateInterfaceIcons()
 							If ne\state = 0.0
 								If EntityY(ne\door\frameobj)>ne\floory[1]*RoomScale+1
 									StartNewElevator(d_I\ClosestDoor,3)
-									DebugLog "Option 3"
+									;debuglog "Option 3"
 								ElseIf EntityY(ne\door\frameobj)<ne\floory[2]*RoomScale-1 And EntityY(ne\door\frameobj)>ne\floory[0]*RoomScale
 									StartNewElevator(d_I\ClosestDoor,2)
-									DebugLog "Option 2"
+									;debuglog "Option 2"
 								Else
 									StartNewElevator(d_I\ClosestDoor,1)
-									DebugLog "Option 1"
+									;debuglog "Option 1"
 								EndIf
 							Else
 								If (m_msg\Txt<>GetLocalString("Doors", "elevator_called"))
@@ -1041,7 +1041,7 @@ Function DrawGUI()
 										strtemp = strtemp + GetLocalString("Devices","radio_no_track")
 									EndIf
 								Case 1
-									DebugLog RadioState[1]
+									;debuglog RadioState[1]
 									strtemp = GetLocalString("Devices","radio_cb_1")
 								Case 2
 									strtemp = GetLocalString("Devices","radio_scp")
@@ -1676,8 +1676,8 @@ Function UpdateGUI()
 											If CurrUserTrack%<>0 Then FreeSound_Strict(CurrUserTrack%) : CurrUserTrack% = 0
 											CurrUserTrack% = LoadSound_Strict("SFX\Radio\UserTracks\"+UserTrackName[RadioState[0]])
 											RadioCHN[0] = PlaySound_Strict(CurrUserTrack%)
-											DebugLog "CurrTrack: "+RadioState[0]
-											DebugLog UserTrackName[RadioState[0]]
+											;debuglog "CurrTrack: "+RadioState[0]
+											;debuglog UserTrackName[RadioState[0]]
 										Else
 											strtemp = strtemp + Upper(UserTrackName[RadioState[0]]) + "          "
 											UserTrackFlag = False
@@ -1700,8 +1700,8 @@ Function UpdateGUI()
 											If CurrUserTrack%<>0 Then FreeSound_Strict(CurrUserTrack%) : CurrUserTrack% = 0
 											CurrUserTrack% = LoadSound_Strict("SFX\Radio\UserTracks\"+UserTrackName[RadioState[0]])
 											RadioCHN[0] = PlaySound_Strict(CurrUserTrack%)
-											DebugLog "CurrTrack: "+RadioState[0]
-											DebugLog UserTrackName[RadioState[0]]
+											;debuglog "CurrTrack: "+RadioState[0]
+											;debuglog UserTrackName[RadioState[0]]
 										EndIf
 									EndIf
 								Case 1

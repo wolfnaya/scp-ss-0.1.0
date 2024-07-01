@@ -1329,7 +1329,7 @@ Function UpdateConsole(commandSet%)
 								MainMenuOpen = False
 								Null3DMenu()
 								gopt\CurrZone = Int(StrTemp2)
-								DebugLog "zone loading: "+gopt\CurrZone
+								;debuglog "zone loading: "+gopt\CurrZone
 								LoadEntities()
 								LoadAllSounds()
 								InitNewGame()

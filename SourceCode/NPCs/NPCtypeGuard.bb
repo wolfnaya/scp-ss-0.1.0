@@ -74,7 +74,7 @@ Function UpdateNPCtypeGuard(n.NPCs)
 					RotateEntity(pvt, Min(EntityPitch(pvt), 40), EntityYaw(n\Collider), 0)
 					
 					If n\Reload = 0 Then
-						DebugLog "entitypick"
+						;debuglog "entitypick"
 						EntityPick(pvt, Sqr(dist))
 						If PickedEntity() = Collider Lor n\State[2]=1 Then
 							Local instaKillPlayer% = False
@@ -262,7 +262,7 @@ Function UpdateNPCtypeGuard(n.NPCs)
 					RotateEntity(pvt, Min(EntityPitch(pvt), 40), EntityYaw(n\Collider), 0)
 					
 					If n\Reload = 0 Then
-						DebugLog "entitypick"
+						;debuglog "entitypick"
 						EntityPick(pvt, Sqr(dist))
 						If PickedEntity() = Collider Lor n\State[2]=1 Then
 							instaKillPlayer% = False

@@ -402,8 +402,8 @@ Function UpdateMainMenu()
 						Null3DMenu()
 						gopt\GameMode = sa\Gamemode
 						ClassDNumber = sa\DNumber
-						gopt\CurrZone = sa\Zone
 						gopt\CurrZoneString = sa\ZoneString
+						IsStartingFromMenu = True
 						LoadEntities()
 						LoadAllSounds()
 						LoadGame(SavePath + CurrSave\Name + "\")
@@ -658,8 +658,8 @@ Function UpdateMainMenu()
 										Null3DMenu()
 										gopt\GameMode = CurrSave\Gamemode
 										ClassDNumber = CurrSave\DNumber
-										gopt\CurrZone = CurrSave\Zone
 										gopt\CurrZoneString = CurrSave\ZoneString
+										IsStartingFromMenu = True
 										LoadEntities()
 										LoadAllSounds()
 										LoadGame(SavePath + CurrSave\Name + "\")
@@ -1507,7 +1507,7 @@ Function UpdateMainMenu()
 ;					ResetControllerSelections()
 ;					Null3DMenu()
 ;					MainMenuOpen = False
-;					DebugLog "Starting Multiplayer Match!"
+;					;debuglog "Starting Multiplayer Match!"
 ;					If mp_I\PlayState=GAME_SERVER Then
 ;						LoadingServer()
 ;					Else
@@ -1839,7 +1839,7 @@ Function UpdateMainMenu()
 					ResetControllerSelections()
 					Null3DMenu()
 					MainMenuOpen = False
-					DebugLog "Starting Multiplayer Match!"
+					;debuglog "Starting Multiplayer Match!"
 					LoadingServer()
 					Return
 				EndIf

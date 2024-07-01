@@ -138,7 +138,7 @@ Function LoadMPMaps()
 						mfl\Image = LoadImage_Strict("GFX\menu\map_preview_unknown.png")
 					EndIf
 					mfl\Image = ResizeImage2(mfl\Image, 384 * MenuScale, 192 * MenuScale)
-					DebugLog mfl\Name+"|"+mfl\MeshPath
+					;debuglog mfl\Name+"|"+mfl\MeshPath
 				EndIf
 			EndIf
 		EndIf
@@ -456,7 +456,7 @@ Function InitMPWayPoints(loadingstart=45,drawloadingscreen=True)
 		Next
 	Next
 	
-	DebugLog "InitWaypoints() - "+(MilliSecs()-temper)
+	;debuglog "InitWaypoints() - "+(MilliSecs()-temper)
 End Function
 
 Function UpdateGamemodeMP()

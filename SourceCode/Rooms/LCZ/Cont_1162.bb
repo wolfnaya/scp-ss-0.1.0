@@ -63,7 +63,7 @@ Function UpdateEvent_Cont_1162(e.Events)
 			If Inventory[e\EventState[1]]<>Null
 				;randomly picked item slot has an item in it, using this slot
 				e\EventState[2] = 1.0
-				DebugLog "pick1"
+				;debuglog "pick1"
 			Else
 				;randomly picked item slot is empty, getting the first available slot
 				For i = 0 To MaxItemAmount-1
@@ -130,27 +130,27 @@ Function UpdateEvent_Cont_1162(e.Events)
 							Case "key"
 								If itt\tempname = "key1" Lor itt\tempname = "key2" And Rand(2)=1
 									shouldCreateItem = True
-									DebugLog "lostkey"
+									;debuglog "lostkey"
 								EndIf
 							Case "gasmask","gasmask3","gasmask2","hazmat","hazmat2","hazmat3"
 								If itt\tempname = "gasmask" Lor itt\tempname = "gasmask3" Lor itt\tempname = "gasmask2" Lor itt\tempname = "hazmat" Lor itt\tempname = "hazmat2" Lor itt\tempname = "hazmat3" And Rand(2)=1
 									shouldCreateItem = True
-									DebugLog "gasmask hazmat"
+									;debuglog "gasmask hazmat"
 								EndIf
 							Case "key1","key2","key3"
 								If itt\tempname = "key1" Lor itt\tempname = "key2" Lor itt\tempname = "key3" Lor itt\tempname = "misc" And Rand(6)=1
 									shouldCreateItem = True
-									DebugLog "key"
+									;debuglog "key"
 								EndIf
 							Case "vest","vest2"
 								If itt\tempname = "vest" Lor itt\tempname = "vest2" And Rand(1)=1
 									shouldCreateItem = True
-									DebugLog "vest"
+									;debuglog "vest"
 								EndIf
 							Default
 								If itt\tempname = "misc" And Rand(6)=1
 									shouldCreateItem = True
-									DebugLog "default"
+									;debuglog "default"
 								EndIf
 						End Select
 					EndIf

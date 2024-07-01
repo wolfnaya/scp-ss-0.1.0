@@ -499,7 +499,7 @@ Function UpdateInventory()
 			
 			If OtherOpen = Null Then Exit
 			
-			DebugLog "otheropen: "+(OtherOpen<>Null)
+			;debuglog "otheropen: "+(OtherOpen<>Null)
 			If OtherOpen\SecondInv[n] <> Null And SelectedItem <> OtherOpen\SecondInv[n] Then
 				If IsMouseOn Then
 					If SelectedItem = Null Then
@@ -624,9 +624,9 @@ Function UpdateInventory()
 		
 		; ~ Beginning Task for keycard
 		
-		If TaskExists(TASK_OPEN_INV) Then
-			EndTask(TASK_OPEN_INV)
-		EndIf
+		;If TaskExists(TASK_OPEN_INV) Then
+		;	EndTask(TASK_OPEN_INV)
+		;EndIf
 		
 		Local keyhits[MaxGunSlots]
 		For i = 0 To MaxGunSlots-1

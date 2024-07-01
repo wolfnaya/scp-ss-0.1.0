@@ -141,6 +141,12 @@ Function FillRoom_Room3_CT(r.Rooms)
 ;		EndIf
 ;	Next
 	
+	If gopt\GameMode <> GAMEMODE_NTF Then
+		it = CreateItem(GetLocalString("Item Names", "backpack"), "backpack", r\x -5239.0 * RoomScale, r\y-4040.0 * RoomScale, r\z -29.0 * RoomScale)
+		EntityParent(it\collider, r\obj)
+		EntityType it\collider, HIT_ITEM
+	EndIf
+	
 	wa.Water = CreateWater("GFX\map\rooms\room3_ct\room3_ct_water.b3d","sewers_water2",0,0,0,r\obj,(-7936.0*RoomScale))
 	EntityAlpha wa\obj,0.8
 	EntityColor wa\obj,100,100,100

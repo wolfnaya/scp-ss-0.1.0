@@ -87,7 +87,7 @@ Function UpdateEvent_Room3_Pit_1048(e.Events)
 ;				b% = GetSurfaceBrush( sf )
 ;				t% = GetBrushTexture(b, 0)
 ;				texname$ = StripPath(TextureName(t))
-;				DebugLog "texname: "+texname
+;				;debuglog "texname: "+texname
 ;				If Lower(texname) = "1048_1.jpg" Then
 ;					PaintSurface sf, brush
 ;				EndIf

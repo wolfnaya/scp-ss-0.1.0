@@ -1,7 +1,11 @@
 v0.1.0
 
-~ Some additions to Saving System.
-~ Optimized Reactor area.
+~ Added chatwheel for NTF in Singleplayer.
+~ Added automated way for adding gear to character.
+~ Some additions to saving system.
+~ Some fixes to loading system.
+~ Optimized reactor area.
+~ Optimized debug mode.
 ~ Fixed some issues caused by chapters.
 ~ Nerfed EMR-P's jamming.
 

@@ -11,16 +11,16 @@ Function UpdateEvent_096_Spawn(e.Events)
 			If Curr096<>Null
 				If EntityDistanceSquared(Curr096\Collider,Collider)<PowTwo(40)
 					e\EventState[0] = 2
-					DebugLog "Failed to spawn SCP-096 in room "+e\room\RoomTemplate\Name$
-					DebugLog "- SCP-096 too close to player"
+					;debuglog "Failed to spawn SCP-096 in room "+e\room\RoomTemplate\Name$
+					;debuglog "- SCP-096 too close to player"
 				EndIf
 				
 				For e2.Events = Each Events
 					If e2\EventName = "room2_servers_1"
 						If e2\EventState[0] > 0 And e2\room\NPC[0]<>Null
 							e\EventState[0] = 2
-							DebugLog "Failed to spawn SCP-096 in room "+e\room\RoomTemplate\Name$
-							DebugLog "- room2_servers_1 event still in progress"
+							;debuglog "Failed to spawn SCP-096 in room "+e\room\RoomTemplate\Name$
+							;debuglog "- room2_servers_1 event still in progress"
 							Exit
 						EndIf
 					EndIf
@@ -30,8 +30,8 @@ Function UpdateEvent_096_Spawn(e.Events)
 					If r\RoomTemplate\Name = "checkpoint_hcz"
 						If r\dist < 10
 							e\EventState[0] = 2
-							DebugLog "Failed to spawn SCP-096 in room "+e\room\RoomTemplate\Name$
-							DebugLog "- too close to checkpoint_hcz"
+							;debuglog "Failed to spawn SCP-096 in room "+e\room\RoomTemplate\Name$
+							;debuglog "- too close to checkpoint_hcz"
 							Exit
 						EndIf
 					EndIf
@@ -39,22 +39,22 @@ Function UpdateEvent_096_Spawn(e.Events)
 				
 				If Curr096\State[0] <> 5
 					e\EventState[0] = 2
-					DebugLog "Failed to spawn SCP-096 in room "+e\room\RoomTemplate\Name$
-					DebugLog "- SCP-096 enraged"
+					;debuglog "Failed to spawn SCP-096 in room "+e\room\RoomTemplate\Name$
+					;debuglog "- SCP-096 enraged"
 				EndIf
 				
 				If EntityDistanceSquared(Curr096\Collider,e\room\obj)>EntityDistanceSquared(Curr096\Collider,Collider)
 					e\EventState[0] = 2
-					DebugLog "Failed to spawn SCP-096 in room "+e\room\RoomTemplate\Name$
-					DebugLog "- Room is too far away"
+					;debuglog "Failed to spawn SCP-096 in room "+e\room\RoomTemplate\Name$
+					;debuglog "- Room is too far away"
 				EndIf
 			EndIf
 			For e2.Events = Each Events
 				If e2\EventName = "room2_servers_1"
 					If e2\EventState[0] = 0 And (Abs(e2\room\dist-e\room\dist)<HideDistance)
 						e\EventState[0] = 2
-						DebugLog "Failed to spawn SCP-096 in room "+e\room\RoomTemplate\Name$
-						DebugLog "- room2_servers_1 event not activated + room is too close to room2_servers_1"
+						;debuglog "Failed to spawn SCP-096 in room "+e\room\RoomTemplate\Name$
+						;debuglog "- room2_servers_1 event not activated + room is too close to room2_servers_1"
 						Exit
 					EndIf
 				EndIf
@@ -94,7 +94,7 @@ Function UpdateEvent_096_Spawn(e.Events)
 			PositionEntity pvt%,xspawn#,0,zspawn#
 			If Curr096 = Null
 				Curr096 = CreateNPC(NPC_SCP_096,EntityX(pvt%,True),e\room\y+0.5,EntityZ(pvt%,True))
-				DebugLog EntityY(Curr096\Collider)
+				;debuglog EntityY(Curr096\Collider)
 			Else
 				PositionEntity Curr096\Collider,EntityX(pvt%,True),e\room\y+0.5,EntityZ(pvt%,True)
 				ResetEntity Curr096\Collider
@@ -104,7 +104,7 @@ Function UpdateEvent_096_Spawn(e.Events)
 			pvt = FreeEntity_Strict(pvt)
 			Curr096\State[0] = 5
 			
-			DebugLog "SCP-096 successfully placed in "+Chr(34)+e\room\RoomTemplate\Name+Chr(34)
+			;debuglog "SCP-096 successfully placed in "+Chr(34)+e\room\RoomTemplate\Name+Chr(34)
 			e\EventState[0] = 1
 		ElseIf e\EventState[0] = 1
 			PointEntity Curr096\Collider,Collider

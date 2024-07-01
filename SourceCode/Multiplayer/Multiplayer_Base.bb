@@ -340,8 +340,8 @@ EndIf
 Function CreateServer()
 	
 	mp_I\PlayState=GAME_SERVER
-	DebugLog "---Created Server---"
-	DebugLog "Username: "+mp_O\PlayerName$
+	;debuglog "---Created Server---"
+	;debuglog "Username: "+mp_O\PlayerName$
 	CreateHostPlayer()
 	mp_I\PlayerID = 0
 	mp_I\PlayerCount = 1
@@ -459,7 +459,7 @@ Function ConnectFinal()
 		Return
 	ElseIf currMSGSync = PACKET_LOAD Then
 ;		mp_I\PlayerID = ReadByte(mp_I\Server)
-;		DebugLog "ID: "+mp_I\PlayerID
+;		;debuglog "ID: "+mp_I\PlayerID
 ;		mp_I\TimeOut = ReadInt(mp_I\Server)
 ;		mp_I\MaxPlayers = ReadByte(mp_I\Server)
 ;		Local mapName = ReadLine(mp_I\Server)
@@ -523,7 +523,7 @@ Function ConnectFinal()
 ;		ResetControllerSelections()
 ;		Null3DMenu()
 ;		MainMenuOpen = False
-;		DebugLog "Starting Multiplayer Match!"
+;		;debuglog "Starting Multiplayer Match!"
 ;		For i = 1 To (mp_I\MaxPlayers)
 ;			exists = ReadByte(mp_I\Server)
 ;			If exists Then
@@ -541,7 +541,7 @@ Function ConnectFinal()
 		Null3DMenu()
 	EndIf
 	MainMenuOpen = False
-	DebugLog "Starting Multiplayer Match!"
+	;debuglog "Starting Multiplayer Match!"
 	;RuntimeError "Player Client Data: " + currMSGSync + ", " + mp_I\PlayerID + ", " + mp_I\TimeOut + ", " + mp_I\MaxPlayers + ", " + mapname + ", " + gamemode
 	Players[mp_I\PlayerID] = New Player
 	LoadingClient(True)
@@ -582,7 +582,7 @@ Function CheckForConnectingPlayer(currMSGSync%)
 	For giveID = 1 To mp_I\MaxPlayers-1
 		If Players[giveID] <> Null Then
 			If Players[giveID]\SteamIDUpper = IDUpper And Players[giveID]\SteamIDLower = IDLower Then
-				DebugLog "Player " + giveID + " already exists!"
+				;debuglog "Player " + giveID + " already exists!"
 				CatchErrors("Uncaught (CheckForConnectingPlayer)")
 				Return -1
 			EndIf
@@ -690,7 +690,7 @@ Function CheckForConnectingPlayer(currMSGSync%)
 		DeleteSharedSecret(IDUpper, IDLower)
 	EndIf
 	
-	DebugLog "Player that connects to your server: " + id
+	;debuglog "Player that connects to your server: " + id
 	CatchErrors("Uncaught (CheckForConnectingPlayer)")
 	Return id
 	

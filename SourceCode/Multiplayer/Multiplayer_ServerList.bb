@@ -83,15 +83,15 @@ Function ListServers()
 				se\map = Piece(l,8,"|")
 				se\pl_on = Piece(l,9,"|")
 				se\pl_max = Piece(l,10,"|")
-				DebugLog se\id_lower
-				DebugLog se\id_upper
-				DebugLog se\region
-				DebugLog se\name
-				DebugLog se\password
-				DebugLog se\gamemode
-				DebugLog se\map
-				DebugLog se\pl_on
-				DebugLog se\pl_max
+				;debuglog se\id_lower
+				;debuglog se\id_upper
+				;debuglog se\region
+				;debuglog se\name
+				;debuglog se\password
+				;debuglog se\gamemode
+				;debuglog se\map
+				;debuglog se\pl_on
+				;debuglog se\pl_max
 			EndIf
 		Wend
 		

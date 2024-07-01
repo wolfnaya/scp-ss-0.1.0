@@ -549,23 +549,18 @@ Function UpdateEvent_Cores(e.Events)
 						psp\NoMove = True
 						
 					ElseIf e\EventState[2] >= 70*8 And e\EventState[2] < 70*8.02 Then
+						ShouldPlay = MUS_NULL
 						
 						SaveGame(SavePath + CurrSave\Name + "\", True)
-						
-						e\EventState[2] = 70*8
-						
-						psp\NoMove = False
-						
-						Curr106\Contained = False
-						
 						gopt\CurrZone = AREA_106_ESCAPE
 						
 						ResetControllerSelections()
 						DropSpeed = 0
-						NullGame(True,False)
+						
+						NullGame(True, False)
 						LoadEntities()
 						LoadAllSounds()
-						Local zonecache% = gopt\CurrZone
+						
 						If FileType(SavePath + CurrSave\Name + "\" + gopt\CurrZone + ".sav") = 1 Then
 							LoadGame(SavePath + CurrSave\Name + "\", gopt\CurrZone)
 							InitLoadGame()
@@ -573,12 +568,16 @@ Function UpdateEvent_Cores(e.Events)
 							InitNewGame()
 							LoadDataForZones(SavePath + CurrSave\Name + "\")
 						EndIf
-						gopt\CurrZone = zonecache
+						gopt\CurrZone = AREA_106_ESCAPE
+						
 						MainMenuOpen = False
 						FlushKeys()
 						FlushMouse()
 						FlushJoy()
 						ResetInput()
+						
+						SaveGame(SavePath + CurrSave\Name + "\", True)
+						Return
 					EndIf
 			End Select
 			
@@ -623,7 +622,7 @@ Function UpdateEvent_Cores(e.Events)
 					NullGame(True,False)
 					LoadEntities()
 					LoadAllSounds()
-					zonecache% = gopt\CurrZone
+					Local zonecache% = gopt\CurrZone
 					If FileType(SavePath + CurrSave\Name + "\" + gopt\CurrZone + ".sav") = 1 Then
 						LoadGame(SavePath + CurrSave\Name + "\", gopt\CurrZone)
 						InitLoadGame()

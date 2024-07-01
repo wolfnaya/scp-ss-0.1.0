@@ -34,50 +34,59 @@ Function UpdateEvent_Facility_Reactor_Entrance(e.Events)
 				If TaskExists(TASK_TURN_ON_REACTOR) Then
 					If d_I\ClosestButton = e\room\Objects[REACTOR_ENTRANCE_BUTTON] Then
 						If KeyHitUse Then
-							e\EventState[1] = 1
-							CreateMsg(GetLocalString("Doors", "elevator_called"), 70*1)
+							e\EventState[0] = 0.1
+							CreateMsg(GetLocalString("Doors", "elevator_called"), 70*0.5)
 							PlaySound_Strict(ButtonSFX[0])
 						EndIf
 					EndIf
 				EndIf
 				
-				If e\EventState[1] = 1 Then
+				If e\EventState[0] > 0 Then
 					e\EventState[0] = e\EventState[0] + (FPSfactor*0.02)
 					EntityAlpha e\room\Objects[REACTOR_ENTRANCE_DARK_SPRITE],Min(e\EventState[0],1.0)
 				EndIf
 				
 				If e\EventState[0] > 2.1 Then
-					SaveGame(SavePath + CurrSave\Name + "\", True)
-					Local prevZone = gopt\CurrZone
+					ShouldPlay = MUS_NULL
 					
+					SaveGame(SavePath + CurrSave\Name + "\", True)
 					gopt\CurrZone = REACTOR_AREA
 					
 					ResetControllerSelections()
 					DropSpeed = 0
-					NullGame(True,False)
+					
+					NullGame(True, False)
 					LoadEntities()
 					LoadAllSounds()
-					Local zonecache% = gopt\CurrZone
-					InitNewGame()
-					LoadDataForZones(SavePath + CurrSave\Name + "\")
-					gopt\CurrZone = zonecache
+					
+					If FileType(SavePath + CurrSave\Name + "\" + gopt\CurrZone + ".sav") = 1 Then
+						LoadGame(SavePath + CurrSave\Name + "\", gopt\CurrZone)
+						InitLoadGame()
+					Else
+						InitNewGame()
+						LoadDataForZones(SavePath + CurrSave\Name + "\")
+					EndIf
+					gopt\CurrZone = REACTOR_AREA
+					
 					MainMenuOpen = False
 					FlushKeys()
 					FlushMouse()
 					FlushJoy()
 					ResetInput()
-					For e2 = Each Events
-						If e2\room = PlayerRoom Then
-							e2\EventState[5] = 0
-							Exit
-						EndIf
-					Next
+					
 					SaveGame(SavePath + CurrSave\Name + "\", True)
 					Return
 				EndIf
 			Else
-				e\EventState[0] = 0
-				e\EventState[1] = 0
+				If e\EventState[0] = 0 Then
+					SaveGame(SavePath + CurrSave\Name + "\", True)
+					
+					EntityAlpha e\room\Objects[REACTOR_ENTRANCE_DARK_SPRITE], 0.0
+					TeleportEntity(Collider, EntityX(e\room\obj), 1.0, EntityZ(e\room\obj), 0.3, True)
+					RotateEntity(Collider, 0, e\room\angle, 0)
+					
+					e\EventState[0] = 1
+				EndIf
 			EndIf
 		EndIf
 	EndIf
@@ -426,7 +435,7 @@ Function UpdateEvent_Facility_Reactor(e.Events)
 				
 				Local ne.NewElevator
 				
-				If EntityY(Collider)<-1000.0*RoomScale ; ~ Reactor
+				If EntityY(Collider)<-1000.0*RoomScale
 					
 					If (Not PlayerInNewElevator)
 						PositionEntity e\room\RoomDoors[REACTOR_STORAGE_ELEVATOR_DOOR]\frameobj,EntityX(e\room\RoomDoors[REACTOR_STORAGE_ELEVATOR_DOOR]\frameobj),-2000.0*RoomScale,EntityZ(e\room\RoomDoors[REACTOR_STORAGE_ELEVATOR_DOOR]\frameobj)
@@ -436,7 +445,7 @@ Function UpdateEvent_Facility_Reactor(e.Events)
 						PositionEntity e\room\RoomDoors[REACTOR_STORAGE_ELEVATOR_DOOR]\obj2,EntityX(e\room\RoomDoors[REACTOR_STORAGE_ELEVATOR_DOOR]\obj2),-2000.0*RoomScale,EntityZ(e\room\RoomDoors[REACTOR_STORAGE_ELEVATOR_DOOR]\obj2)
 					EndIf
 					
-				ElseIf EntityY(Collider)>-100.0*RoomScale ; ~ Entrance
+				ElseIf EntityY(Collider)>-100.0*RoomScale
 					
 					If (Not PlayerInNewElevator)
 						PositionEntity e\room\RoomDoors[REACTOR_STORAGE_ELEVATOR_DOOR]\frameobj,EntityX(e\room\RoomDoors[REACTOR_STORAGE_ELEVATOR_DOOR]\frameobj),0,EntityZ(e\room\RoomDoors[REACTOR_STORAGE_ELEVATOR_DOOR]\frameobj)
@@ -747,7 +756,14 @@ Function UpdateEvent_Facility_Reactor(e.Events)
 				EndIf
 				
 				If e\EventState[0] = 4 Then
-					If EntityDistanceSquared(Collider,e\room\Objects[REACTOR_CLOSE_TRIGGER])<PowTwo(0.6) Then
+					If EntityDistanceSquared(Collider,e\room\Objects[REACTOR_CLOSE_TRIGGER]) < PowTwo(0.6) Then
+						SaveGame(SavePath + CurrSave\Name + "\", True)
+						e\EventState[0] = 5
+					EndIf
+				EndIf
+				
+				If e\EventState[0] = 5 Then
+					If EntityDistanceSquared(Collider,e\room\Objects[REACTOR_CLOSE_TRIGGER]) < PowTwo(0.6) Then
 						e\room\RoomDoors[1]\open = False
 						e\room\RoomDoors[1]\locked = True
 					EndIf
@@ -767,28 +783,22 @@ Function UpdateEvent_Facility_Reactor(e.Events)
 				
 				If e\EventState[5] > 1.05 Then
 					
+					;[Block]
 					ecst\WasInReactor = True
+					;[End Block]
 					
-					e\room\Objects[REACTOR_MODEL] = FreeEntity_Strict(e\room\Objects[REACTOR_MODEL])
-					e\room\Objects[REACTOR_PART_2] = FreeEntity_Strict(e\room\Objects[REACTOR_PART_2])
-					e\room\Objects[REACTOR_PART_3] = FreeEntity_Strict(e\room\Objects[REACTOR_PART_3])
-					e\room\Objects[REACTOR_PART_4] = FreeEntity_Strict(e\room\Objects[REACTOR_PART_4])
-					e\room\Objects[REACTOR_PART_5] = FreeEntity_Strict(e\room\Objects[REACTOR_PART_5])
-					e\room\Objects[REACTOR_SHIELD] = FreeEntity_Strict(e\room\Objects[REACTOR_SHIELD])
-					e\room\Objects[REACTOR_BRIDGES] = FreeEntity_Strict(e\room\Objects[REACTOR_BRIDGES])
-					e\room\Objects[REACTOR_FAKE_DOOR] = FreeEntity_Strict(e\room\Objects[REACTOR_FAKE_DOOR])
+					ShouldPlay = MUS_NULL
 					
 					SaveGame(SavePath + CurrSave\Name + "\", True)
-					Local prevZone = gopt\CurrZone
-					
 					gopt\CurrZone = HCZ
 					
 					ResetControllerSelections()
 					DropSpeed = 0
-					NullGame(True,False)
+					
+					NullGame(True, False)
 					LoadEntities()
 					LoadAllSounds()
-					Local zonecache% = gopt\CurrZone
+					
 					If FileType(SavePath + CurrSave\Name + "\" + gopt\CurrZone + ".sav") = 1 Then
 						LoadGame(SavePath + CurrSave\Name + "\", gopt\CurrZone)
 						InitLoadGame()
@@ -796,33 +806,27 @@ Function UpdateEvent_Facility_Reactor(e.Events)
 						InitNewGame()
 						LoadDataForZones(SavePath + CurrSave\Name + "\")
 					EndIf
-					gopt\CurrZone = zonecache
+					gopt\CurrZone = HCZ
+					
 					MainMenuOpen = False
 					FlushKeys()
 					FlushMouse()
 					FlushJoy()
 					ResetInput()
+					
 					For e2 = Each Events
 						If e2\room = PlayerRoom Then
 							e2\EventState[0] = 0
+							EntityAlpha e2\room\Objects[REACTOR_ENTRANCE_DARK_SPRITE], 0.0
 							TeleportEntity(Collider, EntityX(e2\room\obj), 1.0, EntityZ(e2\room\obj), 0.3, True)
 							RotateEntity(Collider, 0, e2\room\angle, 0)
 							Exit
 						EndIf
 					Next
+					
 					SaveGame(SavePath + CurrSave\Name + "\", True)
 					Return
 				EndIf
-				
-			Else
-				e\room\Objects[REACTOR_MODEL] = FreeEntity_Strict(e\room\Objects[REACTOR_MODEL])
-				e\room\Objects[REACTOR_PART_2] = FreeEntity_Strict(e\room\Objects[REACTOR_PART_2])
-				e\room\Objects[REACTOR_PART_3] = FreeEntity_Strict(e\room\Objects[REACTOR_PART_3])
-				e\room\Objects[REACTOR_PART_4] = FreeEntity_Strict(e\room\Objects[REACTOR_PART_4])
-				e\room\Objects[REACTOR_PART_5] = FreeEntity_Strict(e\room\Objects[REACTOR_PART_5])
-				e\room\Objects[REACTOR_SHIELD] = FreeEntity_Strict(e\room\Objects[REACTOR_SHIELD])
-				e\room\Objects[REACTOR_BRIDGES] = FreeEntity_Strict(e\room\Objects[REACTOR_BRIDGES])
-				e\room\Objects[REACTOR_FAKE_DOOR] = FreeEntity_Strict(e\room\Objects[REACTOR_FAKE_DOOR])
 			EndIf
 		EndIf
 	EndIf

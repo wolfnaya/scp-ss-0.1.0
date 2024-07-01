@@ -173,69 +173,7 @@ Function UpdateEvent_Room1_Intro(e.Events)
 			
 			e\Sound[1] = LoadSound_Strict("SFX\General\Spark_Medium.ogg")
 			
-			; ~ Beretta
-			it = CreateItem("M9 Beretta", "beretta", 1, 1, 1)
-			it\Picked = True
-			it\Dropped = -1
-			it\itemtemplate\found=True
-			Inventory[SLOT_HOLSTER] = it
-			HideEntity(it\collider)
-			EntityType (it\collider, HIT_ITEM)
-			EntityParent(it\collider, 0)
-			ItemAmount = ItemAmount + 1
-			; ~ Knife
-			it = CreateItem(GetLocalString("Item Names","knife"), "knife", 1, 1, 1)
-			it\Picked = True
-			it\Dropped = -1
-			it\itemtemplate\found=True
-			Inventory[SLOT_SCABBARD] = it
-			HideEntity(it\collider)
-			EntityType (it\collider, HIT_ITEM)
-			EntityParent(it\collider, 0)
-			ItemAmount = ItemAmount + 1
-			; ~ Level 3 Key Card
-			it = CreateItem(GetLocalString("Item Names","key_3"), "key3", 1, 1, 1)
-			it\Picked = True
-			it\Dropped = -1
-			it\itemtemplate\found=True
-			Inventory[0] = it
-			HideEntity(it\collider)
-			EntityType (it\collider, HIT_ITEM)
-			EntityParent(it\collider, 0)
-			ItemAmount = ItemAmount + 1
-			; ~ Radio
-			it = CreateItem(GetLocalString("Item Names","radio"), "radio", 1, 1, 1)
-			it\Picked = True
-			it\Dropped = -1
-			it\itemtemplate\found=True
-			it\state = 1000
-			Inventory[1] = it
-			HideEntity(it\collider)
-			EntityType (it\collider, HIT_ITEM)
-			EntityParent(it\collider, 0)
-			ItemAmount = ItemAmount + 1
-			; ~ Vest
-			it = CreateItem(GetLocalString("Item Names","vest"), "vest", 1, 1, 1)
-			it\Picked = True
-			it\Dropped = -1
-			it\itemtemplate\found=True
-			it\state = 100
-			Inventory[SLOT_TORSO] = it
-			HideEntity(it\collider)
-			EntityType (it\collider, HIT_ITEM)
-			EntityParent(it\collider, 0)
-			ItemAmount = ItemAmount + 1
-			; ~ Helmet
-			it = CreateItem(GetLocalString("Item Names","helmet"), "helmet", 1, 1, 1)
-			it\Picked = True
-			it\Dropped = -1
-			it\itemtemplate\found=True
-			it\state = 100
-			Inventory[SLOT_HEAD] = it
-			HideEntity(it\collider)
-			EntityType (it\collider, HIT_ITEM)
-			EntityParent(it\collider, 0)
-			ItemAmount = ItemAmount + 1
+			; ~ ! [ITEMS ARE CREATED INSIDE InitChapters()] !
 			
 			If (Not ChannelPlaying(e\SoundCHN[0])) Then
 				e\SoundCHN[0] = PlaySound_Strict(LoadTempSound("SFX\Room\Intro\Ryan\ArrivalSound.ogg"))

@@ -52,13 +52,13 @@ End Function
 Function DeleteTextureEntriesFromCache(deletetype%)
 	Local tic.TextureInCache,mat.Materials
 	
-	DebugLog "--------------------------------------------"
-	DebugLog "Cache Delete:"
+	;debuglog "--------------------------------------------"
+	;debuglog "Cache Delete:"
 	
 	For tic = Each TextureInCache
 		If tic\texdeletetype<=deletetype
 			If tic\tex<>0 Then FreeTexture tic\tex : tic\tex=0
-			DebugLog "Deleted texture "+tic\texname+" from cache."
+			;debuglog "Deleted texture "+tic\texname+" from cache."
 			Delete tic
 		EndIf
 	Next
@@ -67,7 +67,7 @@ Function DeleteTextureEntriesFromCache(deletetype%)
 		mat\Bump = 0
 	Next
 	
-	DebugLog "--------------------------------------------"
+	;debuglog "--------------------------------------------"
 	
 End Function
 
@@ -77,7 +77,7 @@ Function DeleteSingleTextureEntryFromCache(texture%)
 	For tic = Each TextureInCache
 		If tic\tex=texture
 			If tic\tex<>0 Then FreeTexture tic\tex : tic\tex=0
-			DebugLog "Deleted texture "+tic\texname+" from cache."
+			;debuglog "Deleted texture "+tic\texname+" from cache."
 			Delete tic
 		EndIf
 	Next
@@ -91,7 +91,7 @@ Function CreateTextureUsingCacheSystem(width%,height%,texflags%=1,frames%=1,dele
 	tic\texname = "CreateTexture"
 	tic\texdeletetype = deletetype
 	tic\tex = CreateTexture(width%,height%,texflags%+256);(256*(SaveTexturesInVRam<>0)),frames%)
-	DebugLog "CreateTexture using Cache system (handle): "+tic\tex
+	;debuglog "CreateTexture using Cache system (handle): "+tic\tex
 	Return tic\tex
 	
 End Function
@@ -120,13 +120,13 @@ Function isTexAlpha%(tex%,name$="") ;detect transparency in textures
 		EndIf
 	Next
 	
-	DebugLog "***************************************************"
-	DebugLog "Texture "+temp1s+" init with flags:"
-	DebugLog "Color: 1"
-	DebugLog "Alpha: "+temp
-	DebugLog "Masked: "+temp2
-	DebugLog "Spherical Reflection Map: "+temp3
-	DebugLog "***************************************************"
+	;debuglog "***************************************************"
+	;debuglog "Texture "+temp1s+" init with flags:"
+	;debuglog "Color: 1"
+	;debuglog "Alpha: "+temp
+	;debuglog "Masked: "+temp2
+	;debuglog "Spherical Reflection Map: "+temp3
+	;debuglog "***************************************************"
 	
 	Return 1+(2*(temp<>0))+(4*(temp2<>0)+(64*(temp3<>0)))
 End Function
@@ -160,7 +160,7 @@ Function CheckForTexture(tex%,texflags%=1)
 			TextureBlend texture,5
 		Else
 			TextureBlend texture,1
-			DebugLog TextureName(texture)+" has Alpha flag!"
+			;debuglog TextureName(texture)+" has Alpha flag!"
 		EndIf
 	EndIf
 	Return texture

@@ -123,7 +123,11 @@ Function DrawLoading(percent%, shortloading=False, customloadingscreen$="", Asse
 	EndIf
 	
 	If gopt\GameMode <> GAMEMODE_MULTIPLAYER Then
-		customloadingscreen = gopt\CurrZoneString
+		If IsStartingFromMenu Then
+			customloadingscreen = GetLocalString("Loading", "loading_into_game")
+		Else
+			customloadingscreen = gopt\CurrZoneString
+		EndIf
 	EndIf
 	
 	If percent = 0 Then
@@ -254,7 +258,11 @@ Function DrawLoading(percent%, shortloading=False, customloadingscreen$="", Asse
 				
 				SetFont fo\Font[Font_Default]
 				Text opt\GraphicWidth/2, opt\GraphicHeight-(height2)-(20*(opt\GraphicHeight/720.0))-20*MenuScale,GetLocalString("Menu","menu_seed")+" "+RandomSeed,True
-				Text opt\GraphicWidth/2, opt\GraphicHeight-(height2)-(20*(opt\GraphicHeight/720.0))+20*MenuScale,GetLocalString("Menu","menu_zone")+" "+gopt\CurrZoneString,True
+				If IsStartingFromMenu Then
+					Text opt\GraphicWidth/2, opt\GraphicHeight-(height2)-(20*(opt\GraphicHeight/720.0))+20*MenuScale,GetLocalString("Menu","menu_init_zone"),True
+				Else
+					Text opt\GraphicWidth/2, opt\GraphicHeight-(height2)-(20*(opt\GraphicHeight/720.0))+20*MenuScale,GetLocalString("Menu","menu_zone")+" "+gopt\CurrZoneString,True
+				EndIf
 			Else
 				Text opt\GraphicWidth/2, opt\GraphicHeight-(height2)-(20*(opt\GraphicHeight/720.0))-20*MenuScale,GetLocalString("Menu","mp_map")+" "+mp_I\MapInList\Name,True
 			EndIf

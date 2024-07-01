@@ -443,7 +443,7 @@ Function RemoveItem(i.Items)
 	
 	For n% = 0 To MaxItemAmount - 1
 		If Inventory[n] = i
-			DebugLog "Removed "+i\itemtemplate\name+" from slot "+n
+			;debuglog "Removed "+i\itemtemplate\name+" from slot "+n
 			Inventory[n] = Null
 			ItemAmount = ItemAmount-1
 			Exit
@@ -570,7 +570,7 @@ Function UpdateItems()
 					Next
 				EndIf
 				
-				If EntityY(i\collider) < - 35.0 Then DebugLog "remove: " + i\itemtemplate\name:RemoveItem(i):deletedItem=True
+				If EntityY(i\collider) < - 35.0 Then RemoveItem(i) : deletedItem = True ; : DebugLog "remove: " + i\itemtemplate\name
 			Else
 				HideEntity i\collider
 			EndIf
@@ -976,4 +976,4 @@ Function DropItem(item.Items)
 End Function
 
 ;~IDEal Editor Parameters:
-;~C#Blitz3D_TSS
+;~C#Blitz3D

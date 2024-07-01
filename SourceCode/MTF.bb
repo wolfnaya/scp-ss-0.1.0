@@ -1036,7 +1036,7 @@ Function StartNewElevator(door.Doors, Newfloor%)
 			ne\tofloor = Newfloor
 			If Abs(EntityX(Collider)-EntityX(ne\obj,True))<=280.0*RoomScale+(0.015*FPSfactor)
 				If Abs(EntityZ(Collider)-EntityZ(ne\obj,True))<=280.0*RoomScale+(0.015*FPSfactor)
-					DebugLog "In Elevator"
+					;debuglog "In Elevator"
 					PlayerInNewElevator = True
 					PlayerNewElevator = ne\ID
 					playerinside = True
@@ -1312,6 +1312,7 @@ Function UpdateNewElevators()
 			ElseIf ne\state >= 100.0 Then
 				PlaySound2(ElevatorBeepSFX, Camera, ne\door\frameobj, 6.0)
 				UseDoor(ne\door)
+				If Left(PlayerRoom\RoomTemplate\Name, 10) = "checkpoint" Lor Left(PlayerRoom\RoomTemplate\Name, 4) = "core" Then SaveGame(SavePath + CurrSave\Name + "\", True)
 				PlayerInNewElevator = False
 				ne\state = 0.0
 			EndIf
@@ -1591,7 +1592,7 @@ Function ApplyAnimation(n.NPCs,sequence%,speed#,animmode%=1)
 		n\CurrAnimSeq = sequence
 	EndIf
 	n\Frame = AnimTime(n\obj)
-	DebugLog n\Frame
+	;debuglog n\Frame
 	
 End Function
 
@@ -1853,7 +1854,7 @@ End Function
 ;	For n.NPCs = Each NPCs
 ;		If n <> Curr173 And n <> Curr106 And n <> Curr096
 ;			If n\NPCtype <> NPCtype049 And n\NPCtype <> NPCtypeMTF
-;				DebugLog("Saving NPC " +n\NVName+ " (ID "+n\ID+")")
+;				;debuglog("Saving NPC " +n\NVName+ " (ID "+n\ID+")")
 ;				
 ;				WriteByte f, n\NPCtype
 ;				WriteFloat f, EntityX(n\Collider,True)
@@ -2071,7 +2072,7 @@ End Function
 ;				If MapTemp(x,y)>0
 ;					SZL_RoomAmount = SZL_RoomAmount + 1
 ;					SZL_CurrRoom(x,y)=SZL_RoomAmount
-;					DebugLog SZL_CurrRoom(x,y)
+;					;debuglog SZL_CurrRoom(x,y)
 ;				EndIf
 ;			Next
 ;		Next
@@ -2154,7 +2155,7 @@ End Function
 ;						If (SZL_CurrLoad Mod 2)=0
 ;							QuickLoadPercent = Min(QuickLoadPercent+1,91)
 ;						EndIf
-;						DebugLog SZL_CurrLoad
+;						;debuglog SZL_CurrLoad
 ;						Exit
 ;					EndIf
 ;				ElseIf MapTemp(x, y) > 0
@@ -2245,7 +2246,7 @@ End Function
 ;						If (SZL_CurrLoad Mod 2)=0
 ;							QuickLoadPercent = Min(QuickLoadPercent+1,91)
 ;						EndIf
-;						DebugLog SZL_CurrLoad
+;						;debuglog SZL_CurrLoad
 ;						Exit
 ;					EndIf
 ;				EndIf
@@ -2275,7 +2276,7 @@ End Function
 ;;									FreeEntity d\obj
 ;;									FreeEntity d\obj2
 ;;									Delete d
-;;									DebugLog "DELETED DOORS"
+;;									;debuglog "DELETED DOORS"
 ;;								EndIf
 ;							Next
 ;							
@@ -2331,11 +2332,11 @@ End Function
 ;					EndIf
 ;				Next
 ;			Next
-;			DebugLog "Status 1"
+;			;debuglog "Status 1"
 ;			QuickLoadPercent = 92
 ;			SZL_CurrLoad=SZL_CurrLoad+1
 ;		ElseIf SZL_CurrLoad=SZL_RoomAmount+4
-;			DebugLog "Status 2"
+;			;debuglog "Status 2"
 ;			QuickLoadPercent = 93
 ;			SZL_CurrLoad=SZL_CurrLoad+1
 ;		ElseIf SZL_CurrLoad=SZL_RoomAmount+5
@@ -2367,7 +2368,7 @@ End Function
 ;					If (r\Adjacent[0]<>Null) And (r\Adjacent[1]<>Null) And (r\Adjacent[2]<>Null) And (r\Adjacent[3]<>Null) Then Exit
 ;				Next
 ;			Next
-;			DebugLog "Status 3"
+;			;debuglog "Status 3"
 ;			QuickLoadPercent = 94
 ;			SZL_CurrLoad=SZL_CurrLoad+1
 ;		ElseIf SZL_CurrLoad=SZL_RoomAmount+6
@@ -2414,19 +2415,19 @@ End Function
 ;			For tw.TempWayPoints = Each TempWayPoints
 ;				Delete tw
 ;			Next
-;			DebugLog "Status 4"
+;			;debuglog "Status 4"
 ;			QuickLoadPercent = 96
 ;			SZL_CurrLoad=SZL_CurrLoad+1
 ;		ElseIf SZL_CurrLoad=SZL_RoomAmount+7
 ;			InitEvents()
-;			DebugLog "Status 5"
+;			;debuglog "Status 5"
 ;			QuickLoadPercent = 97
 ;			SZL_CurrLoad=SZL_CurrLoad+1
 ;		ElseIf SZL_CurrLoad=SZL_RoomAmount+8
 ;			HideEntity Collider
 ;			InitWayPoints(0,False)
 ;			ShowEntity Collider
-;			DebugLog "Status 6"
+;			;debuglog "Status 6"
 ;			QuickLoadPercent = 98
 ;			SZL_CurrLoad=SZL_CurrLoad+1
 ;		ElseIf SZL_CurrLoad>SZL_RoomAmount+7
@@ -2446,7 +2447,7 @@ End Function
 ;				PlayerRoom\RoomDoors[1]\open = False
 ;			EndIf
 ;			;FreeTextureCache
-;			DebugLog "Status 7"
+;			;debuglog "Status 7"
 ;			QuickLoadPercent = 99
 ;			SZL_CurrLoad = 9999
 ;		EndIf

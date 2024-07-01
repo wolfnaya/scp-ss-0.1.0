@@ -4,49 +4,49 @@
 Include "SourceCode\Math.bb"
 
 Type FixedTimesteps
-	Field tickDuration#
-	Field accumulator#
-	Field prevTime%
-	Field currTime%
-	Field fps%
-	Field tempfps%
-	Field fpsgoal%
+	Field TickDuration#
+	Field Accumulator#
+	Field PrevTime%
+	Field CurrTime%
+	Field FPS%
+	Field TempFPS%
+	Field FPSGoal%
 	Field DeltaTime%
 End Type
 
-Function SetTickrate(tickrate%)
-	ft\tickDuration = 70.0/Float(tickrate)
+Function SetTickrate(Tickrate%)
+	ft\TickDuration = 70.0/Float(Tickrate)
 End Function
 
-Function AddToTimingAccumulator(milliseconds%)
-	If (milliseconds<1 Lor milliseconds>500) Then
+Function AddToTimingAccumulator(Milliseconds%)
+	If (Milliseconds < 1 Lor Milliseconds > 500) Then
 		Return
 	EndIf
-	ft\accumulator = ft\accumulator+Max(0,Float(milliseconds)*70.0/1000.0)
+	ft\Accumulator = ft\Accumulator+Max(0,Float(Milliseconds)*70.0/1000.0)
 End Function
 
 Function ResetTimingAccumulator()
-	ft\accumulator = 0.0
+	ft\Accumulator = 0.0
 End Function
 
-Function SetCurrTime(time%)
-	ft\currTime = time%
+Function SetCurrTime(Time%)
+	ft\CurrTime = Time%
 End Function
 
-Function SetPrevTime(time%)
-	ft\prevTime = time%
+Function SetPrevTime(Time%)
+	ft\PrevTime = Time%
 End Function
 
 Function GetCurrTime%()
-	Return ft\currTime
+	Return ft\CurrTime
 End Function
 
 Function GetPrevTime%()
-	Return ft\prevTime
+	Return ft\PrevTime
 End Function
 
 Function GetTickDuration#()
-	Return ft\tickDuration
+	Return ft\TickDuration
 End Function
 
 SetTickrate(60)
@@ -62,9 +62,9 @@ End Type
 Global I_Loc.Loc = New Loc
 
 Type LocalString
-	Field section$
-	Field parameter$
-	Field value$
+	Field Section$
+	Field Parameter$
+	Field Value$
 End Type
 
 Global Language$ = "English"
@@ -799,9 +799,9 @@ Type EventConstants
 	Field UnlockedAirlock%
 	
 	Field UnlockedWolfnaya%
-	Field ChanceToSpawnWolfNote%
+	Field ChanceToSpawnWolfNote
 	
-	Field FusesAmount#
+	Field FusesAmount
 	
 	Field UnlockedEMRP%
 	Field UnlockedHDS%
@@ -2778,7 +2778,7 @@ Function MovePlayer()
 	Update409()
 	
 	If HealTimer > 0 Then
-		DebugLog HealTimer
+		;debuglog HealTimer
 		HealTimer = HealTimer - (FPSfactor / 70)
 		HealSPPlayer(0.01 * FPSfactor)
 	EndIf
@@ -3528,248 +3528,567 @@ End Function
 
 Function InitChapters()
 	CatchErrors("InitChapters")
-	Local it.Items,g.Guns
+	Local it.Items, g.Guns, i%, randm% = Rand(0, 12)
 	
 	; ~ Yeah, I know it's messy, but I didn't have time to make it better. - Wolfnaya
-	
-	If gopt\GameMode = GAMEMODE_DEFAULT Then
-		
-		Select cpt\Current
-			Case 2
-				;[Block]
-				ecst\WasInLCZCore = True
-				ecst\WasInRoom2_SL = True
-				ecst\UnlockedAirlock = True
-				;[End Block]
-				
-				;[Block]
-				If (Not TaskExists(TASK_FINDWAY_EZDOOR)) Then
-					BeginTask(TASK_FINDWAY_EZDOOR)
-				EndIf
-				If (Not TaskExists(TASK_GET_TOPSIDE)) Then
-					BeginTask(TASK_GET_TOPSIDE)
-				EndIf
-				;[End Block]
-			Case 3
-				;[Block]
-				ecst\WasInLCZCore = True
-				ecst\WasInRoom2_SL = True
-				ecst\UnlockedAirlock = True
-				;[End Block]
-				
-				;[Block]
-				If (Not TaskExists(TASK_GET_TOPSIDE)) Then
-					BeginTask(TASK_GET_TOPSIDE)
-				EndIf
-				If (Not TaskExists(TASK_TURN_ON_REACTOR)) Then
-					BeginTask(TASK_TURN_ON_REACTOR)
-				EndIf
-				If TaskExists(TASK_FIND_REACTOR) Then
-					EndTask(TASK_FIND_REACTOR)
-				EndIf
-				;[End Block]
-			Case 4
-				;[Block]
-				ecst\WasInLCZCore = True
-				ecst\WasInRoom2_SL = True
-				ecst\UnlockedAirlock = True
-				
-				ecst\EzDoorOpened = True
-				ecst\WasInHCZ = True
-				ecst\NTFArrived = True
-				ecst\UnlockedHDS = True
-				ecst\WasInReactor = True
-				;[End Block]
-				
-				;[Block]
-				If (Not TaskExists(TASK_LAUNCH_ROCKET)) Then
-					BeginTask(TASK_LAUNCH_ROCKET)
-				EndIf
-				If (Not TaskExists(TASK_GET_TOPSIDE)) Then
-					BeginTask(TASK_GET_TOPSIDE)
-				EndIf
-				If TaskExists(TASK_COME_BACK_TO_GUARD) Then
-					EndTask(TASK_COME_BACK_TO_GUARD)
-				EndIf
-				;[End Block]
-			Case 5
-				;[Block]
-				ecst\WasInLCZCore = True
-				ecst\WasInRoom2_SL = True
-				ecst\UnlockedAirlock = True
-				
-				ecst\EzDoorOpened = True
-				ecst\WasInHCZ = True
-				ecst\NTFArrived = True
-				ecst\UnlockedHDS = True
-				ecst\WasInReactor = True
-				
-				ecst\WasInO5 = True
-				;[End Block]
-				
-				;[Block]
-				If (Not TaskExists(TASK_FIND_AREA_076)) Then
-					BeginTask(TASK_FIND_AREA_076)
-				EndIf
-				If (Not TaskExists(TASK_LAUNCH_ROCKET)) Then
-					BeginTask(TASK_LAUNCH_ROCKET)
-				EndIf
-				If (Not TaskExists(TASK_GET_TOPSIDE)) Then
-					BeginTask(TASK_GET_TOPSIDE)
-				EndIf
-				;[End Block]
-			Case 6
-				;[Block]
-				ecst\WasInLCZCore = True
-				ecst\WasInRoom2_SL = True
-				ecst\UnlockedAirlock = True
-				
-				ecst\EzDoorOpened = True
-				ecst\WasInHCZ = True
-				ecst\NTFArrived = True
-				ecst\UnlockedHDS = True
-				ecst\WasInReactor = True
-				
-				ecst\WasInO5 = True
-				;[End Block]
-				
-				;[Block]
-				If (Not TaskExists(TASK_FIND_KEY_IN_076)) Then
-					BeginTask(TASK_FIND_KEY_IN_076)
-				EndIf
-				If (Not TaskExists(TASK_LAUNCH_ROCKET)) Then
-					BeginTask(TASK_LAUNCH_ROCKET)
-				EndIf
-				If (Not TaskExists(TASK_GET_TOPSIDE)) Then
-					BeginTask(TASK_GET_TOPSIDE)
-				EndIf
-				;[End Block]
-			Case 7
-				;[Block]
-				ecst\WasInLCZCore = True
-				ecst\WasInRoom2_SL = True
-				ecst\UnlockedAirlock = True
-				
-				ecst\EzDoorOpened = True
-				ecst\WasInHCZ = True
-				ecst\NTFArrived = True
-				ecst\UnlockedHDS = True
-				ecst\WasInReactor = True
-				
-				ecst\WasInO5 = True
-				
-				ecst\WasIn076 = True
-				ecst\NewCavesEvent = True
-				;[End Block]
-				
-				;[Block]
-				If (Not TaskExists(TASK_FIND_CAVES)) Then
-					BeginTask(TASK_FIND_CAVES)
-				EndIf
-				If (Not TaskExists(TASK_LAUNCH_ROCKET)) Then
-					BeginTask(TASK_LAUNCH_ROCKET)
-				EndIf
-				If (Not TaskExists(TASK_GET_TOPSIDE)) Then
-					BeginTask(TASK_GET_TOPSIDE)
-				EndIf
-				;[End Block]
-			Case 8
-				;[Block]
-				ecst\WasInLCZCore = True
-				ecst\WasInRoom2_SL = True
-				ecst\UnlockedAirlock = True
-				
-				ecst\EzDoorOpened = True
-				ecst\WasInHCZ = True
-				ecst\NTFArrived = True
-				ecst\UnlockedHDS = True
-				ecst\WasInReactor = True
-				
-				ecst\WasInO5 = True
-				
-				ecst\WasIn076 = True
-				ecst\NewCavesEvent = True
-				
-				IsStartingFromMenu = False
-				;[End Block]
-				
-				;[Block]
-				If (Not TaskExists(TASK_GO_TO_BCZ)) Then
-					BeginTask(TASK_GO_TO_BCZ)
-				EndIf
-				If (Not TaskExists(TASK_LAUNCH_ROCKET)) Then
-					BeginTask(TASK_LAUNCH_ROCKET)
-				EndIf
-				If (Not TaskExists(TASK_GET_TOPSIDE)) Then
-					BeginTask(TASK_GET_TOPSIDE)
-				EndIf
-				;[End Block]
-			Case 9
-				;[Block]
-				ecst\WasInLCZCore = True
-				ecst\WasInRoom2_SL = True
-				ecst\UnlockedAirlock = True
-				
-				ecst\EzDoorOpened = True
-				ecst\WasInHCZ = True
-				ecst\NTFArrived = True
-				ecst\UnlockedHDS = True
-				ecst\WasInReactor = True
-				
-				ecst\WasInO5 = True
-				
-				ecst\WasIn076 = True
-				ecst\NewCavesEvent = True
-				;[End Block]
-				
-				;[Block]
-				If TaskExists(TASK_GET_TOPSIDE) Then
-					EndTask(TASK_GET_TOPSIDE)
-				EndIf
-				If gopt\CurrZone <> GATE_C_TOPSIDE Then
-					If TaskExists(TASK_LAUNCH_ROCKET) Then
-						CancelTask(TASK_LAUNCH_ROCKET)
+	Select gopt\GameMode
+		Case GAMEMODE_DEFAULT
+			
+			Select cpt\Current
+				Case 0
+					;[Block]
+					If gopt\CurrZone = LCZ Then
+						AddGearToPlayer(SLOT_HOLSTER, "M9 Beretta", "beretta", 15, 30)
+						AddGearToPlayer(SLOT_HEAD, GetLocalString("Item Names", "helmet"), "helmet", 100)
+						AddGearToPlayer(SLOT_SCABBARD, GetLocalString("Item Names", "knife"), "knife")
+						AddGearToPlayer(0, GetLocalString("Item Names", "key_2"), "key2")
+						AddGearToPlayer(1, GetLocalString("Item Names", "radio"), "radio", 1000)
 					EndIf
-				Else
+					;[End Block]
+				Case 2
+					;[Block]
+					ecst\WasInLCZCore = True
+					ecst\WasInRoom2_SL = True
+					ecst\UnlockedAirlock = True
+					;[End Block]
+					
+					;[Block]
+					If (Not TaskExists(TASK_FINDWAY_EZDOOR)) Then
+						BeginTask(TASK_FINDWAY_EZDOOR)
+					EndIf
+					If (Not TaskExists(TASK_GET_TOPSIDE)) Then
+						BeginTask(TASK_GET_TOPSIDE)
+					EndIf
+					;[End Block]
+					
+					;[Block]
+					AddGearToPlayer(SLOT_HOLSTER, "FN Five-Seven", "fiveseven", 20, 60)
+					AddGearToPlayer(SLOT_SCABBARD, GetLocalString("Item Names", "crowbar"), "crowbar")
+					AddGearToPlayer(0, GetLocalString("Item Names", "key_3"), "key3")
+					;[End Block]
+				Case 3
+					;[Block]
+					ecst\WasInLCZCore = True
+					ecst\WasInRoom2_SL = True
+					ecst\UnlockedAirlock = True
+					;[End Block]
+					
+					;[Block]
+					If (Not TaskExists(TASK_GET_TOPSIDE)) Then
+						BeginTask(TASK_GET_TOPSIDE)
+					EndIf
+					If (Not TaskExists(TASK_TURN_ON_REACTOR)) Then
+						BeginTask(TASK_TURN_ON_REACTOR)
+					EndIf
+					If TaskExists(TASK_FIND_REACTOR) Then
+						EndTask(TASK_FIND_REACTOR)
+					EndIf
+					;[End Block]
+					
+					;[Block]
+					AddGearToPlayer(SLOT_HOLSTER, "FN Five-Seven", "fiveseven", 20, 60)
+					AddGearToPlayer(SLOT_PRIMARY, "FN P90", "p90", 50, 150)
+					AddGearToPlayer(SLOT_SCABBARD, GetLocalString("Item Names", "crowbar"), "crowbar")
+					AddGearToPlayer(0, GetLocalString("Item Names", "key_4"), "key4")
+					;[End Block]
+				Case 4
+					;[Block]
+					ecst\WasInLCZCore = True
+					ecst\WasInRoom2_SL = True
+					ecst\UnlockedAirlock = True
+					
+					ecst\EzDoorOpened = True
+					ecst\WasInHCZ = True
+					ecst\NTFArrived = True
+					ecst\UnlockedHDS = True
+					ecst\WasInReactor = True
+					;[End Block]
+					
+					;[Block]
 					If (Not TaskExists(TASK_LAUNCH_ROCKET)) Then
 						BeginTask(TASK_LAUNCH_ROCKET)
 					EndIf
-				EndIf
-				;[End Block]
-		End Select
-		
-		; ~ [GEAR]
-		
-		; TODO GEAR!!!!
-		
-	ElseIf gopt\GameMode = GAMEMODE_NTF
-		
-		Select cpt\NTFCurrent
-			Case 2
-				;[Block]
-				psp\Checkpoint106Passed = True
-				WasInPD = True
-				;[End Block]
-				
-				;[Block]
-				If (Not TaskExists(TASK_NTF_GO_TO_ZONE)) Then
-					BeginTask(TASK_NTF_GO_TO_ZONE)
-				EndIf
-				;[End Block]
-		End Select
-		
-		; ~ [GEAR]
-		
-		; TODO GEAR!!!!
-		
-	EndIf
+					If (Not TaskExists(TASK_GET_TOPSIDE)) Then
+						BeginTask(TASK_GET_TOPSIDE)
+					EndIf
+					If TaskExists(TASK_COME_BACK_TO_GUARD) Then
+						EndTask(TASK_COME_BACK_TO_GUARD)
+					EndIf
+					;[End Block]
+					
+					;[Block]
+					AddGearToPlayer(SLOT_HOLSTER, "FN Five-Seven", "fiveseven", 20, 60)
+					AddGearToPlayer(SLOT_PRIMARY, "FN P90", "p90", 50, 150)
+					AddGearToPlayer(SLOT_SECONDARY, "Franchi SPAS-12", "spas12", 6, 42)
+					AddGearToPlayer(SLOT_SCABBARD, GetLocalString("Item Names", "crowbar"), "crowbar")
+					AddGearToPlayer(0, GetLocalString("Item Names", "key_4"), "key4")
+					;[End Block]
+				Case 5
+					;[Block]
+					ecst\WasInLCZCore = True
+					ecst\WasInRoom2_SL = True
+					ecst\UnlockedAirlock = True
+					
+					ecst\EzDoorOpened = True
+					ecst\WasInHCZ = True
+					ecst\NTFArrived = True
+					ecst\UnlockedHDS = True
+					ecst\WasInReactor = True
+					
+					ecst\WasInO5 = True
+					;[End Block]
+					
+					;[Block]
+					If (Not TaskExists(TASK_FIND_AREA_076)) Then
+						BeginTask(TASK_FIND_AREA_076)
+					EndIf
+					If (Not TaskExists(TASK_LAUNCH_ROCKET)) Then
+						BeginTask(TASK_LAUNCH_ROCKET)
+					EndIf
+					If (Not TaskExists(TASK_GET_TOPSIDE)) Then
+						BeginTask(TASK_GET_TOPSIDE)
+					EndIf
+					;[End Block]
+					
+					;[Block]
+					AddGearToPlayer(SLOT_HOLSTER, "FN Five-Seven", "fiveseven", 20, 60)
+					AddGearToPlayer(SLOT_PRIMARY, "FN P90", "p90", 50, 150)
+					AddGearToPlayer(SLOT_SECONDARY, "Franchi SPAS-12", "spas12", 6, 42)
+					AddGearToPlayer(SLOT_SCABBARD, GetLocalString("Item Names", "crowbar"), "crowbar")
+					AddGearToPlayer(0, GetLocalString("Item Names", "key_5"), "key5")
+					;[End Block]
+				Case 6
+					;[Block]
+					ecst\WasInLCZCore = True
+					ecst\WasInRoom2_SL = True
+					ecst\UnlockedAirlock = True
+					
+					ecst\EzDoorOpened = True
+					ecst\WasInHCZ = True
+					ecst\NTFArrived = True
+					ecst\UnlockedHDS = True
+					ecst\WasInReactor = True
+					
+					ecst\WasInO5 = True
+					;[End Block]
+					
+					;[Block]
+					If (Not TaskExists(TASK_FIND_KEY_IN_076)) Then
+						BeginTask(TASK_FIND_KEY_IN_076)
+					EndIf
+					If (Not TaskExists(TASK_LAUNCH_ROCKET)) Then
+						BeginTask(TASK_LAUNCH_ROCKET)
+					EndIf
+					If (Not TaskExists(TASK_GET_TOPSIDE)) Then
+						BeginTask(TASK_GET_TOPSIDE)
+					EndIf
+					;[End Block]
+					
+					;[Block]
+					AddGearToPlayer(SLOT_HOLSTER, "FN Five-Seven", "fiveseven", 20, 60)
+					AddGearToPlayer(SLOT_PRIMARY, "FN P90", "p90", 50, 150)
+					AddGearToPlayer(SLOT_SECONDARY, "Franchi SPAS-12", "spas12", 6, 42)
+					AddGearToPlayer(SLOT_SCABBARD, GetLocalString("Item Names", "crowbar"), "crowbar")
+					AddGearToPlayer(0, GetLocalString("Item Names", "key_5"), "key5")
+					;[End Block]
+				Case 7
+					;[Block]
+					ecst\WasInLCZCore = True
+					ecst\WasInRoom2_SL = True
+					ecst\UnlockedAirlock = True
+					
+					ecst\EzDoorOpened = True
+					ecst\WasInHCZ = True
+					ecst\NTFArrived = True
+					ecst\UnlockedHDS = True
+					ecst\WasInReactor = True
+					
+					ecst\WasInO5 = True
+					
+					ecst\WasIn076 = True
+					ecst\NewCavesEvent = True
+					;[End Block]
+					
+					;[Block]
+					If (Not TaskExists(TASK_FIND_CAVES)) Then
+						BeginTask(TASK_FIND_CAVES)
+					EndIf
+					If (Not TaskExists(TASK_LAUNCH_ROCKET)) Then
+						BeginTask(TASK_LAUNCH_ROCKET)
+					EndIf
+					If (Not TaskExists(TASK_GET_TOPSIDE)) Then
+						BeginTask(TASK_GET_TOPSIDE)
+					EndIf
+					;[End Block]
+					
+					;[Block]
+					AddGearToPlayer(SLOT_HOLSTER, "FN Five-Seven", "fiveseven", 20, 60)
+					AddGearToPlayer(SLOT_PRIMARY, "Colt M4A1", "m4a1", 30, 90)
+					AddGearToPlayer(SLOT_SECONDARY, "Franchi SPAS-12", "spas12", 6, 42)
+					AddGearToPlayer(SLOT_SCABBARD, GetLocalString("Item Names", "crowbar"), "crowbar")
+					AddGearToPlayer(0, GetLocalString("Item Names", "key_5"), "key5")
+					AddGearToPlayer(1, "FN P90", "p90", 50, 150)
+					;[End Block]
+				Case 8
+					;[Block]
+					ecst\WasInLCZCore = True
+					ecst\WasInRoom2_SL = True
+					ecst\UnlockedAirlock = True
+					
+					ecst\EzDoorOpened = True
+					ecst\WasInHCZ = True
+					ecst\NTFArrived = True
+					ecst\UnlockedHDS = True
+					ecst\WasInReactor = True
+					
+					ecst\WasInO5 = True
+					
+					ecst\WasIn076 = True
+					ecst\NewCavesEvent = True
+					
+					IsStartingFromMenu = False
+					;[End Block]
+					
+					;[Block]
+					If (Not TaskExists(TASK_GO_TO_BCZ)) Then
+						BeginTask(TASK_GO_TO_BCZ)
+					EndIf
+					If (Not TaskExists(TASK_LAUNCH_ROCKET)) Then
+						BeginTask(TASK_LAUNCH_ROCKET)
+					EndIf
+					If (Not TaskExists(TASK_GET_TOPSIDE)) Then
+						BeginTask(TASK_GET_TOPSIDE)
+					EndIf
+					;[End Block]
+					
+					;[Block]
+					AddGearToPlayer(SLOT_HOLSTER, "FN Five-Seven", "fiveseven", 20, 60)
+					AddGearToPlayer(SLOT_PRIMARY, "Colt M4A1", "m4a1", 30, 90)
+					AddGearToPlayer(SLOT_SECONDARY, "Franchi SPAS-12", "spas12", 6, 42)
+					AddGearToPlayer(SLOT_SCABBARD, GetLocalString("Item Names", "crowbar"), "crowbar")
+					AddGearToPlayer(0, GetLocalString("Item Names", "key_5"), "key5")
+					AddGearToPlayer(1, "FN P90", "p90", 50, 150)
+					;[End Block]
+				Case 9
+					;[Block]
+					ecst\WasInLCZCore = True
+					ecst\WasInRoom2_SL = True
+					ecst\UnlockedAirlock = True
+					
+					ecst\EzDoorOpened = True
+					ecst\WasInHCZ = True
+					ecst\NTFArrived = True
+					ecst\UnlockedHDS = True
+					ecst\WasInReactor = True
+					
+					ecst\WasInO5 = True
+					
+					ecst\WasIn076 = True
+					ecst\NewCavesEvent = True
+					;[End Block]
+					
+					;[Block]
+					If TaskExists(TASK_GET_TOPSIDE) Then
+						EndTask(TASK_GET_TOPSIDE)
+					EndIf
+					If gopt\CurrZone <> GATE_C_TOPSIDE Then
+						If TaskExists(TASK_LAUNCH_ROCKET) Then
+							CancelTask(TASK_LAUNCH_ROCKET)
+						EndIf
+					Else
+						If (Not TaskExists(TASK_LAUNCH_ROCKET)) Then
+							BeginTask(TASK_LAUNCH_ROCKET)
+						EndIf
+					EndIf
+					;[End Block]
+					
+					;[Block]
+					AddGearToPlayer(SLOT_HOLSTER, "FN Five-Seven", "fiveseven", 20, 60)
+					AddGearToPlayer(SLOT_PRIMARY, "Colt M4A1", "m4a1", 30, 90)
+					AddGearToPlayer(SLOT_SECONDARY, "Franchi SPAS-12", "spas12", 6, 42)
+					AddGearToPlayer(SLOT_SCABBARD, GetLocalString("Item Names", "crowbar"), "crowbar")
+					AddGearToPlayer(0, GetLocalString("Item Names", "key_5"), "key5")
+					AddGearToPlayer(1, "FN P90", "p90", 50, 150)
+					;[End Block]
+			End Select
+			
+		Case GAMEMODE_NTF
+			
+			Select cpt\NTFCurrent
+				Case 0
+					;[Block]
+					For g = Each Guns
+						For i = 0 To MaxAttachments - 1
+							g\HasPickedAttachments[i] = True
+						Next
+						Select g\ID
+							Case GUN_M4A1
+								g\CurrAmmo = 30
+								g\CurrReloadAmmo = 210
+							Case GUN_SPAS12
+								g\CurrAmmo = 6
+								g\CurrReloadAmmo = 42
+							Case GUN_M870
+								g\CurrAmmo = 8
+								g\CurrReloadAmmo = 64
+							Case GUN_P90
+								g\CurrAmmo = 50
+								g\CurrReloadAmmo = 200
+							Case GUN_MP5
+								g\CurrAmmo = 30
+								g\CurrReloadAmmo = 210
+							Case GUN_MP7
+								g\CurrAmmo = 40
+								g\CurrReloadAmmo = 280
+							Case GUN_FIVESEVEN
+								g\CurrAmmo = 20
+								g\CurrReloadAmmo = 60
+								g\Found = True
+							Case GUN_USP
+								g\CurrAmmo = 12
+								g\CurrReloadAmmo = 36
+								g\Found = True
+							Case GUN_BERETTA
+								g\CurrAmmo = 15
+								g\CurrReloadAmmo = 45
+								g\Found = True
+							Case GUN_KNIFE
+								g\Found = True
+						End Select
+						
+						Select randm
+							Case 0, 1, 2
+								AddGearToPlayer(SLOT_PRIMARY, "FN P90", "p90")
+								AddGearToPlayer(SLOT_HOLSTER, "FN Five-Seven", "fiveseven")
+								
+								g_I\Weapon_InSlot[QUICKSLOT_PRIMARY] = "p90"
+								g_I\Weapon_InSlot[QUICKSLOT_HOLSTER] = "fiveseven"
+								
+								g_I\HoldingGun = GUN_P90
+							Case 3, 4, 5
+								AddGearToPlayer(SLOT_PRIMARY, "H&K MP5", "mp5")
+								AddGearToPlayer(SLOT_HOLSTER, "M9 Beretta", "beretta")
+								
+								g_I\Weapon_InSlot[QUICKSLOT_PRIMARY] = "mp5"
+								g_I\Weapon_InSlot[QUICKSLOT_HOLSTER] = "beretta"
+								
+								g_I\HoldingGun = GUN_MP5
+							Case 6
+								AddGearToPlayer(SLOT_PRIMARY, "H&K MP7", "mp7")
+								AddGearToPlayer(SLOT_HOLSTER, "H&K USP", "usp")
+								
+								g_I\Weapon_InSlot[QUICKSLOT_PRIMARY] = "mp7"
+								g_I\Weapon_InSlot[QUICKSLOT_HOLSTER] = "usp"
+								
+								g_I\HoldingGun = GUN_MP7
+							Case 7, 8
+								AddGearToPlayer(SLOT_PRIMARY, "Franchi SPAS-12", "spas12")
+								AddGearToPlayer(SLOT_HOLSTER, "H&K USP", "usp")
+								AddGearToPlayer(3, GetLocalString("Item Names", "grenade_m67"), "m67")
+								
+								g_I\Weapon_InSlot[QUICKSLOT_PRIMARY] = "spas12"
+								g_I\Weapon_InSlot[QUICKSLOT_HOLSTER] = "usp"
+								
+								g_I\HoldingGun = GUN_SPAS12
+							Case 9
+								AddGearToPlayer(SLOT_PRIMARY, "Remington M870", "m870")
+								AddGearToPlayer(SLOT_HOLSTER, "H&K USP", "usp")
+								AddGearToPlayer(3, GetLocalString("Item Names", "grenade_m67"), "m67")
+								
+								g_I\Weapon_InSlot[QUICKSLOT_PRIMARY] = "m870"
+								g_I\Weapon_InSlot[QUICKSLOT_HOLSTER] = "usp"
+								
+								g_I\HoldingGun = GUN_M870
+							Case 10, 11, 12
+								AddGearToPlayer(SLOT_PRIMARY, "Colt M4A1", "m4a1")
+								AddGearToPlayer(SLOT_HOLSTER, "FN Five-Seven", "fiveseven")
+								
+								g_I\Weapon_InSlot[QUICKSLOT_PRIMARY] = "m4a1"
+								g_I\Weapon_InSlot[QUICKSLOT_HOLSTER] = "fiveseven"
+								
+								g_I\HoldingGun = GUN_M4A1
+						End Select
+					Next
+					
+					AddGearToPlayer(SLOT_SCABBARD, GetLocalString("Item Names", "knife"), "knife")
+					AddGearToPlayer(SLOT_HEAD, GetLocalString("Item Names", "ntf_helmet"), "ntf_helmet", 150)
+					AddGearToPlayer(SLOT_TORSO, GetLocalString("Item Names", "vest"), "vest", 150)
+					AddGearToPlayer(SLOT_BACKPACK, GetLocalString("Item Names", "backpack"), "backpack")
+					AddGearToPlayer(0, GetLocalString("Item Names", "key_5"), "key5")
+					AddGearToPlayer(1, GetLocalString("Item Names", "radio"), "radio", 1000)
+					AddGearToPlayer(2, GetLocalString("Item Names", "nav_310"), "nav", 1000)
+					
+					psp\Helmet = 150
+					psp\Kevlar = 150
+					
+					g_I\Weapon_InSlot[QUICKSLOT_SCABBARD] = "knife"
+					g_I\Weapon_CurrSlot% = QUICKSLOT_PRIMARY+1
+					
+					;[End Block]
+				Case 1
+					;[Block]
+					If (Not opt\IntroEnabled) Then
+						
+						For g = Each Guns
+							For i = 0 To MaxAttachments - 1
+								g\HasPickedAttachments[i] = True
+							Next
+							Select g\ID
+								Case GUN_M4A1
+									g\CurrAmmo = 30
+									g\CurrReloadAmmo = 210
+								Case GUN_SPAS12
+									g\CurrAmmo = 6
+									g\CurrReloadAmmo = 42
+								Case GUN_M870
+									g\CurrAmmo = 8
+									g\CurrReloadAmmo = 64
+								Case GUN_P90
+									g\CurrAmmo = 50
+									g\CurrReloadAmmo = 200
+								Case GUN_MP5
+									g\CurrAmmo = 30
+									g\CurrReloadAmmo = 210
+								Case GUN_MP7
+									g\CurrAmmo = 40
+									g\CurrReloadAmmo = 280
+								Case GUN_FIVESEVEN
+									g\CurrAmmo = 20
+									g\CurrReloadAmmo = 60
+									g\Found = True
+								Case GUN_USP
+									g\CurrAmmo = 12
+									g\CurrReloadAmmo = 36
+									g\Found = True
+								Case GUN_BERETTA
+									g\CurrAmmo = 15
+									g\CurrReloadAmmo = 45
+									g\Found = True
+								Case GUN_KNIFE
+									g\Found = True
+							End Select
+							
+							Select randm
+								Case 0, 1, 2
+									AddGearToPlayer(SLOT_PRIMARY, "FN P90", "p90")
+									AddGearToPlayer(SLOT_HOLSTER, "FN Five-Seven", "fiveseven")
+									
+									g_I\Weapon_InSlot[QUICKSLOT_PRIMARY] = "p90"
+									g_I\Weapon_InSlot[QUICKSLOT_HOLSTER] = "fiveseven"
+									
+									g_I\HoldingGun = GUN_P90
+								Case 3, 4, 5
+									AddGearToPlayer(SLOT_PRIMARY, "H&K MP5", "mp5")
+									AddGearToPlayer(SLOT_HOLSTER, "M9 Beretta", "beretta")
+									
+									g_I\Weapon_InSlot[QUICKSLOT_PRIMARY] = "mp5"
+									g_I\Weapon_InSlot[QUICKSLOT_HOLSTER] = "beretta"
+									
+									g_I\HoldingGun = GUN_MP5
+								Case 6
+									AddGearToPlayer(SLOT_PRIMARY, "H&K MP7", "mp7")
+									AddGearToPlayer(SLOT_HOLSTER, "H&K USP", "usp")
+									
+									g_I\Weapon_InSlot[QUICKSLOT_PRIMARY] = "mp7"
+									g_I\Weapon_InSlot[QUICKSLOT_HOLSTER] = "usp"
+									
+									g_I\HoldingGun = GUN_MP7
+								Case 7, 8
+									AddGearToPlayer(SLOT_PRIMARY, "Franchi SPAS-12", "spas12")
+									AddGearToPlayer(SLOT_HOLSTER, "H&K USP", "usp")
+									AddGearToPlayer(3, GetLocalString("Item Names", "grenade_m67"), "m67")
+									
+									g_I\Weapon_InSlot[QUICKSLOT_PRIMARY] = "spas12"
+									g_I\Weapon_InSlot[QUICKSLOT_HOLSTER] = "usp"
+									
+									g_I\HoldingGun = GUN_SPAS12
+								Case 9
+									AddGearToPlayer(SLOT_PRIMARY, "Remington M870", "m870")
+									AddGearToPlayer(SLOT_HOLSTER, "H&K USP", "usp")
+									AddGearToPlayer(3, GetLocalString("Item Names", "grenade_m67"), "m67")
+									
+									g_I\Weapon_InSlot[QUICKSLOT_PRIMARY] = "m870"
+									g_I\Weapon_InSlot[QUICKSLOT_HOLSTER] = "usp"
+									
+									g_I\HoldingGun = GUN_M870
+								Case 10, 11, 12
+									AddGearToPlayer(SLOT_PRIMARY, "Colt M4A1", "m4a1")
+									AddGearToPlayer(SLOT_HOLSTER, "FN Five-Seven", "fiveseven")
+									
+									g_I\Weapon_InSlot[QUICKSLOT_PRIMARY] = "m4a1"
+									g_I\Weapon_InSlot[QUICKSLOT_HOLSTER] = "fiveseven"
+									
+									g_I\HoldingGun = GUN_M4A1
+							End Select
+						Next
+						
+						AddGearToPlayer(SLOT_SCABBARD, GetLocalString("Item Names", "knife"), "knife")
+						AddGearToPlayer(SLOT_HEAD, GetLocalString("Item Names", "ntf_helmet"), "ntf_helmet", 150)
+						AddGearToPlayer(SLOT_TORSO, GetLocalString("Item Names", "vest"), "vest", 150)
+						AddGearToPlayer(SLOT_BACKPACK, GetLocalString("Item Names", "backpack"), "backpack")
+						AddGearToPlayer(0, GetLocalString("Item Names", "key_5"), "key5")
+						AddGearToPlayer(1, GetLocalString("Item Names", "radio"), "radio", 1000)
+						AddGearToPlayer(2, GetLocalString("Item Names", "nav_310"), "nav", 1000)
+						
+						psp\Helmet = 150
+						psp\Kevlar = 150
+						
+						g_I\Weapon_InSlot[QUICKSLOT_SCABBARD] = "knife"
+						g_I\Weapon_CurrSlot% = QUICKSLOT_PRIMARY+1
+						
+					EndIf
+					;[End Block]
+				Case 2
+					;[Block]
+					psp\Checkpoint106Passed = True
+					WasInPD = True
+					;[End Block]
+					
+					;[Block]
+					If (Not TaskExists(TASK_NTF_GO_TO_ZONE)) Then
+						BeginTask(TASK_NTF_GO_TO_ZONE)
+					EndIf
+					;[End Block]
+			End Select
+			
+		Case GAMEMODE_CLASS_D
+			
+			Select cpt\DCurrent
+				Case 1
+					;[Block]
+					AddGearToPlayer(0, GetLocalString("Item Names", "key_class_d"), "key_class_d")
+					;[End Block]
+			End Select
+			
+	End Select
 	
 	CatchErrors("Uncaught : InitChapters")
+End Function
+
+Function AddGearToPlayer(Slot%, ItemName$, Item$, State%=0, State2%=0)
+	Local it.Items
+	
+	;[Block]
+	it = CreateItem(ItemName$, Item$, 1, 1, 1)
+	it\Picked = True
+	it\Dropped = -1
+	it\itemtemplate\found=True
+	it\state = State
+	it\state2 = State2
+	Inventory[Slot] = it
+	HideEntity(it\collider)
+	EntityType (it\collider, HIT_ITEM)
+	EntityParent(it\collider, 0)
+	ItemAmount = ItemAmount + 1
+	;[End Block]
+	
 End Function
 
 Function InitNewGame()
 	CatchErrors("InitNewGame")
 	Local i%, de.Decals, d.Doors, it.Items, r.Rooms, sc.SecurityCams, e.Events, g.Guns
+	
+	IsStartingFromMenu = False
 	
 	DrawLoading(45,False,"","Creating_new_game")
 	
@@ -3952,7 +4271,7 @@ Function InitNewGame()
 							PlayerRoom = r
 						EndIf
 					Else
-						If IsStartingFromMenu Then
+						;If IsStartingFromMenu Then
 							If cpt\Current = 1 Lor cpt\Current = 7 Then
 								If r\RoomTemplate\Name = "room1_start"
 									PositionEntity (Collider, EntityX(r\obj), 1.0, EntityZ(r\obj))
@@ -3966,13 +4285,13 @@ Function InitNewGame()
 									PlayerRoom = r
 								EndIf
 							EndIf
-						Else
-							If r\RoomTemplate\Name = "core_lcz"
-								PositionEntity (Collider, EntityX(r\obj), 1.0, EntityZ(r\obj))
-								RotateEntity (Collider,0,r\angle,0)
-								PlayerRoom = r
-							EndIf
-						EndIf
+;						Else
+;							If r\RoomTemplate\Name = "core_lcz"
+;								PositionEntity (Collider, EntityX(r\obj), 1.0, EntityZ(r\obj))
+;								RotateEntity (Collider,0,r\angle,0)
+;								PlayerRoom = r
+;							EndIf
+;						EndIf
 					EndIf
 				ElseIf gopt\GameMode = GAMEMODE_CLASS_D Then
 					If (Not opt\IntroEnabled) Then
@@ -4137,6 +4456,8 @@ Function InitLoadGame()
 	CatchErrors("InitLoadGame")
 	Local d.Doors, sc.SecurityCams, rt.RoomTemplates, e.Events
 	
+	IsStartingFromMenu = False
+	
 	DrawLoading(80,False,"","Loading_game")
 	
 	For d.Doors = Each Doors
@@ -4160,7 +4481,7 @@ Function InitLoadGame()
 	
 	SetFont fo\Font[Font_Default]
 	
-	HidePointer ()
+	HidePointer()
 	
 	BlinkTimer = BLINKFREQ
 	Stamina = 100
@@ -4859,20 +5180,38 @@ Function UpdateIntercomSystem()
 			MTFtimer = MTFtimer + FPSfactor
 		ElseIf MTFtimer > 25000+(70*60) And MTFtimer < 30000
 			If PlayerInReachableRoom()
+				PlayAnnouncement("SFX\Intercom\MTF\NTF\AnnouncCameraCheck.ogg")
+			EndIf
+			MTFtimer = 30000
+		ElseIf MTFtimer >= 30000 And MTFtimer <= 30000+(70*60)
+			MTFtimer = MTFtimer + FPSfactor
+		ElseIf MTFtimer > 30000+(70*60) And MTFtimer < 35000
+			If PlayerInReachableRoom()
+				If Rand(5) = 1 Then
+					PlayAnnouncement("SFX\Intercom\MTF\NTF\AnnouncCameraFound"+Rand(1, 2)+".ogg")
+				Else
+					PlayAnnouncement("SFX\Intercom\MTF\NTF\AnnouncCameraNoFound.ogg")
+				EndIf
+			EndIf
+			MTFtimer = 35000
+		ElseIf MTFtimer >= 35000 And MTFtimer <= 35000+(70*60)
+			MTFtimer = MTFtimer + FPSfactor
+		ElseIf MTFtimer > 40000+(70*60) And MTFtimer < 45000
+			If PlayerInReachableRoom()
 				If Rand(5) = 1 Then
 					PlayAnnouncement("SFX\Intercom\MTF\NTF\ThreatAnnouncFinal.ogg")
 				Else
 					PlayAnnouncement("SFX\Intercom\MTF\NTF\ThreatAnnouncObjective.ogg")
 				EndIf
 			EndIf
-			MTFtimer = 30000
-		ElseIf MTFtimer > 30000 And MTFtimer < 35000
+			MTFtimer = 40000
+		ElseIf MTFtimer > 45000 And MTFtimer < 45000
 			If PlayerInReachableRoom()
 				If Curr106\Contained And Curr173\Contained Then
 					PlayAnnouncement("SFX\Intercom\MTF\NTF\ThreatAnnouncExposure.ogg")
 				EndIf
 			EndIf
-			MTFtimer = 35000
+			MTFtimer = 45000
 		EndIf
 	EndIf
 	
@@ -5014,12 +5353,12 @@ Function DeleteINIFile(filename$)
 		Next
 		If file <> Null Then
 			FreeBank file\bank
-			DebugLog "FREED BANK FOR "+filename
+			;debuglog "FREED BANK FOR "+filename
 			Delete file
 			Return
 		EndIf
 	EndIf
-	DebugLog "COULD NOT FREE BANK FOR "+filename+": INI FILE IS NOT LOADED"
+	;debuglog "COULD NOT FREE BANK FOR "+filename+": INI FILE IS NOT LOADED"
 End Function
 
 Function GetINIString$(file$, section$, parameter$, defaultvalue$="")
@@ -5035,7 +5374,7 @@ Function GetINIString$(file$, section$, parameter$, defaultvalue$="")
 	Next
 	
 	If lfile = Null Then
-		DebugLog "CREATE BANK FOR "+file
+		;debuglog "CREATE BANK FOR "+file
 		lfile = New INIFile
 		lfile\name = Lower(file)
 		lfile\bank = 0
@@ -5349,7 +5688,7 @@ Function UpdateDeafPlayer()
 		If opt\SFXVolume# > 0.0
 			ControlSoundVolume()
 		EndIf
-		DebugLog DeafTimer
+		;debuglog DeafTimer
 	Else
 		DeafTimer = 0
 		If DeafPlayer Then ControlSoundVolume()
@@ -5718,14 +6057,14 @@ Function TeleportEntity(entity%,x#,y#,z#,customradius#=0.3,isglobal%=False,pickr
 		Else
 			PositionEntity(entity, x,PickedY()+customradius#-0.02,z,isglobal)
 		EndIf
-		DebugLog "Entity teleported successfully"
+		;debuglog "Entity teleported successfully"
 	Else
 		PositionEntity(entity,x,y,z,isglobal)
-		DebugLog "Warning: no ground found when teleporting an entity"
+		;debuglog "Warning: no ground found when teleporting an entity"
 	EndIf
 	pvt = FreeEntity_Strict(pvt)
 	ResetEntity entity
-	DebugLog "Teleported entity to: "+EntityX(entity)+"/"+EntityY(entity)+"/"+EntityZ(entity)
+	;debuglog "Teleported entity to: "+EntityX(entity)+"/"+EntityY(entity)+"/"+EntityZ(entity)
 	
 End Function
 
@@ -5739,10 +6078,10 @@ Function PlayStartupVideos()
 	Local Ratio# = Float(RealGraphicWidth)/Float(RealGraphicHeight)
 	If Ratio>1.76 And Ratio<1.78
 		ScaledGraphicHeight = RealGraphicHeight
-		DebugLog "Not Scaled"
+		;debuglog "Not Scaled"
 	Else
 		ScaledGraphicHeight% = Float(RealGraphicWidth)/(16.0/9.0)
-		DebugLog "Scaled: "+ScaledGraphicHeight
+		;debuglog "Scaled: "+ScaledGraphicHeight
 	EndIf
 	
 	Local i, moviefile$

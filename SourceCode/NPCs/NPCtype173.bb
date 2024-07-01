@@ -170,7 +170,7 @@ Function UpdateNPCtype173(n.NPCs)
 											If x < 25.0 And x > 15.0 Then
 												z = Abs(EntityZ(Collider)-EntityZ(w\obj,True))
 												If z < 25 And z > 15.0 Then
-													DebugLog "MOVING 173 TO "+w\room\RoomTemplate\Name
+													;debuglog "MOVING 173 TO "+w\room\RoomTemplate\Name
 													TeleportEntity n\Collider, EntityX(w\obj,True), EntityY(w\obj,True)+0.25,EntityZ(w\obj,True),n\CollRadius
 													Exit
 												EndIf

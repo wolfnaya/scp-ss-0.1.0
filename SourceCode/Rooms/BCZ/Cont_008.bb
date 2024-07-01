@@ -213,7 +213,7 @@ Function UpdateEvent_Cont_008(e.Events)
 					If (Not Inventory[SLOT_TORSO] <> Null And Left(Inventory[SLOT_TORSO]\itemtemplate\tempname, 3) = "hds") Lor (Not Inventory[SLOT_TORSO] <> Null And Left(Inventory[SLOT_TORSO]\itemtemplate\tempname, 6) = "hazmat") Then
 						If I_008\Timer=0
 							I_008\Timer=1
-							DebugLog "Infected player"
+							;debuglog "Infected player"
 						EndIf
 					EndIf
 				EndIf

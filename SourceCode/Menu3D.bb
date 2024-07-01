@@ -99,7 +99,10 @@ Function MainLoopMenu()
 			co\PressedNext = False
 			co\PressedPrev = False
 		EndIf
-		If mns\WolfnayaButtonPressed Lor Instr((CurrentDate$()), "19 Apr") Then
+		If Instr((CurrentDate$()), "19 Apr") Then
+			mns\WolfnayaButtonPressed = True
+		EndIf
+		If mns\WolfnayaButtonPressed Then
 			ShouldPlay = MUS_SAVE_ME_FROM
 		Else
 			ShouldPlay = opt\MainMenuMusic
@@ -837,31 +840,31 @@ Function Load3DMenu(customprogress$="")
 					PositionEntity m3d\Objects[i],-207.94*RoomScale,(648.0+(112*i))*RoomScale,-60.0686*RoomScale
 					RotateEntity m3d\Objects[i],0,105,0
 					EntityParent m3d\Objects[i],m3d\Scene
-					DebugLog i
+					;debuglog i
 				Next
 				For i = 3 To 5
 					PositionEntity m3d\Objects[i],-231.489*RoomScale,(648.0+(112*(i-3)))*RoomScale,95.7443*RoomScale
 					RotateEntity m3d\Objects[i],0,90,0
 					EntityParent m3d\Objects[i],m3d\Scene
-					DebugLog i
+					;debuglog i
 				Next
 				For i = 6 To 8; Step 2
 					PositionEntity m3d\Objects[i],-231.489*RoomScale,(648.0+(112*(i-6)))*RoomScale,255.744*RoomScale
 					RotateEntity m3d\Objects[i],0,90,0
 					EntityParent m3d\Objects[i],m3d\Scene
-					DebugLog i
+					;debuglog i
 				Next
 				For i = 9 To 11
 					PositionEntity m3d\Objects[i],-231.489*RoomScale,(648.0+(112*(i-9)))*RoomScale,415.744*RoomScale
 					RotateEntity m3d\Objects[i],0,90,0
 					EntityParent m3d\Objects[i],m3d\Scene
-					DebugLog i
+					;debuglog i
 				Next
 				For i = 12 To 14
 					PositionEntity m3d\Objects[i],-208.138*RoomScale,(648.0+(112*(i-12)))*RoomScale,571.583*RoomScale
 					RotateEntity m3d\Objects[i],0,75,0
 					EntityParent m3d\Objects[i],m3d\Scene
-					DebugLog i
+					;debuglog i
 				Next
 				;[End block]
 			Default

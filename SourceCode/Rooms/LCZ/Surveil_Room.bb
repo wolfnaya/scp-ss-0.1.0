@@ -56,31 +56,31 @@ Function FillRoom_Surveil_Room(r.Rooms)
 		PositionEntity r\Objects[i],r\x-207.94*RoomScale,r\y+(648.0+(112*i))*RoomScale,r\z-60.0686*RoomScale
 		RotateEntity r\Objects[i],0,105,0
 		EntityParent r\Objects[i],r\obj
-		DebugLog i
+		;debuglog i
 	Next
 	For i = 3 To 5
 		PositionEntity r\Objects[i],r\x-231.489*RoomScale,r\y+(648.0+(112*(i-3)))*RoomScale,r\z+95.7443*RoomScale
 		RotateEntity r\Objects[i],0,90,0
 		EntityParent r\Objects[i],r\obj
-		DebugLog i
+		;debuglog i
 	Next
 	For i = 6 To 8 Step 2
 		PositionEntity r\Objects[i],r\x-231.489*RoomScale,r\y+(648.0+(112*(i-6)))*RoomScale,r\z+255.744*RoomScale
 		RotateEntity r\Objects[i],0,90,0
 		EntityParent r\Objects[i],r\obj
-		DebugLog i
+		;debuglog i
 	Next
 	For i = 9 To 11
 		PositionEntity r\Objects[i],r\x-231.489*RoomScale,r\y+(648.0+(112*(i-9)))*RoomScale,r\z+415.744*RoomScale
 		RotateEntity r\Objects[i],0,90,0
 		EntityParent r\Objects[i],r\obj
-		DebugLog i
+		;debuglog i
 	Next
 	For i = 12 To 14
 		PositionEntity r\Objects[i],r\x-208.138*RoomScale,r\y+(648.0+(112*(i-12)))*RoomScale,r\z+571.583*RoomScale
 		RotateEntity r\Objects[i],0,75,0
 		EntityParent r\Objects[i],r\obj
-		DebugLog i
+		;debuglog i
 	Next
 	
 	;Doors for room

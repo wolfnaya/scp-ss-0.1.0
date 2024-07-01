@@ -102,11 +102,11 @@ Function UpdateEvent_Testroom_860(e.Events)
 							e\room\NPC[0]\State[0]=2
 							PositionEntity e\room\NPC[0]\Collider, 0,-110,0
 							e\EventState[2]=e\EventState[2]-Rnd(1000,2000-(500*SelectedDifficulty\AggressiveNPCs))
-							DebugLog "attack"
+							;debuglog "attack"
 						Else
 							e\room\NPC[0]\State[0]=1
 							PositionEntity e\room\NPC[0]\Collider, 0,-110,0
-							DebugLog "spawn"
+							;debuglog "spawn"
 						EndIf
 					EndIf
 				EndIf

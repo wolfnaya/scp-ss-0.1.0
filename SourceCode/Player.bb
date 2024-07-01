@@ -20,6 +20,7 @@ Const COMMAND_CANCEL = 5
 Const COMMAND_CAMERA = 6 ;Singleplayer Only
 Const COMMAND_FOLLOWME = 7
 Const COMMAND_COVERME = 8
+Const COMMAND_MEDICAL = 9
 
 ; ~ Social wheel constants
 Const SOCIAL_LETSGO = 0
@@ -598,6 +599,7 @@ Function UpdateCommunicationAndSocialWheel()
 			If gopt\GameMode <> GAMEMODE_MULTIPLAYER Then
 				mpl\WheelOutput[4] = COMMAND_TESLA
 				mpl\WheelOutput[6] = COMMAND_CAMERA
+				mpl\WheelOutput[9] = COMMAND_MEDICAL
 			EndIf
 		ElseIf mpl\WheelOpened = WHEEL_SOCIAL Then
 			mpl\WheelOutput[0] = SOCIAL_LETSGO
@@ -703,7 +705,7 @@ End Function
 
 Function GetPlayerVoiceLine$(voiceLine%, voiceLineNumber%, playerID%=-1)
 	Local voice$
-	Local n.NPCs
+	Local n.NPCs, r.Rooms, e.Events
 	
 	voice = "SFX\Player\Voice\Chat\"
 		
@@ -787,8 +789,14 @@ Function GetPlayerVoiceLine$(voiceLine%, voiceLineNumber%, playerID%=-1)
 		Select voiceLine
 			Case COMMAND_TESLA
 				voice = voice + "TeslaGateDeactivation" + Rand(1, 2) + ".ogg"
+				For e.Events = Each Events
+					If e\EventName = "room2_tesla"
+						e\EventState[4] = 1
+					EndIf
+				Next
 			Case COMMAND_CAMERA
 				voice = voice + "Camerafeed" + Rand(1, 2) + ".ogg"
+				If MTFtimer < 30000 Then MTFtimer = 30000 + (70*50)
 			Case COMMAND_MEDICAL
 				voice = voice + "Playerneedsmedicalattention" + Rand(1, 2) + ".ogg"
 			Case COMMAND_OVERHERE
@@ -873,7 +881,7 @@ Function GetPlayerCommandLineCategory$()
 				Case "ammocrate","bigammocrate"
 					Return ICON_LOOK_AMMO
 				Default
-					If it\itemtemplate\isGun Then
+					If it\itemtemplate\IsGun Then
 						Return ICON_LOOK_GUN
 					EndIf
 			End Select
@@ -1295,4 +1303,4 @@ End Function
 Include "SourceCode\PlayerAnimations.bb"
 
 ;~IDEal Editor Parameters:
-;~C#Blitz3D_TSS
+;~C#Blitz3D

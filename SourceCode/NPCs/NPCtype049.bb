@@ -67,7 +67,7 @@ Function UpdateNPCtype049(n.NPCs)
 					EndIf
 				Next
 				n\Idle = 0.0
-				DebugLog "SCP-049 not idle"
+				;debuglog "SCP-049 not idle"
 			EndIf
 		EndIf
 		
@@ -273,7 +273,7 @@ Function UpdateNPCtype049(n.NPCs)
 										EndIf
 									Next
 									n\PathStatus = FindPath(n,EntityX(closestRoom\obj),0.5,EntityZ(closestRoom\obj))
-									DebugLog "Find path for 049 in another room (pathstatus: "+n\PathStatus+")"
+									;debuglog "Find path for 049 in another room (pathstatus: "+n\PathStatus+")"
 								EndIf
 								
 											;Making 3 attempts at finding a path
@@ -284,13 +284,13 @@ Function UpdateNPCtype049(n.NPCs)
 											If n\Path[2]=Null And EntityDistanceSquared(n\Path[1]\obj,n\Collider)<PowTwo(0.4) Then
 												n\PathLocation = 0
 												n\PathStatus = 0
-												DebugLog "Breaking up path for 049 because no waypoint number 2 has been found and waypoint number 1 is too close."
+												;debuglog "Breaking up path for 049 because no waypoint number 2 has been found and waypoint number 1 is too close."
 											EndIf
 										EndIf
 										If n\Path[0]<>Null And n\Path[1]=Null Then
 											n\PathLocation = 0
 											n\PathStatus = 0
-											DebugLog "Breaking up path for 049 because no waypoint number 1 has been found."
+											;debuglog "Breaking up path for 049 because no waypoint number 1 has been found."
 										EndIf
 									EndIf
 									
@@ -316,7 +316,7 @@ Function UpdateNPCtype049(n.NPCs)
 											EndIf
 										Next
 										n\PathStatus = FindPath(n,EntityX(closestRoom\obj),0.5,EntityZ(closestRoom\obj))
-										DebugLog "Find path for 049 in another further away room (pathstatus: "+n\PathStatus+")"
+										;debuglog "Find path for 049 in another further away room (pathstatus: "+n\PathStatus+")"
 									EndIf
 									
 												;Making 049 skip waypoints for doors he can't interact with, but only if the actual path is behind him
@@ -332,7 +332,7 @@ Function UpdateNPCtype049(n.NPCs)
 														EndIf
 														If n\Path[n\PathLocation]<>Null Then
 															If Abs(DeltaYaw(n\Collider,n\Path[n\PathLocation]\obj))>(45.0-Abs(DeltaYaw(n\Collider,n\Path[1]\obj))) Then
-																DebugLog "Skip until waypoint number "+n\PathLocation
+																;debuglog "Skip until waypoint number "+n\PathLocation
 																n\State[2] = 3
 																Exit
 															EndIf
@@ -372,10 +372,10 @@ Function UpdateNPCtype049(n.NPCs)
 					If PlayerInReachableRoom(True) And InFacility=1 Then ;Player is in a room where SCP-049 can teleport to
 						If Rand(1,3-SelectedDifficulty\OtherFactors)=1 Then
 							TeleportCloser(n)
-							DebugLog "SCP-049 teleported closer due to distance"
+							;debuglog "SCP-049 teleported closer due to distance"
 						Else
 							n\Idle = 60*70
-							DebugLog "SCP-049 is now idle"
+							;debuglog "SCP-049 is now idle"
 						EndIf
 					EndIf
 				EndIf

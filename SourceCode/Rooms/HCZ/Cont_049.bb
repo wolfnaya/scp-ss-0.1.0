@@ -454,7 +454,7 @@ Function UpdateEvent_Cont_049(e.Events)
 							PositionEntity n\Collider, EntityX(e\room\Objects[4],True),EntityY(e\room\Objects[4],True),EntityZ(e\room\Objects[4],True),True
 							ResetEntity n\Collider
 							n\State[0] = 4
-							DebugLog "moving zombie"
+							;debuglog "moving zombie"
 						EndIf
 					Next
 					

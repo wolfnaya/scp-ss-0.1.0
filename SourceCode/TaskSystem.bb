@@ -365,7 +365,7 @@ Function UpdateTasks()
 	
 	For t = Each NewTask
 		If t\ID = TASK_FIND_ROOM3_CT_FUSEBOXES Then
-			t\txt = GetLocalStringR("Tasks", "find_all_fuseboxes",Int(ecst\FusesAmount))
+			t\txt = GetLocalStringR("Tasks", "find_all_fuseboxes",ecst\FusesAmount)
 		EndIf
 		If (hasEndTask And t\Status = TASK_STATUS_END) Lor (hasFailedTask And t\Status = TASK_STATUS_FAILED) Lor (hasCanceledTask And t\Status = TASK_STATUS_CANCELED) Lor (hasUpdatedTask And t\Status = TASK_STATUS_UPDATED) Lor ((Not hasEndTask) And (Not hasFailedTask) And (Not hasUpdatedTask) And (Not hasCanceledTask) And t\Status = TASK_STATUS_NEW) Then
 			If t\Timer > 0.0 Then

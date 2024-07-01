@@ -114,7 +114,7 @@ Function FillRoom_Room2_Maintenance(r.Rooms)
 			Exit
 		EndIf
 	Next
-	DebugLog emittersexist
+	;debuglog emittersexist
 	For i = emittersexist To MaxRoomEmitters-1
 		If rt\TempSoundEmitter[i-emittersexist]<>0 Then
 			r\SoundEmitterObj[i]=CreatePivot(r\Objects[5])

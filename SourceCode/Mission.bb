@@ -361,14 +361,14 @@ Function CreateMissionMap(id%)
 				If name$ <> ""
 					angle = I_ROM\Angle
 					
-					DebugLog x+", "+y+": "+name
-					DebugLog "angle: "+angle
+					;debuglog x+", "+y+": "+name
+					;debuglog "angle: "+angle
 					
 					For rt.RoomTemplates=Each RoomTemplates
 						If Lower(rt\Name) = name Then
 							
 							r.Rooms = CreateRoom(0, rt\Shape, x * 8.0, 0, y * 8.0, name)
-							DebugLog "createroom"
+							;debuglog "createroom"
 							
 							r\angle = angle
 							If rt\Shape = ROOM2C Then r\angle = r\angle+90 Else r\angle = r\angle-180
@@ -600,7 +600,7 @@ Function InitMissionGameMode(id%)
 			EntityType (it\collider, HIT_ITEM)
 			EntityParent(it\collider, 0)
 			pvt = FreeEntity_Strict(pvt)
-			DebugLog EntityX(it\collider)+"|"+EntityY(it\collider)+"|"+EntityZ(it\collider)
+			;debuglog EntityX(it\collider)+"|"+EntityY(it\collider)+"|"+EntityZ(it\collider)
 		EndIf
 	Next
 	
@@ -630,15 +630,15 @@ Function InitMissionGameMode(id%)
 	For e.Events = Each Events
 		If e\EventName = "room2_nuke"
 			e\EventState[0] = 1
-			DebugLog "room2_nuke"
+			;debuglog "room2_nuke"
 		EndIf
 		If e\EventName = "cont_106"
 			e\EventState[1] = 1
-			DebugLog "cont_106"
+			;debuglog "cont_106"
 		EndIf	
 		If e\EventName = "surveil_room"
 			e\EventState[2] = 1
-			DebugLog "surveil_room"
+			;debuglog "surveil_room"
 		EndIf
 	Next
 	
@@ -900,7 +900,7 @@ Function UpdateMissionEvents()
 						If EntityX(pvt,True)=EntityX(d\frameobj)
 							If EntityY(pvt,True)=EntityY(d\frameobj)
 								If EntityZ(pvt,True)=EntityZ(d\frameobj)
-									DebugLog EntityZ(pvt,True)+"|"+EntityZ(d\frameobj)
+									;debuglog EntityZ(pvt,True)+"|"+EntityZ(d\frameobj)
 									If Int(me\triggerparam4)<>False
 										d\locked = True
 									Else

@@ -60,7 +60,7 @@ Function UpdateEvent_Cont_500_1499(e.Events)
 				EndIf
 			EndIf
 		Else
-			DebugLog "Removed 'cont_500_1499' event"
+			;debuglog "Removed 'cont_500_1499' event"
 			e\room\RoomDoors[0]\locked = False
 			de.Decals = CreateDecal(DECAL_DECAY, EntityX(e\room\Objects[0],True), e\room\y+2.0*RoomScale, EntityZ(e\room\Objects[0],True), 90, Rand(360), 0)
 			de\Size = 0.5 : EntityAlpha(de\obj, 0.8)

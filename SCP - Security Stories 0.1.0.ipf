@@ -201,6 +201,7 @@
  AbsPath="\SourceCode\StrictLoads.bb" PrjFolder="\SourceCode" Line="0" Column="0" Tip="0" Visible="False"
  AbsPath="\SourceCode\Subtitles.bb" PrjFolder="\SourceCode" Line="0" Column="0" Tip="0" Visible="False"
  AbsPath="\SourceCode\Rooms\LCZ\Surveil_Room.bb" PrjFolder="\Rooms\LCZ" Line="0" Column="0" Tip="0" Visible="False"
+ AbsPath="\SourceCode\SZL.bb" PrjFolder="\SourceCode" Line="0" Column="0" Tip="0" Visible="False"
  AbsPath="\SourceCode\TaskSystem.bb" PrjFolder="\SourceCode" Line="0" Column="0" Tip="0" Visible="False"
  AbsPath="\SourceCode\Rooms\LCZ\Testroom_2B.bb" PrjFolder="\Rooms\LCZ" Line="0" Column="0" Tip="0" Visible="False"
  AbsPath="\SourceCode\Rooms\LCZ\Testroom_860.bb" PrjFolder="\Rooms\LCZ" Line="0" Column="0" Tip="0" Visible="False"

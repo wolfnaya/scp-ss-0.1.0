@@ -722,7 +722,7 @@ Function KillSounds()
 	
 	ClearSubtitles()
 	
-	DebugLog "Terminated all sounds"
+	;debuglog "Terminated all sounds"
 	
 End Function
 

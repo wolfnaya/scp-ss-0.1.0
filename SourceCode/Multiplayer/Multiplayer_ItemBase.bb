@@ -211,7 +211,7 @@ Function UpdateMPItems()
 	If Players[mp_I\PlayerID]\CurrHP <= 0 Then ClosestItem = Null
 	
 	If ClosestItem <> Null Then
-		If keyhituse Then
+		If KeyHitUse Then
 			ClosestItem\Dropped = 0
 			PickMPItem(ClosestItem,mp_I\PlayerID)
 		EndIf
@@ -261,7 +261,7 @@ Function UpdateMPItemsGravity()
 				EndIf
 			Next
 			
-			If EntityY(i\collider) < - 35.0 Then DebugLog "remove: " + i\itemtemplate\name : RemoveItem(i)
+			If EntityY(i\collider) < - 35.0 Then RemoveItem(i) ; : DebugLog "remove: " + i\itemtemplate\name
 		EndIf
 	Next
 	

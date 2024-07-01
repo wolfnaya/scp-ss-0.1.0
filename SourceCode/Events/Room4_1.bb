@@ -10,7 +10,7 @@ Function UpdateEvent_Room4_1(e.Events)
 						If n\State[0] = 2 And EntityDistanceSquared(Collider,n\Collider)>PowTwo(16.0) Then
 							TFormVector(368, 528, 176, e\room\obj, 0)
 							PositionEntity n\Collider, EntityX(e\room\obj)+TFormedX(), TFormedY(), EntityZ(e\room\obj)+TFormedZ()
-							DebugLog TFormedX()+", "+ TFormedY()+", "+ TFormedZ()
+							;debuglog TFormedX()+", "+ TFormedY()+", "+ TFormedZ()
 							ResetEntity n\Collider
 							n\PathStatus = 0
 							n\State[0] = 4

@@ -444,8 +444,8 @@ Function FillRoom(r.Rooms)
 			EntityColor(r\Triggerboxes[i]\obj,255,255,0)
 			EntityAlpha(r\Triggerboxes[i]\obj, 0.0)
 			r\Triggerboxes[i]\Name = r\RoomTemplate\TempTriggerboxName[i]
-			DebugLog "Triggerbox found: "+i
-			DebugLog "Triggerbox "+i+" name: "+r\Triggerboxes[i]\Name
+			;debuglog "Triggerbox found: "+i
+			;debuglog "Triggerbox "+i+" name: "+r\Triggerboxes[i]\Name
 		Next
 	EndIf
 	
@@ -509,7 +509,7 @@ Const RMESH_INVISBLE = 3
 Function LoadRMesh(file$,rt.RoomTemplates, doublesided=True)
 	CatchErrors("Uncaught (LoadRMesh)")
 	
-	DebugLog "Loading RMesh file "+file
+	;debuglog "Loading RMesh file "+file
 	
 	Local mat.Materials
 	
@@ -937,7 +937,7 @@ Function LoadRMesh(file$,rt.RoomTemplates, doublesided=True)
 	;trigger boxes
 	;[Block]
 	If hasTriggerBox
-		DebugLog "TriggerBoxEnable"
+		;debuglog "TriggerBoxEnable"
 		If (Not MainMenuOpen) Then
 			rt\TempTriggerboxAmount = ReadInt(f)
 			For tb = 0 To rt\TempTriggerboxAmount-1
@@ -1143,9 +1143,9 @@ Function LoadRMesh(file$,rt.RoomTemplates, doublesided=True)
 					EndIf
 					EntityPickMode model,2
 				Else
-					DebugLog "file = 0"
+					;debuglog "file = 0"
 					temp1=ReadFloat(f) : temp2=ReadFloat(f) : temp3=ReadFloat(f)
-					DebugLog temp1+", "+temp2+", "+temp3
+					;debuglog temp1+", "+temp2+", "+temp3
 				EndIf
 				;[End Block]
 			Case "fusebox", "generator"
@@ -1274,7 +1274,7 @@ Function LoadRMesh(file$,rt.RoomTemplates, doublesided=True)
 ;				tfll\rotation = CreateVector3D(temp1,temp2,temp3)
 ;				tfll\id = ReadInt(f)
 ;				
-;				DebugLog "FLU LIGHT DETECTED!"
+;				;debuglog "FLU LIGHT DETECTED!"
 ;				;[End Block]
 				
 			Case "flu_light"
@@ -1293,7 +1293,7 @@ Function LoadRMesh(file$,rt.RoomTemplates, doublesided=True)
 				; ~ Detect ID
 				tfll\id = ReadInt(f)
 				
-				DebugLog("FLU LIGHT DETECTED!")
+				;debuglog("FLU LIGHT DETECTED!")
 				;[End Block]
 		End Select
 	Next
@@ -1749,7 +1749,7 @@ Function PlaceForest(fr.Forest,x#,y#,z#,r.Rooms)
 						tile_entity = CopyEntity(fr\TileMesh[ROOM4])	
 						tile_type = ROOM4
 					Default 
-						DebugLog "tile_type: "+tile_type
+						;debuglog "tile_type: "+tile_type
 				End Select
 				
 				If tile_type > 0 Then 
@@ -1837,7 +1837,7 @@ Function PlaceForest(fr.Forest,x#,y#,z#,r.Rooms)
 					
 					fr\TileEntities[tx+(ty*gridsize)] = tile_entity
 				Else
-					DebugLog "INVALID TILE @ ("+tx+", "+ty+ "): "+tile_type
+					;debuglog "INVALID TILE @ ("+tx+", "+ty+ "): "+tile_type
 				EndIf
 			EndIf
 			
@@ -2237,7 +2237,7 @@ Function CreateRoom.Rooms(zone%, roomshape%, x#, y#, z#, name$ = "", angle%=0)
 		Next
 	EndIf
 	
-	DebugLog "Still use old randomroom mechanic!"
+	;debuglog "Still use old randomroom mechanic!"
 	
 	Local temp% = 0
 	For rt.RoomTemplates = Each RoomTemplates
@@ -2774,7 +2774,7 @@ Function InitWayPoints(loadingstart=45,drawloadingscreen%=True)
 ;		Next
 	Next
 	
-	DebugLog "InitWaypoints() - "+(MilliSecs()-temper)
+	;debuglog "InitWaypoints() - "+(MilliSecs()-temper)
 End Function
 
 Function RemoveWaypoint(w.WayPoints)
@@ -2786,7 +2786,7 @@ End Function
 
 Function FindPath(n.NPCs, x#, y#, z#)
 	CatchErrors("FindPath()")
-	DebugLog "findpath: "+n\NPCtype
+	;debuglog "findpath: "+n\NPCtype
 	
 	Local temp%, dist#, dist2#
 	Local xtemp#, ytemp#, ztemp#
@@ -2841,7 +2841,7 @@ Function FindPath(n.NPCs, x#, y#, z#)
 			EndIf
 		EndIf
 	Next
-	DebugLog "DIST: "+dist
+	;debuglog "DIST: "+dist
 	
 	temp = FreeEntity_Strict(temp)
 	
@@ -2966,7 +2966,7 @@ Function FindPath(n.NPCs, x#, y#, z#)
 		
 		Return 1
 	Else
-		DebugLog "FUNCTION FindPath() - no route found"
+		;debuglog "FUNCTION FindPath() - no route found"
 		Return 2 
 	EndIf
 	
@@ -3837,7 +3837,7 @@ End Type
 Global CurrGrid.MapGrid
 
 Function CreateMap()
-	DebugLog ("Generating a map using the seed "+RandomSeed)
+	;debuglog ("Generating a map using the seed "+RandomSeed)
 	CatchErrors("CreateMap(), Map seed:"+RandomSeed)
 	Local x%,y%,i,n
 	Local startX%,endX%
@@ -3923,7 +3923,7 @@ Function CreateMap()
 			EndIf
 		Until ((i >= loopamount) And (y>=MapGridSize-2))
 		
-		DebugLog "Map Generator Stage 1 complete"
+		;debuglog "Map Generator Stage 1 complete"
 		
 		;Add the end position
 		endX = x
@@ -3961,7 +3961,7 @@ Function CreateMap()
 			iterator_check = iterator_check + 1
 		Until (i >= 20) Lor (iterator_check >= 20)
 		
-		DebugLog "Map Generator Stage 2 complete"
+		;debuglog "Map Generator Stage 2 complete"
 		
 		;Assign the room types and rotation for each room
 		CatchErrors("CreateMap(), Stage 3, Map seed:"+RandomSeed)
@@ -3978,7 +3978,7 @@ Function CreateMap()
 					EndIf
 					temp=temp+Min(CurrGrid\Grid[x+((y+1)*MapGridSize)],1)+Min(CurrGrid\Grid[x+((y-1)*MapGridSize)],1)
 					
-					DebugLog temp
+					;debuglog temp
 					
 					Select temp
 						Case 1
@@ -4038,12 +4038,12 @@ Function CreateMap()
 			Next
 		Next
 		
-		DebugLog "Map Generator Stage 3 complete"
+		;debuglog "Map Generator Stage 3 complete"
 		
 		For y = 1 To MapGridSize-2
 			For x = 0 To MapGridSize-1
 				If CurrGrid\Grid[x+(y*MapGridSize)]>0 Then
-					DebugLog CurrGrid\RoomType[x+(y*MapGridSize)]
+					;debuglog CurrGrid\RoomType[x+(y*MapGridSize)]
 				EndIf
 			Next
 		Next
@@ -4069,13 +4069,13 @@ Function CreateMap()
 					;Be in the loop until it has been positioned successfully
 					x = 0
 					y = 1
-					DebugLog "Trying to spawn "+rt\Name+" with shape "+rt\Shape
+					;debuglog "Trying to spawn "+rt\Name+" with shape "+rt\Shape
 					Repeat
 						If CurrGrid\Grid[x+(y*MapGridSize)]>0 And CurrGrid\RoomName[x+(y*MapGridSize)]="" Then
 							If CurrGrid\RoomType[x+(y*MapGridSize)] = rt\Shape Then
 								If Rand(1,5)=1 Then
 									CurrGrid\RoomName[x+(y*MapGridSize)] = rt\Name
-									DebugLog "Spawned "+rt\Name+" successfully"
+									;debuglog "Spawned "+rt\Name+" successfully"
 									Exit
 								EndIf
 							EndIf
@@ -4093,7 +4093,7 @@ Function CreateMap()
 			EndIf
 		Next
 		
-		DebugLog "Map Generator Stage 4 complete"
+		;debuglog "Map Generator Stage 4 complete"
 		
 		;Then assign all other rooms (commonness between 1 and 100)
 		CatchErrors("CreateMap(), Stage 5, Map seed:"+RandomSeed)
@@ -4141,7 +4141,7 @@ Function CreateMap()
 									temp=temp+rt\Commonness
 									If RandomRoom > temp - rt\Commonness And RandomRoom <= temp Then
 										CurrGrid\RoomName[x+(y*MapGridSize)] = rt\Name
-										DebugLog "Added room "+rt\Name+" successfully"
+										;debuglog "Added room "+rt\Name+" successfully"
 										Exit
 									EndIf
 								EndIf
@@ -4152,7 +4152,7 @@ Function CreateMap()
 			Next
 		Next
 		
-		DebugLog "Map Generator Stage 5 complete"
+		;debuglog "Map Generator Stage 5 complete"
 		
 		;Create the rooms itself
 		Local r.Rooms, spacing# = 8.0
@@ -4246,7 +4246,7 @@ Function CreateMap()
 		PreventRoomOverlap(r)
 	Next
 	
-	DebugLog "Map Generator Stage 6 complete"
+	;debuglog "Map Generator Stage 6 complete"
 	
 	;Add adjacent doors and assign them to the corresponding rooms
 	Local d.Doors
@@ -4359,7 +4359,7 @@ Function CreateMap()
 		Next
 	Next
 	
-	DebugLog "Map Generator complete"
+	;debuglog "Map Generator complete"
 	
 End Function
 
@@ -4367,7 +4367,7 @@ End Function
 
 Function load_terrain(hmap,yscale#=0.7,t1%,t2%,mask%)
 	
-	DebugLog "load_terrain: "+hmap
+	;debuglog "load_terrain: "+hmap
 	
 	; load the heightmap
 	If hmap = 0 Then RuntimeError "Heightmap image "+hmap+" does not exist."
@@ -4707,7 +4707,7 @@ Function FindAndDeleteFakeMonitor(r.Rooms,x#,y#,z#,Amount%)
 				If EntityY(r\Objects[i],True) = y#
 					If EntityZ(r\Objects[i],True) = z#
 						r\Objects[i] = FreeEntity_Strict(r\Objects[i])
-						DebugLog "Deleted Fake Monitor: "+i
+						;debuglog "Deleted Fake Monitor: "+i
 						Exit
 					EndIf
 				EndIf
@@ -4758,7 +4758,7 @@ Function CalculateRoomTemplateExtents(r.RoomTemplates)
 	r\MaxY = Mesh_MaxY
 	r\MaxZ = Mesh_MaxZ
 	
-	DebugLog("roomtemplateextents: "+r\MinX+", "+r\MinY	+", "+r\MinZ	+", "+r\MaxX	+", "+r\MaxY+", "+r\MaxZ)
+	;debuglog("roomtemplateextents: "+r\MinX+", "+r\MinY	+", "+r\MinZ	+", "+r\MaxX	+", "+r\MaxY+", "+r\MaxZ)
 End Function
 
 Function CalculateRoomExtents(r.Rooms)
@@ -4794,7 +4794,7 @@ Function CalculateRoomExtents(r.Rooms)
 	r\MinY = r\MinY + shrinkAmount : r\MaxY = r\MaxY - shrinkAmount
 	r\MinZ = r\MinZ + shrinkAmount : r\MaxZ = r\MaxZ - shrinkAmount
 	
-	;DebugLog("roomextents: "+r\MinX+", "+r\MinY	+", "+r\MinZ	+", "+r\MaxX	+", "+r\MaxY+", "+r\MaxZ)
+	;;debuglog("roomextents: "+r\MinX+", "+r\MinY	+", "+r\MinZ	+", "+r\MaxX	+", "+r\MaxY+", "+r\MaxZ)
 End Function
 
 Function CheckRoomOverlap(r1.Rooms, r2.Rooms)
@@ -4858,7 +4858,7 @@ Function PreventRoomOverlap(r.Rooms)
 	
 	;room is ROOM2 and was able to be turned by 180 degrees
 	If (Not isIntersecting)
-		DebugLog "ROOM2 turning succesful! "+r\RoomTemplate\Name
+		;debuglog "ROOM2 turning succesful! "+r\RoomTemplate\Name
 		Return True
 	EndIf
 	
@@ -4936,11 +4936,11 @@ Function PreventRoomOverlap(r.Rooms)
 	
 	;room was able to the placed in a different spot
 	If (Not isIntersecting)
-		DebugLog "Room re-placing successful! "+r\RoomTemplate\Name
+		;debuglog "Room re-placing successful! "+r\RoomTemplate\Name
 		Return True
 	EndIf
 	
-	DebugLog "Couldn't fix overlap issue for room "+r\RoomTemplate\Name
+	;debuglog "Couldn't fix overlap issue for room "+r\RoomTemplate\Name
 	Return False
 End Function
 
@@ -4957,4 +4957,4 @@ End Function
 
 
 ;~IDEal Editor Parameters:
-;~C#Blitz3D_TSS
+;~C#Blitz3D

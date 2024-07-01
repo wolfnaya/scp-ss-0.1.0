@@ -357,13 +357,13 @@ Function UpdateNPCtype106(n.NPCs)
 								n\SoundChn2 = PlaySound2(OldManSFX[6+Rand(0,2)],Camera,n\Collider)
 								n\PathTimer = 0
 								n\Reload = (70*10.0)/(SelectedDifficulty\OtherFactors+1)
-								DebugLog "Teleported 106 (Distance: "+EntityDistance(n\Collider,Collider)+")"
+								;debuglog "Teleported 106 (Distance: "+EntityDistance(n\Collider,Collider)+")"
 							EndIf
 						EndIf
 					EndIf
 				EndIf
 				n\Reload = Max(0, n\Reload - FPSfactor)
-				DebugLog "106 in... "+n\Reload 
+				;debuglog "106 in... "+n\Reload 
 				
 				UpdateSoundOrigin(n\SoundChn2,Camera,n\Collider)
 			Else ;idling outside the map

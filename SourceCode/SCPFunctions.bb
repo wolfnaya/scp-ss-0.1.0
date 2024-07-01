@@ -666,7 +666,7 @@ Function Update294()
 	EndIf
 	
 	If VomitTimer > 0 Then
-		DebugLog VomitTimer
+		;debuglog VomitTimer
 		VomitTimer = VomitTimer - (FPSfactor/70)
 		
 		If (MilliSecs() Mod 1600) < Rand(200, 400) Then

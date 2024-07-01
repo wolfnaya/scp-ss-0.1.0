@@ -2724,7 +2724,7 @@ Function ShootGun(g.Guns)
 			PlayGunSound(g\name+"\hitbody",g\MaxShootSounds,0,True,True)
 		EndIf
 		
-		;DebugLog "shot"
+		;;debuglog "shot"
 	ElseIf ent_pick <> 0 And hitwater = Null Then
 		p.Particles = CreateParticle(PickedX(),PickedY(),PickedZ(), 0, 0.03, 0, 80)
 		p\speed = 0.001

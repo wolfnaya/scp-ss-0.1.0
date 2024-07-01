@@ -450,16 +450,17 @@ Function UpdateNPCTypeD2(n.NPCs)
 	
 	If n\IsDead Then
 		If n\NPCName = "Subject D-9341" Then
-			If n\State[4] < 70*25 Then
+			If n\State[4] < 70*15 Then
 				n\State[4] = n\State[4] + FPSfactor * 2
 			Else
-				If n\State[4] >= 70*25 And n\State[4] < 1000 Then
+				If n\State[4] >= 70*15 And n\State[4] < 1000 Then
 					n\State[4] = 1000
 				ElseIf n\State[4] >= 1000 And n\State[4] < 2000 Then
 					EntityAlpha n\obj,Inverse((n\State[4]-1000.0)/1000.0)
-					n\State[4] = n\State[4] + 2 * FPSfactor
+					n\State[4] = n\State[4] + 2 * (FPSfactor * 2)
 				Else
-					LoadGameQuick(SavePath + CurrSave\Name + "\")
+					PlaySound_Strict(LoadTempSound("SFX\General\Save2.ogg"))
+					LoadGameQuick(SavePath + CurrSave\Name + "\", False)
 					RemoveNPC(n)
 					Return
 				EndIf

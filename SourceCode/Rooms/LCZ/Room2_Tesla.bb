@@ -54,8 +54,8 @@ Function FillRoom_Room2_Tesla(r.Rooms)
 End Function
 
 Function UpdateEvent_Room2_Tesla(e.Events)
-	Local e2.Events,p.Particles,n.NPCs,d.Decals
-	Local temp%
+	Local e2.Events, p.Particles, n.NPCs, d.Decals
+	Local temp%, voiceline$
 	Local i
 		
 	If e\EventState[3] = 0 Then
@@ -80,6 +80,14 @@ Function UpdateEvent_Room2_Tesla(e.Events)
 	If e\EventState[3] >= 70*60 Then
 		e\EventState[3] = 0
 		PlaySound2(LoadTempSound("SFX\Room\Tesla\PowerUp.ogg"),Camera,e\room\Objects[1])
+	EndIf
+	
+	If e\EventState[4] = 1 Then
+		StopChannel(e\SoundCHN[0])
+		PlayAnnouncement("SFX\Intercom\MTF\NTF\AnnouncTesla"+Rand(1,3)+".ogg")
+		e\EventState[0] = 3
+		e\EventState[1] = -70*90
+		e\EventState[4] = 0
 	EndIf
 	
 	If e\room\dist < 16 Then
@@ -112,15 +120,41 @@ Function UpdateEvent_Room2_Tesla(e.Events)
 					EndIf
 					For n.NPCs = Each NPCs
 						If n\Collider <> 0 And n\IsDead = False And n\HP > 0 And n\NPCtype <> NPC_SCP_966 Then
-							If Abs(EntityX(n\Collider,True)-EntityX(e\room\Objects[0],True)) < 0.8 And (e\room\angle Mod 180 = 90) Lor Abs(EntityZ(n\Collider,True)-EntityZ(e\room\Objects[0],True)) < 0.8 And (e\room\angle Mod 180 = 0) Then
-								If EntityDistanceSquared(n\Collider,e\room\Objects[0]) < PowTwo(300.0*RoomScale)
-									e\EventState[0] = 1
-									StopChannel(e\SoundCHN[0])
-									e\SoundCHN[0] = PlaySound2(TeslaActivateSFX, Camera, e\room\Objects[1],4.0,0.5)
+							If gopt\GameMode = GAMEMODE_NTF Then
+								If n\NPCtype = NPC_NTF And e\room\NPC[0] = Null Then
+									If Abs(EntityX(n\Collider,True)-EntityX(e\room\Objects[0],True)) <= 5.0 And (e\room\angle Mod 180 = 90) Lor Abs(EntityZ(n\Collider,True)-EntityZ(e\room\Objects[0],True)) <= 5.0 And (e\room\angle Mod 180 = 0) Then
+										If EntityDistanceSquared(n\Collider,e\room\Objects[0]) < PowTwo(500.0*RoomScale) Then
+											n\IdleTimer = 70*10
+											n\State[0] = MTF_TESLA
+											e\room\NPC[0] = n
+											If n\PrevState = MTF_UNIT_MEDIC Then
+												voiceline = "Medic_Tesla"+Rand(1,2)
+											Else
+												voiceline = "Regular_Tesla"+Rand(1,2)
+											EndIf
+											PlaySound2(LoadTempSound("SFX\Character\MTF\Tesla\"+voiceline+".ogg"),Camera,n\Collider)
+										EndIf
+									EndIf
+								EndIf
+							Else
+								If Abs(EntityX(n\Collider,True)-EntityX(e\room\Objects[0],True)) < 0.8 And (e\room\angle Mod 180 = 90) Lor Abs(EntityZ(n\Collider,True)-EntityZ(e\room\Objects[0],True)) < 0.8 And (e\room\angle Mod 180 = 0) Then
+									If EntityDistanceSquared(n\Collider,e\room\Objects[0]) < PowTwo(300.0*RoomScale)
+										e\EventState[0] = 1
+										StopChannel(e\SoundCHN[0])
+										e\SoundCHN[0] = PlaySound2(TeslaActivateSFX, Camera, e\room\Objects[1],4.0,0.5)
+									EndIf
 								EndIf
 							EndIf	
-						EndIf	
+						EndIf
 					Next
+					If gopt\GameMode = GAMEMODE_NTF Then
+						If e\room\NPC[0] <> Null Then
+							If e\room\NPC[0]\IdleTimer <= 0 Then
+								e\EventState[4] = 1
+								e\room\NPC[0] = Null
+							EndIf
+						EndIf
+					EndIf
 				Case 1 ; Charge state
 					e\EventState[1] = e\EventState[1] + FPSfactor
 					If e\EventState[1] >= 35 Then

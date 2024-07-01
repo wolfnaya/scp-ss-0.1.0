@@ -316,7 +316,7 @@ Function LoadMesh_Strict(File$,parent=0)
 	Local bumptex%,temp$
 	Local mat.Materials
 	
-	DebugLog "Load mesh: "+File
+	;debuglog "Load mesh: "+File
 	
 	If I_Loc\Localized And FileType(I_Loc\LangPath + File$)=1 Then
 		tmp = LoadMesh(I_Loc\LangPath + File, parent)
@@ -366,7 +366,7 @@ Function LoadMesh_Strict(File$,parent=0)
 							;Sometimes that error is intentional - such as if the mesh doesn't has a texture applied
 							;or an invalid one which gets fixed by something like EntityTexture
 							BrushTexture b, MissingTexture, 0, 0
-							;DebugLog "Error trying to apply texture "+Chr(34)+name$+Chr(34)
+							;;debuglog "Error trying to apply texture "+Chr(34)+name$+Chr(34)
 						EndIf
 					Else
 						If FileType(TextureName(t1))=1 ;Check if texture is existing in original path
@@ -383,7 +383,7 @@ Function LoadMesh_Strict(File$,parent=0)
 							;Sometimes that error is intentional - such as if the mesh doesn't has a texture applied
 							;or an invalid one which gets fixed by something like EntityTexture
 							BrushTexture b, MissingTexture, 0, 1
-							;DebugLog "Error trying to apply texture "+Chr(34)+name$+Chr(34)
+							;;debuglog "Error trying to apply texture "+Chr(34)+name$+Chr(34)
 						EndIf
 						BrushTexture b, bumptex, 0, 0
 					EndIf
@@ -480,7 +480,7 @@ Function LoadAnimMesh_Strict(File$,parent=0)
 	Local refltex%,temp$
 	Local mat.Materials
 	
-	DebugLog "Load animated mesh: "+File
+	;debuglog "Load animated mesh: "+File
 	
 	If I_Loc\Localized And FileType(I_Loc\LangPath + File$)=1 Then
 		tmp = LoadAnimMesh(I_Loc\LangPath + File, parent)
