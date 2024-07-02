@@ -5,7 +5,7 @@ ${\color{orange}\boxed{WARNING!}}$ This version is full of bugs, it is unfinishe
 ```
 List of all zones with their IDs
 
-To teleport use command "loadzone", or "lz"
+To teleport use command "loadzone", or "lz" and then type the ID of following zone:
 
 GATE_A_INTRO = 0
 LCZ = 1
