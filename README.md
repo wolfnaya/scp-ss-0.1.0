@@ -1,6 +1,6 @@
 ${\color{orange}\boxed{WARNING!}}$ This version is full of bugs, it is unfinished. Do ${\color{red}\{NOT}}$ complain about bugs, I quit Blitz 3D Forever.
 
-Quick help for people whop want to travel between zones:
+*Quick help for people who want to travel between zones:*
 
 ```
 List of all zones with their IDs
