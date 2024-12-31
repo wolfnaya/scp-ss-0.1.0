@@ -1387,13 +1387,13 @@ Function PointEntity2(source_ent%,dest_ent%,roll#=0.0,usepitch%=True,useyaw%=Tru
 End Function
 
 Type HitBox
-	Field HitBox1[25]
-	Field HitBox2[25]
-	Field HitBox3[25]
-	Field BoneName$[25]
-	Field HitBoxPosX#[25]
-	Field HitBoxPosY#[25]
-	Field HitBoxPosZ#[25]
+	Field HitBox1[MaxHitBoxes]
+	Field HitBox2[MaxHitBoxes]
+	Field HitBox3[MaxHitBoxes]
+	Field BoneName$[MaxHitBoxes]
+	Field HitBoxPosX#[MaxHitBoxes]
+	Field HitBoxPosY#[MaxHitBoxes]
+	Field HitBoxPosZ#[MaxHitBoxes]
 	Field NPCtype%
 	Field ID%
 End Type
@@ -1464,7 +1464,7 @@ Function CopyHitBoxes(n.NPCs)
 	
 	For hb = Each HitBox
 		If hb\NPCtype = n\NPCtype Then
-			For i = 0 To 24
+			For i = 0 To MaxHitBoxes - 1
 				If hb\BoneName[i]<>"" Then
 					n\BoneName[i]=hb\BoneName[i]
 					bone = FindChild(n\obj,n\BoneName[i])
@@ -1491,7 +1491,7 @@ End Function
 Function HideNPCHitBoxes(n.NPCs)
 	Local i%
 	
-	For i = 0 To 24
+	For i = 0 To MaxHitBoxes - 1
 		If n\HitBox1[i]<>0 Then HideEntity n\HitBox1[i]
 		If n\HitBox2[i]<>0 Then HideEntity n\HitBox2[i]
 		If n\HitBox3[i]<>0 Then HideEntity n\HitBox3[i]
@@ -1502,7 +1502,7 @@ End Function
 Function ShowNPCHitBoxes(n.NPCs)
 	Local i%
 	
-	For i = 0 To 24
+	For i = 0 To MaxHitBoxes - 1
 		If n\HitBox1[i]<>0 Then ShowEntity n\HitBox1[i]
 		If n\HitBox2[i]<>0 Then ShowEntity n\HitBox2[i]
 		If n\HitBox3[i]<>0 Then ShowEntity n\HitBox3[i]
@@ -1513,7 +1513,7 @@ End Function
 Function FreeNPCHitBoxes(n.NPCs)
 	Local i%
 	
-	For i = 0 To 24
+	For i = 0 To MaxHitBoxes - 1
 		n\HitBox1[i] = FreeEntity_Strict(n\HitBox1[i])
 		n\HitBox2[i] = FreeEntity_Strict(n\HitBox2[i])
 		n\HitBox3[i] = FreeEntity_Strict(n\HitBox3[i])
@@ -2951,4 +2951,4 @@ Function MaskTexture(Texture%, Red, Green, Blue)
 End Function
 
 ;~IDEal Editor Parameters:
-;~C#Blitz3D
+;~C#Blitz3D TSS

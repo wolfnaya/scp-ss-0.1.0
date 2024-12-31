@@ -190,7 +190,7 @@ Function FillRoom_Area_076(r.Rooms)
 	
 	it = CreateItem("Colt M4A1", "m4a1", r\x -494.0 * RoomScale, r\y +140.0 * RoomScale, r\z +3418.0 * RoomScale)
 	EntityParent(it\collider, r\obj)
-	it\state2 = 60 : it\state = 30
+	it\state2 = 60 : it\state = 20
 	
 	; TODO ATTS!!!
 	;it = CreateItem(GetLocalString("Item Names","laser"), "lasersight", r\x -867.0 * RoomScale, r\y +130.0 * RoomScale, r\z +3086.0 * RoomScale)
@@ -496,4 +496,4 @@ Function UpdateEvent_Area_076(e.Events)
 End Function
 
 ;~IDEal Editor Parameters:
-;~C#Blitz3D
+;~C#Blitz3D TSS

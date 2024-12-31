@@ -426,12 +426,7 @@ Function UpdateNPCtype076(n.NPCs)
 					n\State[1] = 1000
 				ElseIf n\State[1] >= 1000 And n\State[1] < 2000 Then
 					
-					CreateParticle(EntityX(FindChild(n\obj,"Bip01_Head"),True),EntityY(FindChild(n\obj,"Bip01_Head"),True),EntityZ(FindChild(n\obj,"Bip01_Head"),True),0,0.05,-0.05)
-					CreateParticle(EntityX(FindChild(n\obj,"Bip01_Spine"),True),EntityY(FindChild(n\obj,"Bip01_Spine"),True),EntityZ(FindChild(n\obj,"Bip01_Spine"),True),0,0.05,-0.05)
-					CreateParticle(EntityX(FindChild(n\obj,"Bip01_L_Calf"),True),EntityY(FindChild(n\obj,"Bip01_L_Calf"),True),EntityZ(FindChild(n\obj,"Bip01_L_Calf"),True),0,0.05,-0.05)
-					CreateParticle(EntityX(FindChild(n\obj,"Bip01_R_Calf"),True),EntityY(FindChild(n\obj,"Bip01_R_Calf"),True),EntityZ(FindChild(n\obj,"Bip01_R_Calf"),True),0,0.05,-0.05)
-					CreateParticle(EntityX(FindChild(n\obj,"Bip01_L_Forearm"),True),EntityY(FindChild(n\obj,"Bip01_L_Forearm"),True),EntityZ(FindChild(n\obj,"Bip01_L_Forearm"),True),0,0.05,-0.05)
-					CreateParticle(EntityX(FindChild(n\obj,"Bip01_R_Forearm"),True),EntityY(FindChild(n\obj,"Bip01_R_Forearm"),True),EntityZ(FindChild(n\obj,"Bip01_R_Forearm"),True),0,0.05,-0.05)
+					CreateParticle(EntityX(FindChild(n\obj,"Bip01_Spine"),True),EntityY(FindChild(n\obj,"Bip01_Spine"),True),EntityZ(FindChild(n\obj,"Bip01_Spine"),True),0,0.5,-0.001)
 					
 					EntityAlpha n\obj,Inverse((n\State[1]-1000.0)/1000.0)
 					n\State[1] = n\State[1] + 2*FPSfactor
@@ -794,4 +789,4 @@ Function UpdateNPCtype076MP(n.NPCs)
 	
 End Function
 ;~IDEal Editor Parameters:
-;~C#Blitz3D
+;~C#Blitz3D TSS

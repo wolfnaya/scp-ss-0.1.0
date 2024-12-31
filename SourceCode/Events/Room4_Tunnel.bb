@@ -9,7 +9,7 @@ End Function
 Function UpdateEvent_Room4_Tunnel(e.Events)
 	
 	If e\room\dist < 10.0 And e\room\dist > 0 Then
-		e\room\NPC[0]=CreateNPC(NPC_human, EntityX(e\room\Objects[0],True), 0.5, EntityZ(e\room\Objects[0],True))
+		e\room\NPC[0]=CreateNPC(NPC_Human, EntityX(e\room\Objects[0],True), 0.5, EntityZ(e\room\Objects[0],True))
 		e\room\NPC[0]\texture = "GFX\npcs\Humans\Personnel\body1.jpg"
 		Local tex = LoadTexture_Strict(e\room\NPC[0]\texture, 1, 2)
 		TextureBlend(tex,5)
@@ -17,7 +17,7 @@ Function UpdateEvent_Room4_Tunnel(e.Events)
 		DeleteSingleTextureEntryFromCache tex
 		RotateEntity e\room\NPC[0]\Collider, 0, e\room\angle+65.0, 0
 		SetNPCFrame e\room\NPC[0], 558
-		e\room\NPC[0]\State[0]=3
+		e\room\NPC[0]\State[0]=STATE_SCRIPT
 		e\room\NPC[0]\IsDead=True
 		
 		RemoveEvent(e)
@@ -26,4 +26,4 @@ Function UpdateEvent_Room4_Tunnel(e.Events)
 End Function
 
 ;~IDEal Editor Parameters:
-;~C#Blitz3D
+;~C#Blitz3D TSS

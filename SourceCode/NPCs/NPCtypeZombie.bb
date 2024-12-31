@@ -325,7 +325,7 @@ Function UpdateNPCtypeZombie(n.NPCs)
 							Local temp = True
 							If n\Path[n\PathLocation]\door <> Null Then
 								If (Not n\Path[n\PathLocation]\door\IsElevatorDoor)
-									If n\Path[n\PathLocation]\door\locked Lor n\Path[n\PathLocation]\door\KeyCard>0 Lor n\Path[n\PathLocation]\door\Code<>"" Then
+									If n\Path[n\PathLocation]\door\locked Lor n\Path[n\PathLocation]\door\KeyCard>-1 Lor n\Path[n\PathLocation]\door\Code<>"" Then
 										temp = False
 									Else
 										If n\Path[n\PathLocation]\door\open = False Then UseDoor(n\Path[n\PathLocation]\door, False)
@@ -664,7 +664,7 @@ Function UpdateNPCtypeZombie(n.NPCs)
 								temp = True
 								If n\Path[n\PathLocation]\door <> Null Then
 									If (Not n\Path[n\PathLocation]\door\IsElevatorDoor)
-										If n\Path[n\PathLocation]\door\locked Lor n\Path[n\PathLocation]\door\KeyCard>0 Lor n\Path[n\PathLocation]\door\Code<>"" Then
+										If n\Path[n\PathLocation]\door\locked Lor n\Path[n\PathLocation]\door\KeyCard>-1 Lor n\Path[n\PathLocation]\door\Code<>"" Then
 											temp = False
 										Else
 											If n\Path[n\PathLocation]\door\open = False Then UseDoor(n\Path[n\PathLocation]\door, False)
@@ -982,6 +982,71 @@ Function UpdateNPCtypeZombie(n.NPCs)
 							it\state2 = n\Gun\MaxAmmo+n\Gun\MaxAmmo
 					End Select
 					it\Dropped = 1
+					Select g\ID
+						Case GUN_P90
+							Random = Rand(0, 5)
+							Select Random
+								Case 0, 1, 4, 5								Case 2
+									AddAttachment(g,ATT_SPECIAL_SCOPE)
+									g\HasToggledAttachments[ATT_SPECIAL_SCOPE] = True
+								Case 3
+									AddAttachment(g,ATT_ACOG_SCOPE)
+									g\HasToggledAttachments[ATT_ACOG_SCOPE] = True
+							End Select
+						Case GUN_MP7
+							Random = Rand(0, 6)
+							Select Random
+								Case 0, 4, 5, 6
+								Case 1
+									AddAttachment(g,ATT_EOTECH)
+									AddAttachment(g,ATT_SUPPRESSOR)
+									g\HasToggledAttachments[ATT_EOTECH] = True
+									g\HasToggledAttachments[ATT_SUPPRESSOR] = True
+								Case 2
+									AddAttachment(g,ATT_RED_DOT)
+									g\HasToggledAttachments[ATT_RED_DOT] = True
+								Case 3
+									AddAttachment(g,ATT_ACOG_SCOPE)
+									g\HasToggledAttachments[ATT_ACOG_SCOPE] = True
+							End Select
+						Case GUN_MP5
+							Random = Rand(0, 5)
+							Select Random
+								Case 0, 4, 5
+								Case 1
+									AddAttachment(g,ATT_EOTECH)
+									g\HasToggledAttachments[ATT_EOTECH] = True
+								Case 2
+									AddAttachment(g,ATT_RED_DOT)
+									AddAttachment(g,ATT_SUPPRESSOR)
+									g\HasToggledAttachments[ATT_RED_DOT] = True
+									g\HasToggledAttachments[ATT_SUPPRESSOR] = True
+								Case 3
+									AddAttachment(g,ATT_ACOG_SCOPE)
+									g\HasToggledAttachments[ATT_ACOG_SCOPE] = True
+							End Select
+						Case GUN_M4A1
+							Random = Rand(0, 7)
+							Select Random
+								Case 0, 4, 5, 6, 7
+								Case 1
+									AddAttachment(g,ATT_EOTECH)
+									g\HasToggledAttachments[ATT_EOTECH] = True
+								Case 2
+									AddAttachment(g,ATT_RED_DOT)
+									g\HasToggledAttachments[ATT_RED_DOT] = True
+								Case 3
+									AddAttachment(g,ATT_ACOG_SCOPE)
+									AddAttachment(g,ATT_SUPPRESSOR)
+									g\HasToggledAttachments[ATT_ACOG_SCOPE] = True
+									g\HasToggledAttachments[ATT_SUPPRESSOR] = True
+							End Select
+						Case GUN_USP
+							Random = Rand(0, 3)							If Random = 0 Then
+								AddAttachment(g,ATT_MATCH)
+								g\HasToggledAttachments[ATT_MATCH] = True
+							EndIf
+					End Select
 					Exit
 				EndIf
 			Next
@@ -1017,4 +1082,4 @@ Function UpdateNPCtypeZombie(n.NPCs)
 End Function
 
 ;~IDEal Editor Parameters:
-;~C#Blitz3D
+;~C#Blitz3D TSS

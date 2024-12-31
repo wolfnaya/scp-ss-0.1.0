@@ -52,6 +52,7 @@ Type NPCs
 	Field FearTarget%
 	Field PrevX#, PrevY#, PrevZ#
 	Field Target.NPCs, TargetID%
+	Field TargetObj%
 	Field EnemyX#, EnemyY#, EnemyZ#
 	Field Path.WayPoints[MaxWayPoints], PathStatus%, PathTimer#, PathLocation%
 	Field NVX#,NVY#,NVZ#,NVName$
@@ -134,6 +135,22 @@ Type NPCAnim
 	Field Animation.Vector3D
 	Field AnimName$
 End Type
+
+;Function CreateDialogue(n.NPCs, EventState%, MinEventNumber%, MaxEventNumber%, Bone$, VoiceLibrary$)
+;	Local e.Events
+;	If n <> Null Then
+;		If e\EventState[EventState] <> MaxEventNumber Then
+;			If InteractWithObject(FindChild(n\obj, Bone), 1.0) Then
+;				Select e\EventState[EventState]
+;					Case MinEventNumber
+;						
+;					Case 
+;				End Select
+;			EndIf
+;		EndIf
+;	EndIf
+;	
+;End Function
 
 Function GetNPCWeaponAnim$(GunType%)
 	
@@ -491,62 +508,7 @@ Function UpdateNPCs()
 				UpdateNPCtypeCI(n)
 			Case NPC_Human, NPC_SM4Nn
 				;[Block]
-				RotateEntity(n\Collider, 0, EntityYaw(n\Collider), EntityRoll(n\Collider), True)
-				
-				prevFrame = AnimTime(n\obj)
-				
-				Select n\State[0]
-					Case 0 ;idle
-						n\CurrSpeed = CurveValue(0.0, n\CurrSpeed, 5.0)
-						Animate2(n\obj, AnimTime(n\obj), 210, 235, 0.1)
-					Case 1 ;walking
-						If n\State[1] = 1.0
-							n\CurrSpeed = CurveValue(n\Speed*0.7, n\CurrSpeed, 20.0)
-						Else
-							n\CurrSpeed = CurveValue(0.015, n\CurrSpeed, 5.0)
-						EndIf
-						Animate2(n\obj, AnimTime(n\obj), 236, 260, n\CurrSpeed * 18)
-					Case 2 ;running
-						n\CurrSpeed = CurveValue(0.03, n\CurrSpeed, 5.0)
-						Animate2(n\obj, AnimTime(n\obj), 301, 319, n\CurrSpeed * 18)
-				End Select
-				
-				If n\State[1] <> 2
-					If n\State[0] = 1
-						If n\CurrSpeed > 0.01 Then
-							If prevFrame < 244 And AnimTime(n\obj)=>244 Then
-								sfxstep = GetStepSound(n\Collider,n\CollRadius)
-								PlaySound2(StepSFX(sfxstep,0,Rand(0,7)),Camera, n\Collider, 8.0, Rnd(0.3,0.5))
-							ElseIf prevFrame < 256 And AnimTime(n\obj)=>256
-								sfxstep = GetStepSound(n\Collider,n\CollRadius)
-								PlaySound2(StepSFX(sfxstep,0,Rand(0,7)),Camera, n\Collider, 8.0, Rnd(0.3,0.5))
-							EndIf
-						EndIf
-					ElseIf n\State[0] = 2
-						If n\CurrSpeed > 0.01 Then
-							If prevFrame < 309 And AnimTime(n\obj)=>309
-								sfxstep = GetStepSound(n\Collider,n\CollRadius)
-								PlaySound2(StepSFX(sfxstep,1,Rand(0,7)),Camera, n\Collider, 8.0, Rnd(0.3,0.5))
-							ElseIf prevFrame =< 319 And AnimTime(n\obj)=<301
-								sfxstep = GetStepSound(n\Collider,n\CollRadius)
-								PlaySound2(StepSFX(sfxstep,1,Rand(0,7)),Camera, n\Collider, 8.0, Rnd(0.3,0.5))
-							EndIf
-						EndIf
-					EndIf
-				EndIf
-				
-				If n\Frame = 19 Lor n\Frame = 60
-					n\IsDead = True
-				EndIf
-				If AnimTime(n\obj)=19 Lor AnimTime(n\obj)=60
-					n\IsDead = True
-				EndIf
-				
-				MoveEntity(n\Collider, 0, 0, n\CurrSpeed * FPSfactor)
-				
-				PositionEntity(n\obj, EntityX(n\Collider), EntityY(n\Collider) - 0.32, EntityZ(n\Collider))
-				
-				RotateEntity n\obj, EntityPitch(n\Collider), EntityYaw(n\Collider)-180.0, 0
+				UpdateNPCTypeHuman(n)
 				;[End Block]
 			Case NPC_SCP_513
 				;[Block}
@@ -1267,7 +1229,7 @@ Function UpdateNPCs()
 			
 			If n\HeadShot And n <> Null Then
 				;debuglog "bleeding"
-				p.Particles = CreateParticle(EntityX(FindChild(n\obj,headbonename$),True),EntityY(FindChild(n\obj,headbonename$),True),EntityZ(FindChild(n\obj,headbonename$),True),5,0.01,-0.005,150)
+				;p.Particles = CreateParticle(EntityX(FindChild(n\obj,headbonename$),True),EntityY(FindChild(n\obj,headbonename$),True),EntityZ(FindChild(n\obj,headbonename$),True),5,0.01,-0.005,150)
 			EndIf
 		EndIf
 			
@@ -1300,9 +1262,10 @@ Function UpdateNPCs()
 						Local UpdateGravity% = False
 						Local MaxX#,MinX#,MaxZ#,MinZ#
 						If n\InFacility=1
+							Local e.Events
 							For e.Events = Each Events
 								If e\EventName = "cont_860" Then
-									If e\eventstate[0] = 1.0
+									If e\EventState[0] = 1.0
 										UpdateGravity = True
 										Exit
 									EndIf
@@ -1838,6 +1801,50 @@ Function ManipulateNPCBones()
 									tovalue = -DeltaYaw(bone,Camera)+offset
 								Else
 									tovalue = DeltaYaw(bone,Camera)+offset
+								EndIf
+								;n\BoneYaw = CurveAngle(tovalue,n\BoneYaw,20.0)
+								smooth# = GetNPCManipulationValue(n\NPCNameInSection,n\BoneToManipulate,"controlleraxis"+i+"_smoothing",2)
+								If smooth>0.0
+									n\BoneYaw = CurveAngle(tovalue,n\BoneYaw,smooth)
+								Else
+									n\BoneYaw = tovalue
+								EndIf
+								n\BoneYaw = ChangeAngleValueForCorrectBoneAssigning(n\BoneYaw)
+								n\BoneYaw = Max(Min(n\BoneYaw,maxvalue),minvalue)
+							;ElseIf --> (Roll Value)
+							;	
+							EndIf
+						Next
+						
+						RotateEntity bone%,EntityPitch(bone)+n\BonePitch,EntityYaw(bone)+n\BoneYaw,EntityRoll(bone)+n\BoneRoll
+					Case 1 ;<--- looking at enemy
+						For i = 1 To GetNPCManipulationValue(n\NPCNameInSection,n\BoneToManipulate,"controller_max",1)
+							If GetNPCManipulationValue(n\NPCNameInSection,n\BoneToManipulate,"controlleraxis"+i,0) = "pitch"
+								maxvalue# = GetNPCManipulationValue(n\NPCNameInSection,n\BoneToManipulate,"controlleraxis"+i+"_max",2)
+								minvalue# = GetNPCManipulationValue(n\NPCNameInSection,n\BoneToManipulate,"controlleraxis"+i+"_min",2)
+								offset# = GetNPCManipulationValue(n\NPCNameInSection,n\BoneToManipulate,"controlleraxis"+i+"_offset",2)
+								If GetNPCManipulationValue(n\NPCNameInSection,n\BoneToManipulate,"controlleraxis"+i+"_inverse",3)
+									tovalue = -DeltaPitch(bone,n\TargetObj)+offset
+								Else
+									tovalue = DeltaPitch(bone,n\TargetObj)+offset
+								EndIf
+								;n\BonePitch = CurveAngle(tovalue,n\BonePitch,20.0)
+								smooth# = GetNPCManipulationValue(n\NPCNameInSection,n\BoneToManipulate,"controlleraxis"+i+"_smoothing",2)
+								If smooth>0.0
+									n\BonePitch = CurveAngle(tovalue,n\BonePitch,smooth)
+								Else
+									n\BonePitch = tovalue
+								EndIf
+								n\BonePitch = ChangeAngleValueForCorrectBoneAssigning(n\BonePitch)
+								n\BonePitch = Max(Min(n\BonePitch,maxvalue),minvalue)
+							ElseIf GetNPCManipulationValue(n\NPCNameInSection,n\BoneToManipulate,"controlleraxis1",0) = "yaw"
+								maxvalue# = GetNPCManipulationValue(n\NPCNameInSection,n\BoneToManipulate,"controlleraxis"+i+"_max",2)
+								minvalue# = GetNPCManipulationValue(n\NPCNameInSection,n\BoneToManipulate,"controlleraxis"+i+"_min",2)
+								offset# = GetNPCManipulationValue(n\NPCNameInSection,n\BoneToManipulate,"controlleraxis"+i+"_offset",2)
+								If GetNPCManipulationValue(n\NPCNameInSection,n\BoneToManipulate,"controlleraxis"+i+"_inverse",3)
+									tovalue = -DeltaYaw(bone,n\TargetObj)+offset
+								Else
+									tovalue = DeltaYaw(bone,n\TargetObj)+offset
 								EndIf
 								;n\BoneYaw = CurveAngle(tovalue,n\BoneYaw,20.0)
 								smooth# = GetNPCManipulationValue(n\NPCNameInSection,n\BoneToManipulate,"controlleraxis"+i+"_smoothing",2)
@@ -2439,44 +2446,44 @@ End Function
 Function PreloadAllNPCAnimations()
 	
 	; ~ Class-D
-	PreloadNPCAnimation("Class-D-Armed", "Class-D", "idle")
-	PreloadNPCAnimation("Class-D-Armed", "Class-D", "walk")
-	PreloadNPCAnimation("Class-D-Armed", "Class-D", "death_front")
-	PreloadNPCAnimation("Class-D-Armed", "Class-D", "death_back")
-	PreloadNPCAnimation("Class-D-Armed", "Class-D", "death_left")
-	PreloadNPCAnimation("Class-D-Armed", "Class-D", "death_right")
-	PreloadNPCAnimation("Class-D-Armed", "Class-D", "pistol_idle")
-	PreloadNPCAnimation("Class-D-Armed", "Class-D", "pistol_walk")
-	PreloadNPCAnimation("Class-D-Armed", "Class-D", "pistol_reload")
-	PreloadNPCAnimation("Class-D-Armed", "Class-D", "rifle_idle")
-	PreloadNPCAnimation("Class-D-Armed", "Class-D", "rifle_walk")
-	PreloadNPCAnimation("Class-D-Armed", "Class-D", "rifle_reload")
-	PreloadNPCAnimation("Class-D-Armed", "Class-D", "shotgun_idle")
-	PreloadNPCAnimation("Class-D-Armed", "Class-D", "shotgun_walk")
-	PreloadNPCAnimation("Class-D-Armed", "Class-D", "shotgun_reload")
-	PreloadNPCAnimation("Class-D-Armed", "Class-D", "smg_idle")
-	PreloadNPCAnimation("Class-D-Armed", "Class-D", "smg_walk")
-	PreloadNPCAnimation("Class-D-Armed", "Class-D", "smg_reload")
-	PreloadNPCAnimation("Class-D-Armed", "Class-D", "surrender")
+	PreloadNPCAnimation(NPC_Class_D, "Class-D", "idle")
+	PreloadNPCAnimation(NPC_Class_D, "Class-D", "walk")
+	PreloadNPCAnimation(NPC_Class_D, "Class-D", "death_front")
+	PreloadNPCAnimation(NPC_Class_D, "Class-D", "death_back")
+	PreloadNPCAnimation(NPC_Class_D, "Class-D", "death_left")
+	PreloadNPCAnimation(NPC_Class_D, "Class-D", "death_right")
+	PreloadNPCAnimation(NPC_Class_D, "Class-D", "pistol_idle")
+	PreloadNPCAnimation(NPC_Class_D, "Class-D", "pistol_walk")
+	PreloadNPCAnimation(NPC_Class_D, "Class-D", "pistol_reload")
+	PreloadNPCAnimation(NPC_Class_D, "Class-D", "rifle_idle")
+	PreloadNPCAnimation(NPC_Class_D, "Class-D", "rifle_walk")
+	PreloadNPCAnimation(NPC_Class_D, "Class-D", "rifle_reload")
+	PreloadNPCAnimation(NPC_Class_D, "Class-D", "shotgun_idle")
+	PreloadNPCAnimation(NPC_Class_D, "Class-D", "shotgun_walk")
+	PreloadNPCAnimation(NPC_Class_D, "Class-D", "shotgun_reload")
+	PreloadNPCAnimation(NPC_Class_D, "Class-D", "smg_idle")
+	PreloadNPCAnimation(NPC_Class_D, "Class-D", "smg_walk")
+	PreloadNPCAnimation(NPC_Class_D, "Class-D", "smg_reload")
+	PreloadNPCAnimation(NPC_Class_D, "Class-D", "surrender")
 	; ~ Chaos Insurgency
-	PreloadNPCAnimation("CI", "Chaos Insurgency", "idle")
-	PreloadNPCAnimation("CI", "Chaos Insurgency", "walk")
-	PreloadNPCAnimation("CI", "Chaos Insurgency", "death_1")
-	PreloadNPCAnimation("CI", "Chaos Insurgency", "death_2")
-	PreloadNPCAnimation("CI", "Chaos Insurgency", "death_3")
-	PreloadNPCAnimation("CI", "Chaos Insurgency", "pistol_idle")
-	PreloadNPCAnimation("CI", "Chaos Insurgency", "pistol_walk")
-	PreloadNPCAnimation("CI", "Chaos Insurgency", "pistol_reload")
-	PreloadNPCAnimation("CI", "Chaos Insurgency", "rifle_idle")
-	PreloadNPCAnimation("CI", "Chaos Insurgency", "rifle_walk")
-	PreloadNPCAnimation("CI", "Chaos Insurgency", "rifle_reload")
-	PreloadNPCAnimation("CI", "Chaos Insurgency", "shotgun_idle")
-	PreloadNPCAnimation("CI", "Chaos Insurgency", "shotgun_walk")
-	PreloadNPCAnimation("CI", "Chaos Insurgency", "shotgun_reload")
-	PreloadNPCAnimation("CI", "Chaos Insurgency", "smg_idle")
-	PreloadNPCAnimation("CI", "Chaos Insurgency", "smg_walk")
-	PreloadNPCAnimation("CI", "Chaos Insurgency", "smg_reload")
-	PreloadNPCAnimation("CI", "Chaos Insurgency", "throw_grenade")
+	PreloadNPCAnimation(NPC_CI, "Chaos Insurgency", "idle")
+	PreloadNPCAnimation(NPC_CI, "Chaos Insurgency", "walk")
+	PreloadNPCAnimation(NPC_CI, "Chaos Insurgency", "death_1")
+	PreloadNPCAnimation(NPC_CI, "Chaos Insurgency", "death_2")
+	PreloadNPCAnimation(NPC_CI, "Chaos Insurgency", "death_3")
+	PreloadNPCAnimation(NPC_CI, "Chaos Insurgency", "pistol_idle")
+	PreloadNPCAnimation(NPC_CI, "Chaos Insurgency", "pistol_walk")
+	PreloadNPCAnimation(NPC_CI, "Chaos Insurgency", "pistol_reload")
+	PreloadNPCAnimation(NPC_CI, "Chaos Insurgency", "rifle_idle")
+	PreloadNPCAnimation(NPC_CI, "Chaos Insurgency", "rifle_walk")
+	PreloadNPCAnimation(NPC_CI, "Chaos Insurgency", "rifle_reload")
+	PreloadNPCAnimation(NPC_CI, "Chaos Insurgency", "shotgun_idle")
+	PreloadNPCAnimation(NPC_CI, "Chaos Insurgency", "shotgun_walk")
+	PreloadNPCAnimation(NPC_CI, "Chaos Insurgency", "shotgun_reload")
+	PreloadNPCAnimation(NPC_CI, "Chaos Insurgency", "smg_idle")
+	PreloadNPCAnimation(NPC_CI, "Chaos Insurgency", "smg_walk")
+	PreloadNPCAnimation(NPC_CI, "Chaos Insurgency", "smg_reload")
+	PreloadNPCAnimation(NPC_CI, "Chaos Insurgency", "throw_grenade")
 	
 End Function
 
@@ -2507,4 +2514,4 @@ Function FindNPCAnimation.Vector3D(NPCtype, AnimName$)
 End Function
 
 ;~IDEal Editor Parameters:
-;~C#Blitz3D
+;~C#Blitz3D TSS

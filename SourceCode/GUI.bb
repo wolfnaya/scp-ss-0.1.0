@@ -46,7 +46,7 @@ Function RenderInterfaceIcons()
 				
 				Color 255,255,255
 				SetFont fo\Font[Font_Default_Large]
-				Text opt\GraphicWidth / 2 + Sin(yawvalue) * (opt\GraphicWidth / 3) - 16, opt\GraphicHeight / 2 - Sin(pitchvalue) * (opt\GraphicHeight / 3) - 14,"E"
+				Text opt\GraphicWidth / 2 + Sin(yawvalue) * (opt\GraphicWidth / 3) - 16, opt\GraphicHeight / 2 - Sin(pitchvalue) * (opt\GraphicHeight / 3) - 14, KeyName[KEY_USE]
 				
 			EndIf
 			
@@ -72,7 +72,7 @@ Function RenderInterfaceIcons()
 				
 				Color 255,255,255
 				SetFont fo\Font[Font_Default_Large]
-				Text opt\GraphicWidth / 2 + Sin(yawvalue) * (opt\GraphicWidth / 3) - 16, opt\GraphicHeight / 2 - Sin(pitchvalue) * (opt\GraphicHeight / 3) - 14,"E"
+				Text opt\GraphicWidth / 2 + Sin(yawvalue) * (opt\GraphicWidth / 3) - 16, opt\GraphicHeight / 2 - Sin(pitchvalue) * (opt\GraphicHeight / 3) - 14, KeyName[KEY_USE]
 			EndIf
 			
 			If InterfaceTimer# >= 70*1.5 Then
@@ -114,7 +114,7 @@ Function RenderInterfaceIcons()
 				Rect(opt\GraphicWidth / 2 + Sin(yawvalue) * (opt\GraphicWidth / 3) + 32, opt\GraphicHeight / 2 - Sin(pitchvalue) * (opt\GraphicHeight / 3) - 32,Min(InterfaceTimer#*2,200),64,False)
 				Color 255,255,255
 				SetFont fo\Font[Font_Default_Large]
-				Text opt\GraphicWidth / 2 + Sin(yawvalue) * (opt\GraphicWidth / 3) - 16, opt\GraphicHeight / 2 - Sin(pitchvalue) * (opt\GraphicHeight / 3) - 14,"E"
+				Text opt\GraphicWidth / 2 + Sin(yawvalue) * (opt\GraphicWidth / 3) - 16, opt\GraphicHeight / 2 - Sin(pitchvalue) * (opt\GraphicHeight / 3) - 14, KeyName[KEY_USE]
 				
 				;If IsDialogue Then
 				;	Text opt\GraphicWidth / 2 + Sin(yawvalue) * (opt\GraphicWidth / 3) + 48, opt\GraphicHeight / 2 - Sin(pitchvalue) * (opt\GraphicHeight / 3) - 10,GetLocalString("Interface","talk")
@@ -143,7 +143,7 @@ Function RenderInterfaceIcons()
 					Rect(x,y,64,64,False)
 					Color 255,255,255
 					SetFont fo\Font[Font_Default_Large]
-					Text x/2, y/2,"E"
+					Text x/2, y/2, KeyName[KEY_USE]
 					
 					Color 0, 0, 0
 					Rect(x + 4, y + 4, 64 - 8, 64 - 8)
@@ -189,7 +189,7 @@ Function RenderInterfaceIcons()
 			
 			Color 255,255,255
 			SetFont fo\Font[Font_Default_Large]
-			Text opt\GraphicWidth / 2 + Sin(yawvalue) * (opt\GraphicWidth / 3) - 16, opt\GraphicHeight / 2 - Sin(pitchvalue) * (opt\GraphicHeight / 3) - 14,"E"
+			Text opt\GraphicWidth / 2 + Sin(yawvalue) * (opt\GraphicWidth / 3) - 16, opt\GraphicHeight / 2 - Sin(pitchvalue) * (opt\GraphicHeight / 3) - 14, KeyName[KEY_USE]
 		EndIf
 		
 		If DrawHandIcon Then
@@ -204,7 +204,7 @@ Function RenderInterfaceIcons()
 			Rect(opt\GraphicWidth / 2 + Sin(yawvalue) * (opt\GraphicWidth / 3) + 32, opt\GraphicHeight / 2 - Sin(pitchvalue) * (opt\GraphicHeight / 3) - 32,Min(InterfaceTimer#*2,200),64,False)
 			Color 255,255,255
 			SetFont fo\Font[Font_Default_Large]
-			Text opt\GraphicWidth / 2 + Sin(yawvalue) * (opt\GraphicWidth / 3) - 16, opt\GraphicHeight / 2 - Sin(pitchvalue) * (opt\GraphicHeight / 3) - 14,"E"
+			Text opt\GraphicWidth / 2 + Sin(yawvalue) * (opt\GraphicWidth / 3) - 16, opt\GraphicHeight / 2 - Sin(pitchvalue) * (opt\GraphicHeight / 3) - 14, KeyName[KEY_USE]
 			
 		EndIf
 		
@@ -252,7 +252,7 @@ Function RenderInterfaceIcons()
 				Rect(x,y,64,64,False)
 				Color 255,255,255
 				SetFont fo\Font[Font_Default_Large]
-				Text x/2, y/2,"E"
+				Text x/2, y/2, KeyName[KEY_USE]
 				
 				Color 0, 0, 0
 				Rect(x + 4, y + 4, 64 - 8, 64 - 8)
@@ -276,24 +276,26 @@ Function UpdateInterfaceIcons()
 			If d_I\ClosestDoor <> Null Then 
 				If d_I\ClosestDoor\Code <> "" Lor (d_I\ClosestDoor\dir=DOOR_ELEVATOR_3FLOOR And d_I\ClosestButton=d_I\ClosestDoor\buttons[0]) Lor (d_I\ClosestDoor\dir=DOOR_STORAGE_ELEVATOR And d_I\ClosestButton=d_I\ClosestDoor\buttons[0]) Then
 					temp = True
-					For ne = Each NewElevator
-						If ne\door = d_I\ClosestDoor Then
-							For np = Each NPCs
-								If np\NPCtype = NPC_SCP_173 And np\Idle = SCP173_BOXED Then
-									If Abs(EntityX(np\Collider) - EntityX(ne\obj, True)) >= 280.0 * RoomScale + (0.015 * FPSfactor) Lor Abs(EntityZ(np\Collider) - EntityZ(ne\obj, True)) >= 280.0 * RoomScale + (0.015 * FPSfactor) Then
-										temp = 2
+					If gopt\GameMode = GAMEMODE_NTF Then ; - Yes, I decided to do that fix after 8 months of the final release...... Yeah, well who knew I would have to revisit B3D to improve my coding skills.... ~ Wolfnaya
+						For ne = Each NewElevator
+							If ne\door = d_I\ClosestDoor Then
+								For np = Each NPCs
+									If np\NPCtype = NPC_SCP_173 And np\Idle = SCP173_BOXED Then
+										If Abs(EntityX(np\Collider) - EntityX(ne\obj, True)) >= 280.0 * RoomScale + (0.015 * FPSfactor) Lor Abs(EntityZ(np\Collider) - EntityZ(ne\obj, True)) >= 280.0 * RoomScale + (0.015 * FPSfactor) Then
+											temp = 2
+										EndIf
 									EndIf
-								EndIf
-								If np\NPCtype = NPC_NTF And np\HP > 0 Then
-									If Abs(EntityX(np\Collider) - EntityX(ne\obj, True)) >= 280.0 * RoomScale + (0.015 * FPSfactor) Lor Abs(EntityZ(np\Collider) - EntityZ(ne\obj, True)) >= 280.0 * RoomScale + (0.015 * FPSfactor) Then
-										temp = False
-										Exit
+									If np\NPCtype = NPC_NTF And np\HP > 0 Then
+										If Abs(EntityX(np\Collider) - EntityX(ne\obj, True)) >= 280.0 * RoomScale + (0.015 * FPSfactor) Lor Abs(EntityZ(np\Collider) - EntityZ(ne\obj, True)) >= 280.0 * RoomScale + (0.015 * FPSfactor) Then
+											temp = False
+											Exit
+										EndIf
 									EndIf
-								EndIf
-							Next
-							Exit
-						EndIf
-					Next
+								Next
+								Exit
+							EndIf
+						Next
+					EndIf
 					
 					If temp = 1 Then
 						d_I\SelectedDoor = d_I\ClosestDoor
@@ -340,7 +342,7 @@ Function UpdateInterfaceIcons()
 						EndIf
 					Next
 				ElseIf Playable Then
-					PlaySound2(ButtonSFX[0], Camera, d_I\ClosestButton)
+					If d_I\ClosestDoor\dir <> DOOR_OFFICE And d_I\ClosestDoor\dir <> DOOR_OFFICE_2 Then PlaySound2(ButtonSFX[0], Camera, d_I\ClosestButton)
 					UseDoor(d_I\ClosestDoor,True)
 				EndIf
 			EndIf
@@ -397,7 +399,6 @@ Function DrawGUI()
 	
 	DrawSplashTexts()
 	DrawSplashMsg()
-	DrawScopeDots()
 	
 	If psp\IsShowingHUD And (Not MenuOpen) Then
 		If HUDenabled Then
@@ -406,7 +407,7 @@ Function DrawGUI()
 			x = (opt\GraphicWidth / 2) - (width / 2) + 20
 			y% = opt\GraphicHeight - 95
 			; ~ Blinking Bar
-			If (EntityVisible(Curr173\Collider,Camera)) And EntityDistanceSquared(Curr173\Collider, Collider) < PowTwo(15.0) Then
+			;If BlinkTimer < BLINKFREQ Then
 				Color 255, 255, 255	
 				Rect (x, y, width, height, False)
 				If BlinkTimer < 150 Then
@@ -433,7 +434,7 @@ Function DrawGUI()
 				
 				DrawImage BlinkIcon[0], x - 50, y
 				
-			EndIf
+			;EndIf
 			SetFont fo\Font%[Font_Digital_Medium]
 			x% = 80
 			y = opt\GraphicHeight - 55
@@ -711,9 +712,6 @@ Function DrawGUI()
 			; ~ Weapons
 			DrawGunsInHUD()
 		EndIf
-		If AttachmentMenuOpen Then
-			RenderAttachments()
-		EndIf
 		
 		If DebugHUD Then
 			x% = 80
@@ -940,11 +938,8 @@ Function DrawGUI()
 									If TaskExists(TASK_READ_NOTE) Then
 										EndTask(TASK_READ_NOTE)
 									EndIf
-									If Inventory[n]\itemtemplate\tempname = "key_class_d" Then
-									Else
-										If (Not TaskExists(TASK_FIND_CLASS_D_KEY)) Then
-											BeginTask(TASK_FIND_CLASS_D_KEY)
-										EndIf
+									If (Not TaskExists(TASK_FIND_CLASS_D_KEY) And Inventory[n]\itemtemplate\tempname = "key_class_d") Then
+										BeginTask(TASK_FIND_CLASS_D_KEY)
 									EndIf
 								EndIf
 							EndIf
@@ -1012,8 +1007,9 @@ Function DrawGUI()
 ;					;[End Block]
 				Case "radio","18vradio","fineradio","veryfineradio"
 					;[Block]
-					If SelectedItem\itemtemplate\img=0 Then
-						SelectedItem\itemtemplate\img=LoadImage_Strict(SelectedItem\itemtemplate\imgpath)	
+					
+					If SelectedItem\itemtemplate\img = 0 Then
+						SelectedItem\itemtemplate\img = LoadImage_Strict(SelectedItem\itemtemplate\imgpath)
 						MaskImage(SelectedItem\itemtemplate\img, 255, 0, 255)
 					EndIf
 					
@@ -1106,7 +1102,7 @@ Function DrawGUI()
 					
 					SetFont fo\Font[Font_Digital_Small]
 					
-					If PlayerRoom\RoomTemplate\Name = "pocketdimension" Then
+					If PlayerRoom\RoomTemplate\Name = "pocketdimension" Then	
 						If (MilliSecs() Mod 1000) > 300 Then
 							Color 30,30,30
 							Text(x, y + height / 2 - 80, GetLocalString("Devices","nav_pd_1"), True)
@@ -1138,13 +1134,14 @@ Function DrawGUI()
 								stepsZ = stepsZ + 1
 								tempPos = tempPos + 8.0
 							Wend
+							
 							x = x - 12 + ((posX + (8.0 * stepsX)) Mod 8.0) * 3
 							y = y + 12 - ((posZ + (8.0 * stepsZ)) Mod 8.0) * 3
-							For z2 = Max(0, PlayerZ - 6) To Min(MapGridSize - 1, PlayerZ + 6)
-								For x2 = Max(0, PlayerX - 6) To Min(MapGridSize - 1, PlayerX + 6)
+							For z2 = Max(0, PlayerZ - 6) To Min(Map_GridSize - 1, PlayerZ + 6)
+								For x2 = Max(0, PlayerX - 6) To Min(Map_GridSize - 1, PlayerX + 6)
 									If SelectedItem\itemtemplate\name = "S-NAV 300 Navigator" And Rand(0,1) Then Exit
 									;If CoffinDistance > 16.0 Lor Rnd(16.0) < CoffinDistance Then
-									If CurrGrid\Grid[x2 + (z2 * MapGridSize)] Then
+									If CurrGrid\Grid[x2 + (z2 * Map_GridSize)] Then
 										Local drawx% = x + (PlayerX - x2) * 24 , drawy% = y - (PlayerZ - z2) * 24
 										
 										Color (30,30,30)
@@ -1285,7 +1282,7 @@ Function DrawGUI()
 	EndIf
 	
 	If Inventory[SLOT_TORSO] <> Null And Left(Inventory[SLOT_TORSO]\itemtemplate\tempname, 3) = "hds" Then
-		If hds\ExplodeTimer > 0 And hds\Health < 0 Then
+		If hds\ExplodeTimer > 0 And hds\Health <= 0 Then
 			If (MilliSecs() Mod 1000) > 300 Then
 				SetFont fo\Font[Font_Digital_Large]
 				Color 255,0,0
@@ -1306,8 +1303,13 @@ Function DrawGUI()
 	
 	DrawTasks()
 	
-	If gopt\GameMode = GAMEMODE_NTF Then
+	If gopt\GameMode = GAMEMODE_NTF And cpt\NTFCurrent < 2 Then
 		RenderCommunicationAndSocialWheel()
+	EndIf
+	
+	Color 255, 255, 255
+	If AttachmentMenuOpen Then
+		RenderAttachments()
 	EndIf
 	
 	CatchErrors("DrawGUI")
@@ -1325,7 +1327,7 @@ Function UpdateGUI()
 	UpdateInterfaceIcons()
 	
 	If (Not MenuOpen) And (Not InvOpen) And (OtherOpen=Null) And (ConsoleOpen=False) And (Using294=False) And (SelectedScreen=Null) And EndingTimer=>0 And KillTimer >= 0
-		If gopt\GameMode = GAMEMODE_NTF Then
+		If gopt\GameMode = GAMEMODE_NTF And cpt\NTFCurrent < 2 Then
 			UpdateCommunicationAndSocialWheel()
 		EndIf
 	EndIf
@@ -1642,8 +1644,10 @@ Function UpdateGUI()
 						RadioState[0] = -1
 					EndIf
 					
-					x = opt\GraphicWidth - ImageWidth(SelectedItem\itemtemplate\img)
-					y = opt\GraphicHeight - ImageHeight(SelectedItem\itemtemplate\img)
+					If SelectedItem\itemtemplate\img <> 0 Then
+						x = opt\GraphicWidth - ImageWidth(SelectedItem\itemtemplate\img)
+						y = opt\GraphicHeight - ImageHeight(SelectedItem\itemtemplate\img)
+					EndIf
 					
 					If SelectedItem\state > 0 Then
 						If PlayerRoom\RoomTemplate\Name = "pocketdimension" Then; Lor CoffinDistance < 4.0 Then
@@ -2322,7 +2326,7 @@ Function UpdateGUI()
 					;[End Block]
 				Case "scp207"
 					;[Block]
-					If (Not Inventory[SLOT_HEAD] <> Null And Left(Inventory[SLOT_HEAD]\itemtemplate\tempname, 6) = "helmet") Lor (Not Inventory[SLOT_HEAD] <> Null And Left(Inventory[SLOT_HEAD]\itemtemplate\tempname, 7) = "gasmask") Lor (Not Inventory[SLOT_TORSO] <> Null And Left(Inventory[SLOT_TORSO]\itemtemplate\tempname, 6) = "hazmat")Lor (Not mpl\HasNTFGasmask) Lor(Not Inventory[SLOT_TORSO] <> Null And Left(Inventory[SLOT_TORSO]\itemtemplate\tempname, 3) = "hds") Then
+					If (Inventory[SLOT_HEAD] <> Null And Left(Inventory[SLOT_HEAD]\itemtemplate\tempname, 6) = "helmet") Lor (Inventory[SLOT_HEAD] <> Null And Left(Inventory[SLOT_HEAD]\itemtemplate\tempname, 7) = "gasmask") Lor (Inventory[SLOT_TORSO] <> Null And Left(Inventory[SLOT_TORSO]\itemtemplate\tempname, 6) = "hazmat")Lor mpl\HasNTFGasmask Lor(Inventory[SLOT_TORSO] <> Null And Left(Inventory[SLOT_TORSO]\itemtemplate\tempname, 3) = "hds") Then
 						CreateMsg(GetLocalString("Items","cant_scp207"))
 						SelectedItem = Null
 						Return
@@ -2807,38 +2811,6 @@ Function UpdateGUI()
 End Function
 
 Global ShowingAimCross%
-
-Function DrawScopeDots()
-	Local g.Guns, alive% = False
-	
-	If gopt\GameMode = GAMEMODE_MULTIPLAYER Then
-		If Players[mp_I\PlayerID]\CurrHP > 0 Then alive = True
-	Else
-		If IsSPPlayerAlive() Then alive = True
-	EndIf
-	
-	For g = Each Guns
-		
-		If g_I\HoldingGun = g\ID Then
-			If ReadyToShowDot And alive Then
-				If g\HasAttachments[ATT_SPECIAL_SCOPE] Then
-					If g\name = "p90" Then
-						DrawImage AimCrossIMG[1],opt\GraphicWidth/2,opt\GraphicHeight/2
-					Else
-						DrawImage AimCrossIMG[5],opt\GraphicWidth/2,opt\GraphicHeight/2
-					EndIf
-				ElseIf g\HasAttachments[ATT_RED_DOT] Then
-					DrawImage AimCrossIMG[2],opt\GraphicWidth/2,opt\GraphicHeight/2
-				ElseIf g\HasAttachments[ATT_EOTECH] Then
-					DrawImage AimCrossIMG[3],opt\GraphicWidth/2,opt\GraphicHeight/2
-				ElseIf g\HasAttachments[ATT_ACOG_SCOPE] Then
-					DrawImage AimCrossIMG[4],opt\GraphicWidth/2,opt\GraphicHeight/2
-				EndIf
-			EndIf
-		EndIf
-	Next
-	
-End Function
 
 Function DrawGunsInHUD()
 	Local isMultiplayer% = (gopt\GameMode = GAMEMODE_MULTIPLAYER)
@@ -3617,4 +3589,4 @@ Function MouseOn%(x%, y%, width%, height%)
 End Function
 
 ;~IDEal Editor Parameters:
-;~C#Blitz3D
+;~C#Blitz3D TSS

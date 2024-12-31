@@ -62,7 +62,7 @@ Global WaterHissSFX%
 Global OpenClassicDoorSFX%, CloseClassicDoorSFX%
 
 Global IntroSFX%[5]
-Global AlarmSFX%[14]
+Global AlarmSFX%[12]
 Global HeartBeatSFX
 Global VomitSFX%
 Global BreathSFX[2 * 5]
@@ -1024,8 +1024,9 @@ Function LoadAllSounds()
 	
 	DrawLoading(39,False,"","Sounds")
 	
-	For i = 0 To 13
-		AlarmSFX[i] = LoadSound_Strict("SFX\Alarm\Alarm"+(i-1)+".ogg")
+	AlarmSFX[0] = LoadSound_Strict("SFX\Alarm\Alarm.ogg")
+	For i = 1 To 11
+		AlarmSFX[i] = LoadSound_Strict("SFX\Alarm\Alarm"+(i+1)+".ogg")
 	Next
 	
 	DrawLoading(40,False,"","Sounds")
@@ -1065,4 +1066,4 @@ Function LoadAllSounds()
 End Function
 
 ;~IDEal Editor Parameters:
-;~C#Blitz3D
+;~C#Blitz3D TSS

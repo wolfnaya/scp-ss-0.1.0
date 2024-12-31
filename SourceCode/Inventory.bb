@@ -1,4 +1,3 @@
-
 Const MaxInventorySpace% = 37
 
 Const SLOT_HEAD = 9
@@ -1291,4 +1290,4 @@ Function ClearInventory(withbackpack=False)
 End Function
 
 ;~IDEal Editor Parameters:
-;~C#Blitz3D
+;~C#Blitz3D TSS

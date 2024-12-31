@@ -53,9 +53,9 @@ Function UpdateEvent_Cont_173(e.Events)
 			ShowEntity e\room\AlarmRotor[0]
 			
 			If e\SoundCHN[0] = 0 Then
-				e\SoundCHN[0] = PlaySound_Strict(AlarmSFX[12])
+				e\SoundCHN[0] = PlaySound_Strict(AlarmSFX[10])
 			Else
-				If Not ChannelPlaying(e\SoundCHN[0]) Then e\SoundCHN[0] = PlaySound_Strict(AlarmSFX[12])
+				If Not ChannelPlaying(e\SoundCHN[0]) Then e\SoundCHN[0] = PlaySound_Strict(AlarmSFX[10])
 			EndIf
 		Else
 			HideEntity e\room\AlarmRotor[0]
@@ -91,4 +91,4 @@ Function UpdateEvent_Cont_173(e.Events)
 End Function
 
 ;~IDEal Editor Parameters:
-;~C#Blitz3D
+;~C#Blitz3D TSS

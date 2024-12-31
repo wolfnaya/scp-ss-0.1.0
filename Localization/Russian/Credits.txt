@@ -2,7 +2,7 @@
 *SCP - Security Stories
 
 
-*Мод основан на SCP: Nine-Tailed Fox by Third Subdivision Studios.
+*Мод основан на SCP: Nine-Tailed Fox от Third Subdivision Studios.
 
 *~ Разработчики:
 
@@ -58,7 +58,7 @@
 *SCP: Nine-Tailed Fox
 
 
-*Основан на SCP - Containment Breach сделанный Undertow Games.
+*Основан на SCP - Containment Breach от Undertow Games.
 
 
 		Aaron Mckee ("TheVolgun")

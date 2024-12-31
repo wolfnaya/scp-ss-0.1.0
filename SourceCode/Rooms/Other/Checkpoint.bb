@@ -541,7 +541,7 @@ Function UpdateEvent_Checkpoints(e.Events)
 						UseDoor(e\room\RoomDoors[2])
 					EndIf
 					
-					PlaySound_Strict(AlarmSFX[6])
+					PlaySound_Strict(AlarmSFX[4])
 				EndIf
 			EndIf
 		Else
@@ -655,7 +655,7 @@ Function UpdateEvent_Checkpoint_HCZ_106(e.Events)
 						mtfd\Enabled = False
 						n.NPCs = CreateNPC(NPC_Human,EntityX(e\room\Objects[14],True),EntityY(e\room\Objects[14],True)+0.5,EntityZ(e\room\Objects[14],True))
 						RotateEntity n\Collider,0,e\room\angle-90,0
-						n\State[0] = 3
+						n\State[0] = STATE_SCRIPT
 						ChangeNPCTexture(n,"GFX\NPCs\Scientist.jpg")
 						SetNPCFrame(n,558)
 						n\IsDead = True
@@ -732,7 +732,7 @@ Function UpdateEvent_Checkpoint_HCZ_106(e.Events)
 							If e\Sound[0] <> 0 Then FreeSound_Strict(e\Sound[0]) : e\Sound[0] = 0
 							e\Sound[0] = LoadSound_Strict("SFX\Door\DoorSparks.ogg")
 							e\SoundCHN[0] = PlaySound2(e\Sound[0],Camera,e\room\RoomDoors[1]\obj,5)
-							PlaySound_Strict(AlarmSFX[6])
+							PlaySound_Strict(AlarmSFX[4])
 							PlaySound_Strict LoadTempSound("SFX\Door\DoorClose079.ogg")
 							
 							e\EventState[0] = 4
@@ -775,7 +775,7 @@ Function UpdateEvent_Checkpoint_HCZ_106(e.Events)
 							mtfd\Enabled = False
 							n.NPCs = CreateNPC(NPC_Human,EntityX(e\room\Objects[14],True),EntityY(e\room\Objects[14],True),EntityZ(e\room\Objects[14],True))
 							RotateEntity n\Collider,0,e\room\angle-90,0
-							n\State[0] = 3
+							n\State[0] = STATE_SCRIPT
 							;ChangeNPCTextureID(n,9)
 							SetNPCFrame(n,558)
 							n\IsDead = True
@@ -892,7 +892,7 @@ Function UpdateEvent_Checkpoint_HCZ_106(e.Events)
 							If e\Sound[0] <> 0 Then FreeSound_Strict(e\Sound[0]) : e\Sound[0] = 0
 							e\Sound[0] = LoadSound_Strict("SFX\Door\DoorSparks.ogg")
 							e\SoundCHN[0] = PlaySound2(e\Sound[0],Camera,e\room\RoomDoors[1]\obj,5)
-							PlaySound_Strict(AlarmSFX[6])
+							PlaySound_Strict(AlarmSFX[4])
 							PlaySound_Strict LoadTempSound("SFX\Door\DoorClose079.ogg")
 							
 							e\EventState[0] = 4
@@ -979,4 +979,4 @@ Function UpdateEvent_Checkpoint_HCZ_106(e.Events)
 End Function
 
 ;~IDEal Editor Parameters:
-;~C#Blitz3D
+;~C#Blitz3D TSS

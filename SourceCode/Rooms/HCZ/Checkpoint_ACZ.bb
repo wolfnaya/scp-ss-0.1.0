@@ -62,7 +62,7 @@ Function UpdateEvent_Checkpoint_ACZ(e.Events)
 			
 			If EntityDistanceSquared(e\room\Objects[10],Collider)<PowTwo(1.4) And e\EventState[10] = 0.0
 				If d_I\ClosestButton = e\room\Objects[11] Then
-					If keyhituse Then
+					If KeyHitUse Then
 						PlaySound_Strict(ButtonSFX[0])
 						e\EventState[12] = 1.0
 						StopChannel e\SoundCHN[1]
@@ -83,7 +83,7 @@ Function UpdateEvent_Checkpoint_ACZ(e.Events)
 							UseDoor(e\room\RoomDoors[2])
 						EndIf
 						
-						PlaySound_Strict(AlarmSFX[6])
+						PlaySound_Strict(AlarmSFX[4])
 					EndIf
 				EndIf
 			EndIf
@@ -154,9 +154,9 @@ Function UpdateEvent_Checkpoint_ACZ(e.Events)
 		If e\room\dist < 6.0 Then
 			If e\room\RoomDoors[1]\locked = True Then
 				If (Not e\SoundCHN[0]) Then
-					e\SoundCHN[0] = PlaySound_Strict(AlarmSFX[9])
+					e\SoundCHN[0] = PlaySound_Strict(AlarmSFX[7])
 				Else
-					If (Not ChannelPlaying(e\SoundCHN[0])) Then e\SoundCHN[0] = PlaySound_Strict(AlarmSFX[9])
+					If (Not ChannelPlaying(e\SoundCHN[0])) Then e\SoundCHN[0] = PlaySound_Strict(AlarmSFX[7])
 				EndIf
 			EndIf
 		EndIf
@@ -165,4 +165,4 @@ Function UpdateEvent_Checkpoint_ACZ(e.Events)
 End Function
 
 ;~IDEal Editor Parameters:
-;~C#Blitz3D
+;~C#Blitz3D TSS

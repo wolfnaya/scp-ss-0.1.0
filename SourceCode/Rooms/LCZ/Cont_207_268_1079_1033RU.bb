@@ -82,7 +82,7 @@ Function UpdateEvent_Cont_207_268_1079_1033RU(e.Events)
 			EntityTexture(e\room\NPC[0]\obj, tex)
 			DeleteSingleTextureEntryFromCache tex
 			SetNPCFrame(e\room\NPC[0], 40)
-			e\room\NPC[0]\State[0] = 3
+			e\room\NPC[0]\State[0] = STATE_SCRIPT
 		EndIf
 		
 		If e\EventState[0] = 0 Then
@@ -115,4 +115,4 @@ Function UpdateEvent_Cont_207_268_1079_1033RU(e.Events)
 	
 End Function
 ;~IDEal Editor Parameters:
-;~C#Blitz3D
+;~C#Blitz3D TSS

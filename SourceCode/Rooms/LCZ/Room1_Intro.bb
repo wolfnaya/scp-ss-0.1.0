@@ -94,7 +94,7 @@ Function UpdateEvent_Room1_Intro(e.Events)
 		e\EventState[5] = e\EventState[5] + FPSfactor
 		
 		If e\EventState[5] > 70*5 Then
-			If e\EventState[4] < 1 Then
+			If e\EventState[4] < 2 Then
 				EntityTexture e\room\Objects[ROOM1_INTRO_Monitors_Obj], Tram_Screen[0], Floor(((e\EventState[5]-70*5)/(70*5)) Mod 2.0)
 			Else
 				EntityTexture e\room\Objects[ROOM1_INTRO_Monitors_Obj], Tram_Screen[1], Floor(((e\EventState[5]-70*5)/(70*5)) Mod 2.0)
@@ -103,7 +103,7 @@ Function UpdateEvent_Room1_Intro(e.Events)
 		
 		;! ~ [Music]
 		
-		If e\EventState[4] < 5 Then
+		If e\EventState[4] < 6 Then
 			ShouldPlay = MUS_INTRODUCTION
 		Else
 			ShouldPlay = MUS_CHASE_106
@@ -193,15 +193,13 @@ Function UpdateEvent_Room1_Intro(e.Events)
 		If e\EventState[0] > 70*5 Then
 			If TaskExists(TASK_GO_TO_LCZ) Then
 				EndTask(TASK_GO_TO_LCZ)
-				BeginTask(TASK_GO_TO_TRAM)
+				If e\EventState[4] = 0 Then BeginTask(TASK_GO_TO_TRAM)
 			Else
-				If (Not TaskExists(TASK_GO_TO_TRAM))
-					BeginTask(TASK_GO_TO_TRAM)
-				EndIf
+				If (Not TaskExists(TASK_GO_TO_TRAM)) And e\EventState[4] = 0 Then BeginTask(TASK_GO_TO_TRAM)
 			EndIf
-			If HUDenabled Then
+;			If HUDenabled Then
 				psp\IsShowingHUD = True
-			EndIf
+;			EndIf
 			psp\NoMove = False
 			psp\NoRotation = False
 		ElseIf e\EventState[0] < 70*5
@@ -211,7 +209,7 @@ Function UpdateEvent_Room1_Intro(e.Events)
 			psp\IsShowingHUD = False
 		EndIf
 		
-		;! ~ Guard dialogue
+		;! ~ Guard interaction
 		
 		If e\room\NPC[0] <> Null Then
 			If e\EventState[3] <> 4 Then
@@ -231,17 +229,56 @@ Function UpdateEvent_Room1_Intro(e.Events)
 					EndIf
 				EndIf
 			EndIf
+			If e\room\NPC[0]\HP < 140 Then
+				If e\room\NPC[0]\State[0] = 9 Then PlayPlayerSPVoiceLine("SFX\Player\pain"+(Rand(1,8)))
+				e\room\NPC[0]\EnemyX = Camera
+				e\room\NPC[0]\EnemyY = Camera
+				e\room\NPC[0]\EnemyZ = Camera
+				;e\room\NPC[0]\State[0] = 5
+				;If EntityDistanceSquared(e\room\NPC[0]\Collider, Collider) < PowTwo(1.0) Then
+					e\room\NPC[0]\State[0] = 15
+					psp\NoMove = True
+				;EndIf
+			EndIf
+		EndIf
+		
+		;! ~ Scientist dialogue
+		
+		If e\room\NPC[2] <> Null Then
+			If e\EventState[9] <> 4 Then
+				If InteractWithObject(FindChild(e\room\NPC[2]\obj,"Bip01_Head"),1.0) Then
+					If e\EventState[9] = 0 Then
+						PlayPlayerSPVoiceLine("SFX\Room\Intro\Ryan\ScientistHello"+(Rand(1,3)))
+						e\EventState[9] = 1
+					ElseIf e\EventState[9] = 1 And (Not ChannelPlaying(psp\SoundCHN)) Then
+						PlayPlayerSPVoiceLine("SFX\Room\Intro\Ryan\ScientistRandom"+(Rand(1,2)))
+						e\EventState[9] = 2
+					ElseIf e\EventState[9] = 2 And (Not ChannelPlaying(psp\SoundCHN)) Then
+						PlayPlayerSPVoiceLine("SFX\Room\Intro\Ryan\ScientistAssigned"+(Rand(1,2)))
+						e\EventState[9] = 3
+					ElseIf e\EventState[9] = 3 And (Not ChannelPlaying(psp\SoundCHN)) Then
+						PlayPlayerSPVoiceLine("SFX\Room\Intro\Ryan\ScientistAssigned3")
+						e\EventState[9] = 4
+					EndIf
+				EndIf
+			EndIf
 		EndIf
 		
 		;! ~ Worker dialogue
 		
 		If e\room\NPC[1] <> Null Then
-			If e\EventState[4] = 1 And (Not ChannelPlaying(psp\SoundCHN)) Then
+			If e\EventState[4] = 2 And (Not ChannelPlaying(psp\SoundCHN)) Then
+				
+				If TaskExists(TASK_WAIT_TRAM) Then CancelTask(TASK_WAIT_TRAM) : BeginTask(TASK_ASK_WORKER)
+				
 				If InteractWithObject(FindChild(e\room\NPC[1]\obj,"Bip01_Head"),1.0) Then
 					PlayPlayerSPVoiceLine("SFX\Room\Intro\Ryan\WorkerWarn")
-					e\EventState[4] = 2
+					e\room\NPC[1]\State[0] = 3 : e\room\NPC[1]\TargetObj = Camera
+					e\EventState[4] = 3
 				EndIf
-			ElseIf e\EventState[4] = 2 And ChannelPlaying(psp\SoundCHN) Then
+			ElseIf e\EventState[4] = 3 And ChannelPlaying(psp\SoundCHN) Then
+				
+				If TaskExists(TASK_ASK_WORKER) Then EndTask(TASK_ASK_WORKER) : e\room\NPC[1]\State[0] = 0 : e\room\NPC[1]\TargetObj = 0
 				
 				Local pvt% = CreatePivot()
 				PositionEntity pvt, EntityX(Camera), EntityY(e\room\NPC[1]\Collider,True)-0.05, EntityZ(Camera)
@@ -254,11 +291,11 @@ Function UpdateEvent_Room1_Intro(e.Events)
 				
 				psp\NoMove = True
 				
-			ElseIf e\EventState[4] = 2 And (Not ChannelPlaying(psp\SoundCHN)) Then
+			ElseIf e\EventState[4] = 3 And (Not ChannelPlaying(psp\SoundCHN)) Then
 				
 				psp\NoMove = False
 				
-				e\EventState[4] = 3
+				e\EventState[4] = 4
 			EndIf
 		EndIf
 		
@@ -286,6 +323,11 @@ Function UpdateEvent_Room1_Intro(e.Events)
 		; ~ (5%$M3A1Nn4_)
 		
 		If e\room\RoomDoors[ROOM1_INTRO_Windowed_Door]\open Then
+			If e\EventState[4] = 0 Then
+				If TaskExists(TASK_GO_TO_TRAM) Then EndTask(TASK_GO_TO_TRAM)
+				If (Not TaskExists(TASK_WAIT_TRAM)) Then BeginTask(TASK_WAIT_TRAM)
+				e\EventState[4] = 1
+			EndIf
 			If e\room\NPC[3] <> Null Then
 				e\room\NPC[3]\State[0] = 1
 			EndIf
@@ -299,7 +341,7 @@ Function UpdateEvent_Room1_Intro(e.Events)
 		Local steam2bone% = FindChild(e\room\Objects[ROOM1_INTRO_Tram_Obj], "Steam2")
 		
 		If e\room\RoomDoors[ROOM1_INTRO_Windowed_Door]\open Then
-			If e\EventState[4] = 0 Then
+			If e\EventState[4] = 1 Then
 				
 				e\EventState[7] = e\EventState[7] + FPSfactor
 				
@@ -315,12 +357,13 @@ Function UpdateEvent_Room1_Intro(e.Events)
 				
 				If e\EventState[7] > 70*20 And e\EventState[7] < 70*20.1 Then
 					PlayPlayerSPVoiceLine("SFX\Room\Intro\Ryan\WorkerMad")
-					e\EventState[4] = 1
+					e\room\NPC[1]\State[0] = 3 : e\room\NPC[1]\TargetObj = e\room\Objects[ROOM1_INTRO_Tram_Obj]
+					e\EventState[4] = 2
 				EndIf
 			EndIf
 		EndIf
 		
-		If e\EventState[4] > 0 Then
+		If e\EventState[4] > 1 Then
 			p.Particles = CreateParticle(EntityX(steam1bone,True),EntityY(steam1bone,True),EntityZ(steam1bone,True),6,0.4,-0.1,260)
 			EntityParent p\obj, steam1bone
 			
@@ -345,7 +388,7 @@ Function UpdateEvent_Room1_Intro(e.Events)
 		
 		;! ~ Pipe event
 		
-		If e\EventState[4] = 3 Then
+		If e\EventState[4] = 4 Then
 			
 			pvt% = CreatePivot()
 			PositionEntity pvt, EntityX(Camera), EntityY(e\room\Objects[ROOM1_INTRO_Go_Point],True)-0.05, EntityZ(Camera)
@@ -356,19 +399,19 @@ Function UpdateEvent_Room1_Intro(e.Events)
 			user_camera_pitch = CurveAngle(EntityPitch(pvt)+25, user_camera_pitch + 90.0, 80-(e\EventState[7]/200.0))
 			user_camera_pitch=user_camera_pitch-90
 			
-			If EntityDistanceSquared(Collider,e\room\Objects[ROOM1_INTRO_Go_Point]) < PowTwo(0.5) Then
+			If EntityDistanceSquared(Collider,e\room\Objects[ROOM1_INTRO_Go_Point]) < PowTwo(0.6) Then
 				IsZombie = False
 				ForceMove = 0.0
-				;psp\NoRotation = False
+				psp\NoRotation = False
 				FreeEntity pvt
-				e\EventState[4] = 4
+				e\EventState[4] = 5
 			Else
-				;psp\NoRotation = True
+				psp\NoRotation = True
 				IsZombie = True
 				ForceMove = 1.0
 			EndIf
 			
-		ElseIf e\EventState[4] = 4 Then
+		ElseIf e\EventState[4] = 5 Then
 			
 			pvt% = CreatePivot()
 			PositionEntity pvt, EntityX(Camera), EntityY(e\room\RoomDoors[ROOM1_INTRO_Entrance_Door]\frameobj,True)-0.05, EntityZ(Camera)
@@ -379,19 +422,19 @@ Function UpdateEvent_Room1_Intro(e.Events)
 			user_camera_pitch = CurveAngle(EntityPitch(pvt)+25, user_camera_pitch + 90.0, 80-(e\EventState[8]/200.0))
 			user_camera_pitch=user_camera_pitch-90
 			
-			If EntityDistanceSquared(Collider,e\room\Objects[ROOM1_INTRO_Event_Hit_Point]) < PowTwo(0.6) Then
+			If EntityDistanceSquared(Collider,e\room\Objects[ROOM1_INTRO_Event_Hit_Point]) < PowTwo(0.8) Then
 				IsZombie = False
 				ForceMove = 0.0
-				;psp\NoRotation = False
+				psp\NoRotation = False
 				FreeEntity pvt
-				e\EventState[4] = 5
+				e\EventState[4] = 6
 			Else
-				;psp\NoRotation = True
+				psp\NoRotation = True
 				IsZombie = True
 				ForceMove = 1.0
 			EndIf
 			
-		ElseIf e\EventState[4] = 5 Then
+		ElseIf e\EventState[4] = 6 Then
 			
 			TeleportEntity(Collider, EntityX(e\room\Objects[ROOM1_INTRO_Event_Hit_Point], True), EntityY(e\room\Objects[ROOM1_INTRO_Event_Hit_Point], True), EntityZ(e\room\Objects[ROOM1_INTRO_Event_Hit_Point], True),0.3,True)
 			
@@ -402,9 +445,9 @@ Function UpdateEvent_Room1_Intro(e.Events)
 			Local de.Decals = CreateDecal(DECAL_DECAY, EntityX(e\room\Objects[ROOM1_INTRO_Pipe_Point], True), EntityY(e\room\Objects[ROOM1_INTRO_Pipe_Point], True) - 0.01, EntityZ(e\room\Objects[ROOM1_INTRO_Pipe_Point], True), -90, Rand(360), 0)
 			de\Size = 0.1 : de\SizeChange = 0.01 : de\MaxSize = 1.75 : EntityAlpha(de\obj, 1.0)
 			
-			e\EventState[4] = 6
+			e\EventState[4] = 7
 			
-		ElseIf e\EventState[4] = 6 Then
+		ElseIf e\EventState[4] = 7 Then
 			
 			psp\NoMove = True
 			psp\NoRotation = True
@@ -416,10 +459,10 @@ Function UpdateEvent_Room1_Intro(e.Events)
 			Animate2(e\room\Objects[ROOM1_INTRO_Pipe_Obj], AnimTime(e\room\Objects[ROOM1_INTRO_Pipe_Obj]), 1, 140, 0.31, False)
 			
 			If AnimTime(e\room\Objects[ROOM1_INTRO_Pipe_Obj]) >= 105 Then
-				e\EventState[4] = 7
+				e\EventState[4] = 8
 			EndIf
 			
-		ElseIf e\EventState[4] = 7 Then
+		ElseIf e\EventState[4] = 8 Then
 			
 			If KillTimer >= 0 And FallTimer >= 0 Then
 				FallTimer = Min(-1, FallTimer)
@@ -438,9 +481,9 @@ Function UpdateEvent_Room1_Intro(e.Events)
 			PointEntity Camera,e\room\Objects[ROOM1_INTRO_Pipe_Point],EntityRoll(Camera)
 			Animate2(e\room\Objects[ROOM1_INTRO_Pipe_Obj], AnimTime(e\room\Objects[ROOM1_INTRO_Pipe_Obj]), 1.0, 140.0, 0.31,False)
 			
-			e\EventState[4] = 8
+			e\EventState[4] = 9
 			
-		ElseIf e\EventState[4] = 8 Then
+		ElseIf e\EventState[4] = 9 Then
 			
 			e\EventState[6] = e\EventState[6] + (0.01*FPSfactor)
 			

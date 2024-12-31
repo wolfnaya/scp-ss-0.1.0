@@ -33,4 +33,4 @@ Function Key_Encode$(encrypt_key$, secret$)
 End Function
 
 ;~IDEal Editor Parameters:
-;~C#Blitz3D
+;~C#Blitz3D TSS

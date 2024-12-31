@@ -70,7 +70,7 @@ Function Update008()
 								TextureBlend(tex,5)
 								EntityTexture(e\room\NPC[0]\obj, tex)
 								DeleteSingleTextureEntryFromCache tex
-								r\NPC[0]\State[0]=6
+								r\NPC[0]\State[0]=STATE_SCRIPT
 								PlayerRoom = r
 								UnableToMove = False
 								Exit
@@ -1674,4 +1674,4 @@ End Function
 
 ;[End Block]
 ;~IDEal Editor Parameters:
-;~C#Blitz3D
+;~C#Blitz3D TSS

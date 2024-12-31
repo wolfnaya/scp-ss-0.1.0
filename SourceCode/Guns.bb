@@ -211,6 +211,7 @@ Type Guns
 	Field ShootSounds%[MaxShootSounds]
 	Field SuppressedShootSounds%[MaxShootSounds]
 	Field MuzzleFlash%
+	Field Reticle%
 	Field PlayerModel%
 	Field PlayerModelAnim%
 	Field ShouldCreateItem%
@@ -538,6 +539,12 @@ Function CreateGun.Guns(DisplayName$,Name$,Id,Model$,CanAim=True,GunType$="melee
 	EntityParent g\MuzzleFlash,g\obj
 	HideEntity g\MuzzleFlash
 	
+	g\Reticle = CreateSprite()	
+	EntityFX g\Reticle,1
+	SpriteViewMode g\Reticle,2
+	EntityParent g\Reticle,g\obj
+	HideEntity g\Reticle
+	
 	g\PlayerModel = LoadAnimMesh_Strict("GFX\Weapons\Models\"+g\name+"_Worldmodel.b3d")
 	HideEntity g\PlayerModel
 	
@@ -576,6 +583,158 @@ Function CreateGun.Guns(DisplayName$,Name$,Id,Model$,CanAim=True,GunType$="melee
 	Return g
 End Function
 
+Function AddAttachment(g.Guns, Attachment)
+	Local isMultiplayer% = (gopt\GameMode = GAMEMODE_MULTIPLAYER)
+	
+	;For g = Each Guns
+		;If g_I\HoldingGun = g\ID Then
+			Select Attachment
+				Case ATT_SUPPRESSOR ; ~ Suppressor
+					If FindChild(g\obj,"att_suppressor") <> 0 Then ScaleEntity FindChild(g\obj,"att_suppressor"),1,1,1
+					If g\CanHaveAttachments[ATT_MATCH] Then
+						If g\name = "usp" Then
+							If FindChild(g\obj,"att_match") <> 0 Then ScaleEntity FindChild(g\obj,"att_match"),0,0,0
+						Else
+							If FindChild(g\obj,"att_compensator") <> 0 Then ScaleEntity FindChild(g\obj,"att_compensator"),0,0,0
+						EndIf
+					EndIf
+				Case ATT_MATCH ; ~ Match\Compensator
+					If FindChild(g\obj,"att_suppressor") <> 0 Then ScaleEntity FindChild(g\obj,"att_suppressor"),0,0,0
+					If g\name = "usp" Then
+						If FindChild(g\obj,"att_match") <> 0 Then ScaleEntity FindChild(g\obj,"att_match"),1,1,1
+					Else
+						If FindChild(g\obj,"att_compensator") <> 0 Then ScaleEntity FindChild(g\obj,"att_compensator"),1,1,1
+					EndIf
+				Case ATT_EXT_MAG ; ~ Extended Magazine
+					If FindChild(g\obj,"att_mag_ext") <> 0 Then ScaleEntity FindChild(g\obj,"att_mag_ext"),1,1,1
+					If FindChild(g\obj,"att_mag") <> 0 Then ScaleEntity FindChild(g\obj,"att_mag"),0,0,0
+					If isMultiplayer Then
+						Players[mp_I\PlayerID]\ReloadAmmo[Players[mp_I\PlayerID]\SelectedSlot] = Players[mp_I\PlayerID]\ReloadAmmo[Players[mp_I\PlayerID]\SelectedSlot] + Players[mp_I\PlayerID]\Ammo[Players[mp_I\PlayerID]\SelectedSlot]
+						Players[mp_I\PlayerID]\Ammo[Players[mp_I\PlayerID]\SelectedSlot] = 0
+					Else
+						g\CurrReloadAmmo = g\CurrReloadAmmo + g\CurrAmmo
+						g\CurrAmmo = 0
+					EndIf
+				Case ATT_ACOG_SCOPE ; ~ ACOG Scope
+					If g\name <> "mp5" And g\name <> "mp7" And g\name <> "m870" Then
+						If FindChild(g\obj,"att_rail") <> 0 Then ScaleEntity FindChild(g\obj,"att_rail"),0,0,0
+					ElseIf g\name = "mp5" Then
+						If FindChild(g\obj,"att_rail") <> 0 Then ScaleEntity FindChild(g\obj,"att_rail"),1,1,1
+					EndIf
+					If FindChild(g\obj,"att_acog_scope") <> 0 Then ScaleEntity FindChild(g\obj,"att_acog_scope"),1,1,1
+					If g\name = "p90" Then
+						If FindChild(g\obj,"att_rail") <> 0 Then ScaleEntity FindChild(g\obj,"att_rail"),1,1,1
+						If FindChild(g\obj,"att_p90_std_scope") <> 0 Then ScaleEntity FindChild(g\obj,"att_p90_std_scope"),0,0,0
+					EndIf
+					ApplyScopeMaterial(True)
+					EntityTexture g\Reticle, AimCrossIMG[4]
+				Case ATT_SPECIAL_SCOPE ; ~ P90\EMRP Scope
+					If g\name = "p90" Then
+						If FindChild(g\obj,"att_rail") <> 0 Then ScaleEntity FindChild(g\obj,"att_rail"),0,0,0
+						If FindChild(g\obj,"att_acog_scope") <> 0 Then ScaleEntity FindChild(g\obj,"att_acog_scope"),0,0,0
+						If FindChild(g\obj,"att_p90_std_scope") <> 0 Then ScaleEntity FindChild(g\obj,"att_p90_std_scope"),1,1,1
+						EntityTexture g\Reticle, AimCrossIMG[1]
+					ElseIf g\name = "emrp" Then
+						If FindChild(g\obj,"att_reddot") <> 0 Then ScaleEntity FindChild(g\obj,"att_reddot"),0,0,0
+						If FindChild(g\obj,"att_eotech") <> 0 Then ScaleEntity FindChild(g\obj,"att_eotech"),0,0,0
+						If FindChild(g\obj,"att_emrp_std_scope") <> 0 Then ScaleEntity FindChild(g\obj,"att_emrp_std_scope"),1,1,1
+						EntityTexture g\Reticle, AimCrossIMG[5]
+					EndIf
+				Case ATT_EOTECH ; ~ EoTech Sight
+					If g\name <> "mp5" And g\name <> "mp7" And g\name <> "m870" Then
+						If FindChild(g\obj,"att_rail") <> 0 Then ScaleEntity FindChild(g\obj,"att_rail"),0,0,0
+					ElseIf g\name = "mp5" Then
+						If FindChild(g\obj,"att_rail") <> 0 Then ScaleEntity FindChild(g\obj,"att_rail"),1,1,1
+					EndIf
+					If FindChild(g\obj,"att_eotech") <> 0 Then ScaleEntity FindChild(g\obj,"att_eotech"),1,1,1
+					If g\name = "p90" Then
+						If FindChild(g\obj,"att_rail") <> 0 Then ScaleEntity FindChild(g\obj,"att_rail"),1,1,1
+						If FindChild(g\obj,"att_p90_std_scope") <> 0 Then ScaleEntity FindChild(g\obj,"att_p90_std_scope"),0,0,0
+					EndIf
+					EntityTexture g\Reticle, AimCrossIMG[3]
+				Case ATT_RED_DOT ; ~ Red Dot Sight
+					If g\name <> "mp5" And g\name <> "mp7" And g\name <> "m870" Then
+						If FindChild(g\obj,"att_rail") <> 0 Then ScaleEntity FindChild(g\obj,"att_rail"),0,0,0
+					ElseIf g\name = "mp5" Then
+						If FindChild(g\obj,"att_rail") <> 0 Then ScaleEntity FindChild(g\obj,"att_rail"),1,1,1
+					EndIf
+					If FindChild(g\obj,"att_reddot") <> 0 Then ScaleEntity FindChild(g\obj,"att_reddot"),1,1,1
+					If g\name = "p90" Then
+						If FindChild(g\obj,"att_rail") <> 0 Then ScaleEntity FindChild(g\obj,"att_rail"),1,1,1
+						If FindChild(g\obj,"att_p90_std_scope") <> 0 ScaleEntity FindChild(g\obj,"att_p90_std_scope"),0,0,0
+					EndIf
+					EntityTexture g\Reticle, AimCrossIMG[2]
+				Case ATT_MUI ; ~ Monitoring Unit
+					
+			End Select
+			g\HasAttachments[Attachment] = True
+		;EndIf
+	;Next
+	
+End Function
+
+Function RemoveAttachment(g.Guns,Attachment)
+	Local isMultiplayer% = (gopt\GameMode = GAMEMODE_MULTIPLAYER)
+	
+	;For g = Each Guns
+		;If g_I\HoldingGun = g\ID Then
+			Select Attachment
+				Case ATT_SUPPRESSOR ; ~ Suppressor
+					If FindChild(g\obj,"att_suppressor") <> 0 Then ScaleEntity FindChild(g\obj,"att_suppressor"),0,0,0
+				Case ATT_MATCH ; ~ Match\Compensator
+					If g\name = "usp" Then
+						If FindChild(g\obj,"att_match") <> 0 Then ScaleEntity FindChild(g\obj,"att_match"),0,0,0
+					Else
+						If FindChild(g\obj,"att_compensator") <> 0 Then ScaleEntity FindChild(g\obj,"att_compensator"),0,0,0
+					EndIf
+				Case ATT_EXT_MAG ; ~ Extended Magazine
+					If FindChild(g\obj,"att_mag_ext") <> 0 Then ScaleEntity FindChild(g\obj,"att_mag_ext"),0,0,0
+					If FindChild(g\obj,"att_mag") <> 0 Then ScaleEntity FindChild(g\obj,"att_mag"),1,1,1
+					If isMultiplayer Then
+						Players[mp_I\PlayerID]\ReloadAmmo[Players[mp_I\PlayerID]\SelectedSlot] = Players[mp_I\PlayerID]\ReloadAmmo[Players[mp_I\PlayerID]\SelectedSlot] + Players[mp_I\PlayerID]\Ammo[Players[mp_I\PlayerID]\SelectedSlot]
+						Players[mp_I\PlayerID]\Ammo[Players[mp_I\PlayerID]\SelectedSlot] = 0
+					Else
+						g\CurrReloadAmmo = g\CurrReloadAmmo + g\CurrAmmo
+						g\CurrAmmo = 0
+					EndIf
+				Case ATT_ACOG_SCOPE ; ~ ACOG Scope
+					If g\name <> "mp5" And g\name <> "mp7" And g\name <> "m870" Then
+						If FindChild(g\obj,"att_rail") <> 0 Then ScaleEntity FindChild(g\obj,"att_rail"),1,1,1
+					ElseIf g\name = "mp5" Then
+						If FindChild(g\obj,"att_rail") <> 0 Then ScaleEntity FindChild(g\obj,"att_rail"),0,0,0
+					EndIf
+					If FindChild(g\obj,"att_acog_scope") <> 0 Then ScaleEntity FindChild(g\obj,"att_acog_scope"),0,0,0
+					;If g_I\HoldingGun = g\ID Then ReplaceTextureByMaterial("GFX\Weapons\Models\wpn_p90_dot_alt.png",g\obj,"wpn_p90_dot_alt",15) ; ~ Scope Material
+				Case ATT_SPECIAL_SCOPE ; ~ P90\EMRP Scope
+					If g\name = "p90" Then
+						If FindChild(g\obj,"att_rail") <> 0 Then ScaleEntity FindChild(g\obj,"att_rail"),1,1,1
+						If FindChild(g\obj,"att_p90_std_scope") <> 0 Then ScaleEntity FindChild(g\obj,"att_p90_std_scope"),0,0,0
+					ElseIf g\name = "emrp" Then
+						If FindChild(g\obj,"att_emrp_std_scope") <> 0 Then ScaleEntity FindChild(g\obj,"att_emrp_std_scope"),0,0,0
+					EndIf
+				Case ATT_EOTECH ; ~ EoTech Sight
+					If g\name <> "mp5" And g\name <> "mp7" And g\name <> "m870" Then
+						If FindChild(g\obj,"att_rail") <> 0 Then ScaleEntity FindChild(g\obj,"att_rail"),1,1,1
+					ElseIf g\name = "mp5" Then
+						If FindChild(g\obj,"att_rail") <> 0 Then ScaleEntity FindChild(g\obj,"att_rail"),0,0,0
+					EndIf
+					If FindChild(g\obj,"att_eotech") <> 0 Then ScaleEntity FindChild(g\obj,"att_eotech"),0,0,0
+				Case ATT_RED_DOT ; ~ Red Dot Sight
+					If g\name <> "mp5" And g\name <> "mp7" And g\name <> "m870" Then
+						If FindChild(g\obj,"att_rail") <> 0 Then ScaleEntity FindChild(g\obj,"att_rail"),1,1,1
+					ElseIf g\name = "mp5" Then
+						If FindChild(g\obj,"att_rail") <> 0 Then ScaleEntity FindChild(g\obj,"att_rail"),0,0,0
+					EndIf
+					If FindChild(g\obj,"att_reddot") <> 0 Then ScaleEntity FindChild(g\obj,"att_reddot"),0,0,0
+				Case ATT_MUI ; ~ Monitoring Unit
+					
+			End Select
+			g\HasAttachments[Attachment] = False
+		;EndIf
+	;Next
+	
+End Function
+
 Function InitGuns()
 	Local g.Guns, gr.Grenades
 	Local it.ItemTemplates
@@ -600,15 +759,12 @@ Function InitGuns()
 		g_I\Weapon_InSlot[i] = ""
 	Next
 	
-	AimCrossIMG[0] = LoadImage_Strict("GFX\Aim_Cross.png")
-	AimCrossIMG[1] = LoadImage_Strict("GFX\Weapons\models\wpn_p90_dot.png")
-	AimCrossIMG[2] = LoadImage_Strict("GFX\Weapons\models\wpn_red_dot.png")
-	AimCrossIMG[3] = LoadImage_Strict("GFX\Weapons\models\wpn_eot_dot.png")
-	AimCrossIMG[4] = LoadImage_Strict("GFX\Weapons\models\wpn_acog_dot.png")
-	AimCrossIMG[5] = LoadImage_Strict("GFX\Weapons\models\wpn_emrp_dot.png")
-	For i = 0 To 5
-		MidHandle AimCrossIMG[i]
-	Next
+	AimCrossIMG[0] = LoadImage_Strict("GFX\Aim_Cross.png") : MidHandle AimCrossIMG[0]
+	AimCrossIMG[1] = LoadTexture_Strict("GFX\Weapons\models\wpn_p90_dot.png", 1 + 2, DeleteAllTextures)
+	AimCrossIMG[2] = LoadTexture_Strict("GFX\Weapons\models\wpn_red_dot.png", 1 + 2, DeleteAllTextures)
+	AimCrossIMG[3] = LoadTexture_Strict("GFX\Weapons\models\wpn_eot_dot.png", 1 + 2, DeleteAllTextures)
+	AimCrossIMG[4] = LoadTexture_Strict("GFX\Weapons\models\wpn_acog_dot.png", 1 + 2, DeleteAllTextures)
+	AimCrossIMG[5] = LoadTexture_Strict("GFX\Weapons\models\wpn_emrp_dot.png", 1 + 2, DeleteAllTextures)
 	BulletIcon% = LoadImage_Strict("GFX\bullet_icon.png")
 	
 	g_I\GunPivot = CreatePivot()
@@ -644,15 +800,12 @@ Function InitGuns()
 	g.Guns = CreateGun("M9 Beretta","beretta",GUN_BERETTA,"Beretta_Viewmodel.b3d",True,"handgun","secondary",15,105,17,1,1.5,7,1,0,0,70,140,265,245,0,0,True,230,120,0.03,True,"Pistol_hands.b3d",0,0,0,0,10,5)
 	If g\name = "beretta" Then
 		g\CanHaveAttachments[ATT_SUPPRESSOR] = True
-		ScaleEntity FindChild(g\obj,"att_suppressor"),0,0,0
 	EndIf
 	; ~ H&K USP
 	g.Guns = CreateGun("H&K USP","usp",GUN_USP,"USP_Viewmodel.b3d",True,"handgun","secondary",12,84,20,1,4,8,1,0,0,70,140,265,245,0,0,True,230,73,0.03,True,"Pistol_hands.b3d",0,0,0,0,10,5)
 	If g\name = "usp" Then
 		g\CanHaveAttachments[ATT_SUPPRESSOR] = True
 		g\CanHaveAttachments[ATT_MATCH] = True
-		ScaleEntity FindChild(g\obj,"att_suppressor"),0,0,0
-		ScaleEntity FindChild(g\obj,"att_match"),0,0,0
 	EndIf
 	; ~ Tokarev TT-33
 	If gopt\GameMode = GAMEMODE_MULTIPLAYER Then
@@ -664,13 +817,11 @@ Function InitGuns()
 	g.Guns = CreateGun("FN Five-Seven","fiveseven",GUN_FIVESEVEN,"FiveSeven_Viewmodel.b3d",True,"handgun","secondary",20,140,11,1,1.5,6,1,0,0,70,140,265,245,0,0,True,230,150,0.03,True,"Pistol_hands.b3d",0,0,0,0,10,5)
 	If g\name = "fiveseven" Then
 		g\CanHaveAttachments[ATT_SUPPRESSOR] = True
-		ScaleEntity FindChild(g\obj,"att_suppressor"),0,0,0
 	EndIf
 	; ~ Glock 20-C
 	g.Guns = CreateGun("Glock 20-C","glock",GUN_GLOCK,"Glock_Viewmodel.b3d",True,"smg","secondary",15,105,22,1,3.5,3,1,0,0,70,140,265,245,0,0,True,230,80,0.03,True,"Pistol_hands.b3d",0,0,0,0,10,5)
 	If g\name = "glock" Then
 		g\CanHaveAttachments[ATT_SUPPRESSOR] = True
-		ScaleEntity FindChild(g\obj,"att_suppressor"),0,0,0
 	EndIf
 	
 	;! ~ [SMGs&PDWs]
@@ -678,17 +829,13 @@ Function InitGuns()
 	; ~ FN P90
 	g.Guns = CreateGun("FN P90","p90",GUN_P90,"P90_Viewmodel.b3d",True,"smg","primary",50,350,10,2,0.4,4,1,0,0,70,120,280,240,0,0,True,560,220,0.04,True,"",0,0,0,70,0.5,1.2)
 	If g\name = "p90" Then
+		g\HasPickedAttachments[ATT_SPECIAL_SCOPE] = True
+		
 		g\CanHaveAttachments[ATT_SUPPRESSOR] = True
 		g\CanHaveAttachments[ATT_ACOG_SCOPE] = True
 		g\CanHaveAttachments[ATT_SPECIAL_SCOPE] = True
 		g\CanHaveAttachments[ATT_RED_DOT] = True
 		g\CanHaveAttachments[ATT_EOTECH] = True
-		ScaleEntity FindChild(g\obj,"att_p90_std_scope"),0,0,0
-		ScaleEntity FindChild(g\obj,"att_acog_scope"),0,0,0
-		ScaleEntity FindChild(g\obj,"att_suppressor"),0,0,0
-		ScaleEntity FindChild(g\obj,"att_reddot"),0,0,0
-		ScaleEntity FindChild(g\obj,"att_eotech"),0,0,0
-		g\HasPickedAttachments[ATT_SPECIAL_SCOPE] = True
 	EndIf
 	; ~ H&K MP5
 	g.Guns = CreateGun("H&K MP5","mp5",GUN_MP5,"MP5_Viewmodel.b3d",True,"smg","primary",30,210,15,2,1,5.4,1,0,0,65,250,350,230,0,0,True,180,260,0.04,True,"",250,230,350,45,1.15,2.2)
@@ -698,12 +845,6 @@ Function InitGuns()
 		g\CanHaveAttachments[ATT_RED_DOT] = True
 		g\CanHaveAttachments[ATT_EOTECH] = True
 		g\CanHaveAttachments[ATT_ACOG_SCOPE] = True
-		ScaleEntity FindChild(g\obj,"att_suppressor"),0,0,0
-		ScaleEntity FindChild(g\obj,"att_mag_ext"),0,0,0
-		ScaleEntity FindChild(g\obj,"att_rail"),0,0,0
-		ScaleEntity FindChild(g\obj,"att_reddot"),0,0,0
-		ScaleEntity FindChild(g\obj,"att_eotech"),0,0,0
-		ScaleEntity FindChild(g\obj,"att_acog_scope"),0,0,0
 	EndIf
 	; ~ H&K MP7
 	g.Guns = CreateGun("H&K MP7","mp7",GUN_MP7,"MP7_Viewmodel.b3d",True,"smg","primary",40,280,12,1,0.8,3.7,1,0,0,65,250,330,250,0,0,True,180,170,0.04,True,"",0,0,0,45,1.15,2.2)
@@ -712,10 +853,6 @@ Function InitGuns()
 		g\CanHaveAttachments[ATT_RED_DOT] = True
 		g\CanHaveAttachments[ATT_EOTECH] = True
 		g\CanHaveAttachments[ATT_ACOG_SCOPE] = True
-		ScaleEntity FindChild(g\obj,"att_suppressor"),0,0,0
-		ScaleEntity FindChild(g\obj,"att_reddot"),0,0,0
-		ScaleEntity FindChild(g\obj,"att_eotech"),0,0,0
-		ScaleEntity FindChild(g\obj,"att_acog_scope"),0,0,0
 	EndIf
 	
 	;! ~ [ASSAULT RIFLES]
@@ -728,11 +865,6 @@ Function InitGuns()
 		g\CanHaveAttachments[ATT_RED_DOT] = True
 		g\CanHaveAttachments[ATT_EOTECH] = True
 		g\CanHaveAttachments[ATT_ACOG_SCOPE] = True
-		ScaleEntity FindChild(g\obj,"att_suppressor"),0,0,0
-		ScaleEntity FindChild(g\obj,"att_mag_ext"),0,0,0
-		ScaleEntity FindChild(g\obj,"att_reddot"),0,0,0
-		ScaleEntity FindChild(g\obj,"att_eotech"),0,0,0
-		ScaleEntity FindChild(g\obj,"att_acog_scope"),0,0,0
 	EndIf
 	; ~ Colt M4A1
 	g.Guns = CreateGun("Colt M4A1","m4a1",GUN_M4A1,"m4a1_Viewmodel.b3d",True,"rifle","primary",20,140,24,1,1.4,4.75,1,0,0,50,450,420,365,0,0,True,350,240,0.06,True,"",450,430,500,45)
@@ -742,11 +874,6 @@ Function InitGuns()
 		g\CanHaveAttachments[ATT_RED_DOT] = True
 		g\CanHaveAttachments[ATT_EOTECH] = True
 		g\CanHaveAttachments[ATT_ACOG_SCOPE] = True
-		ScaleEntity FindChild(g\obj,"att_suppressor"),0,0,0
-		ScaleEntity FindChild(g\obj,"att_mag_ext"),0,0,0
-		ScaleEntity FindChild(g\obj,"att_reddot"),0,0,0
-		ScaleEntity FindChild(g\obj,"att_eotech"),0,0,0
-		ScaleEntity FindChild(g\obj,"att_acog_scope"),0,0,0
 	EndIf
 	
 	;! ~ [SHOTGUNS]
@@ -756,8 +883,6 @@ Function InitGuns()
 	If g\name = "m870" Then
 		g\CanHaveAttachments[ATT_RED_DOT] = True
 		g\CanHaveAttachments[ATT_EOTECH] = True
-		ScaleEntity FindChild(g\obj,"att_reddot"),0,0,0
-		ScaleEntity FindChild(g\obj,"att_eotech"),0,0,0
 	EndIf
 	; ~ Franchi SPAS-12
 	g.Guns = CreateGun("Franchi SPAS-12","spas12",GUN_SPAS12,"SPAS12_Viewmodel.b3d",True,"shotgun","primary",6,78,24,5,7,60,6,0,0,60,260,90,0,80,430,True,180,30,0.006,False,"Shotgun_hands.b3d")
@@ -775,14 +900,11 @@ Function InitGuns()
 	; ~ Electro-Magnetic Rifle - Prototype
 	g.Guns = CreateGun(GetLocalString("Item Names","emrp"),"emrp",GUN_EMRP,"EMRP_Viewmodel.b3d",True,"handgun","primary",10,70,1000,0.5,20,220,1,0,0,50,300,360,360,0,0,True,340,3,0.01,True,"",0,0,0,0,1.1,2.1)
 	If g\name = "emrp" Then
+		g\HasPickedAttachments[ATT_SPECIAL_SCOPE] = True
+		
 		g\CanHaveAttachments[ATT_SPECIAL_SCOPE] = True
 		g\CanHaveAttachments[ATT_RED_DOT] = True
-		g\CanHaveAttachments[ATT_EOTECH] = True	
-		ScaleEntity FindChild(g\obj,"att_mui_base"),0,0,0
-		ScaleEntity FindChild(g\obj,"att_emrp_std_scope"),0,0,0
-		ScaleEntity FindChild(g\obj,"att_reddot"),0,0,0
-		ScaleEntity FindChild(g\obj,"att_eotech"),0,0,0
-		g\HasPickedAttachments[ATT_SPECIAL_SCOPE] = True
+		g\CanHaveAttachments[ATT_EOTECH] = True
 	EndIf
 	
 ;! ~ [Creating Items]
@@ -836,6 +958,15 @@ Function InitGuns()
 	
 	g_I\AttachSFX = LoadSound_Strict("SFX\Guns\attach_addon.ogg")
 	g_I\DetachSFX = LoadSound_Strict("SFX\Guns\detach_addon.ogg")
+	
+	Local nat%
+	
+	For g = Each Guns
+		For nat = 0 To MaxAttachments - 1
+			If g\CanHaveAttachments[nat] Then RemoveAttachment(g,nat)
+			If g\HasAttachments[nat] Then AddAttachment(g,nat)
+		Next
+	Next
 	
 End Function
 
@@ -1014,6 +1145,7 @@ Function UpdateGuns()
 	If playerAlive Then
 		For g = Each Guns
 			HideEntity g\MuzzleFlash
+			HideEntity g\Reticle
 			
 			If g_I\GunChangeFLAG = False Then
 				For g2.Guns = Each Guns
@@ -1103,8 +1235,46 @@ Function UpdateGuns()
 					muzzlebone$ = "weapon_muzzle"
 				EndIf
 				
+				Local RetStrTemp$
+				
+				If g\HasAttachments[ATT_RED_DOT] Then
+					RetStrTemp = "att_reddot_reticle"
+				ElseIf g\HasAttachments[ATT_EOTECH] Then
+					RetStrTemp = "att_eotech_reticle"
+				ElseIf g\HasAttachments[ATT_ACOG_SCOPE] Then
+					RetStrTemp = "att_acog_scope_reticle"
+				ElseIf g\HasAttachments[ATT_SPECIAL_SCOPE] Then
+					If g\name = "p90" Then
+						RetStrTemp = "att_p90_std_scope_reticle"
+					ElseIf g\name = "emrp"
+						RetStrTemp = "att_emrp_std_scope_reticle"
+					EndIf
+				Else
+					RetStrTemp = ""
+				EndIf
+				
+				If RetStrTemp <> "" Then
+					If ReadyToShowDot Then
+						ShowEntity g\Reticle
+					Else
+						HideEntity g\Reticle
+					EndIf
+				Else
+					HideEntity g\Reticle
+				EndIf
+				
 				If g\GunType <> GUNTYPE_MELEE Then
-					PositionEntity(g\MuzzleFlash,EntityX(FindChild(g\obj,muzzlebone$),True),EntityY(FindChild(g\obj,muzzlebone$),True),EntityZ(FindChild(g\obj,muzzlebone$),True),True)
+					PositionEntity(g\MuzzleFlash, EntityX(FindChild(g\obj,muzzlebone$),True), EntityY(FindChild(g\obj,muzzlebone$),True), EntityZ(FindChild(g\obj,muzzlebone$),True),True)
+					PositionEntity(g\Reticle, EntityX(FindChild(g\obj, RetStrTemp), True), EntityY(FindChild(g\obj, RetStrTemp), True), EntityZ(FindChild(g\obj, RetStrTemp), True), True)
+					If g\HasAttachments[ATT_ACOG_SCOPE] Then
+						ScaleSprite g\Reticle,0.0025,0.0025
+					Else
+						If g\HasAttachments[ATT_SPECIAL_SCOPE] And g\name = "p90" Then
+							ScaleSprite g\Reticle,Rnd(0.0009,0.000925),Rnd(0.0009,0.000925)
+						Else
+							ScaleSprite g\Reticle,Rnd(0.0005,0.000525),Rnd(0.0005,0.000525)
+						EndIf
+					EndIf
 				EndIf
 				
 				shootCondition = ((Not MenuOpen) And (Not AttachmentMenuOpen) And (Not ConsoleOpen) And ((Not isMultiplayer) Lor ((Not InLobby()) And (Not mp_I\ChatOpen) And (Not mp_I\Gamemode\DisableMovement) And (Not IsInVote()))) And (Not IsPlayerListOpen()) And (Not IsModerationOpen()))
@@ -2583,6 +2753,7 @@ End Function
 Function ShootGun(g.Guns)
 	Local temp,n.NPCs,p.Particles,j,de.Decals,ent_pick%,i%
 	Local hitNPC.NPCs ;unused right now, but could be very useful later, there should be no performance difference and better code
+	Local DismemberedBone%
 	
 	IsPlayerShooting% = True
 	
@@ -2609,7 +2780,7 @@ Function ShootGun(g.Guns)
 	If ent_pick%<>0 Then
 		For n.NPCs = Each NPCs
 			For j = 0 To 24
-				If ent_pick% = n\HitBox1[j] Then
+				If ent_pick% = n\HitBox1[j] Then ; ~ Head
 					
 					If g_I\HoldingGun = GUN_EMRP Then
 						If n\NPCtype = NPC_SCP_106 Then
@@ -2617,8 +2788,6 @@ Function ShootGun(g.Guns)
 							TranslateEntity(n\Collider,0,-10.0,0,True)
 						ElseIf n\NPCtype = NPC_SCP_049 Then
 							n\State[0] = SCP049_STUNNED
-;				ElseIf n\NPCtype = NPCtype096 Then
-;					n\State[0] = SCP096_STUNNED
 						EndIf
 					ElseIf g\GunType = GUNTYPE_SHOTGUN Then
 						If n\NPCtype = NPC_SCP_049 Then
@@ -2639,31 +2808,12 @@ Function ShootGun(g.Guns)
 					n\GotHit = True
 					If n\HP <= 0 Then
 						If g_I\HoldingGun = g\ID And g\GunType = GUNTYPE_SHOTGUN Lor g_I\HoldingGun =  GUN_EMRP Then
-							If n\Boss <> n Then
-								PlaySound2(LoadTempSound("SFX\SCP\1048A\Explode.ogg"),Camera,n\Collider)
-								p.Particles = CreateParticle(EntityX(n\Collider),EntityY(n\Collider)+0.8,EntityZ(n\Collider),5,0.25,0.0)
-								EntityColor p\obj,100,100,100
-								RotateEntity p\pvt,0,0,Rnd(360)
-								p\Achange = -Rnd(0.02,0.03)
-								For i = 0 To 1
-									p.Particles = CreateParticle(EntityX(n\Collider)+Rnd(-0.2,0.2),EntityY(n\Collider)+0.85,EntityZ(n\Collider)+Rnd(-0.2,0.2),5,0.15,0.0)
-									EntityColor p\obj,100,100,100
-									RotateEntity p\pvt,0,0,Rnd(360)
-									p\Achange = -Rnd(0.02,0.03)
-								Next
-								
-								;Local headbonename$ = FindChild(n\obj, GetINIString("Data\NPCBones.ini", n\NPCtype, "head_bonename"))
-								
-								;ScaleEntity(FindChild(n\obj,headbonename$),0,0,0)
-								
-								n\HeadShot = True
-								
-							EndIf
+							If n\Boss <> n Then n\HeadShot = True; : DismemberedBone = FindChild(n\obj, GetINIString("Data\NPCBones.ini", n\NPCtype, "head_bonename"))
 						EndIf
 					EndIf
 					Exit
 				EndIf
-				If ent_pick% = n\HitBox2[j] Then
+				If ent_pick% = n\HitBox2[j] Then ; ~ Body
 					n\HP = n\HP - g\DamageOnEntity
 					hitNPC = n
 					n\GotHit = True
@@ -2674,8 +2824,6 @@ Function ShootGun(g.Guns)
 							TranslateEntity(n\Collider,0,-10.0,0,True)
 						ElseIf n\NPCtype = NPC_SCP_049 Then
 							n\State[0] = SCP049_STUNNED
-;				ElseIf n\NPCtype = NPCtype096 Then
-;					n\State[0] = SCP096_STUNNED
 						EndIf
 					ElseIf g\GunType = GUNTYPE_SHOTGUN Then
 						If n\NPCtype = NPC_SCP_049 Then
@@ -2685,12 +2833,30 @@ Function ShootGun(g.Guns)
 					
 					Exit
 				EndIf
-				If ent_pick% = n\HitBox3[j] Then
+				If ent_pick% = n\HitBox3[j] Then ; ~ Arms\Legs
 					n\HP = n\HP - (g\DamageOnEntity/2)
+					;If (g_I\HoldingGun = g\ID And g\GunType = GUNTYPE_SHOTGUN Lor g_I\HoldingGun =  GUN_EMRP) And n\Boss <> n Then DismemberedBone = FindChild(n\obj, GetINIString("Data\NPCBones.ini", n\NPCtype, "weapon_hand_bonename"))
 					hitNPC = n
 					n\GotHit = True
 					Exit
 				EndIf
+				
+;				If DismemberedBone <> 0 Then
+;					ScaleEntity(DismemberedBone,0,0,0)
+;					
+;					;PlaySound2(LoadTempSound("SFX\SCP\1048A\Explode.ogg"),Camera,n\Collider)
+;					p.Particles = CreateParticle(EntityX(n\Collider),EntityY(n\Collider)+0.8,EntityZ(n\Collider),5,0.25,0.0)
+;					EntityColor p\obj,100,100,100
+;					RotateEntity p\pvt,0,0,Rnd(360)
+;					p\Achange = -Rnd(0.02,0.03)
+;					For i = 0 To 1
+;						p.Particles = CreateParticle(EntityX(n\Collider)+Rnd(-0.2,0.2),EntityY(n\Collider)+0.85,EntityZ(n\Collider)+Rnd(-0.2,0.2),5,0.15,0.0)
+;						EntityColor p\obj,100,100,100
+;						RotateEntity p\pvt,0,0,Rnd(360)
+;						p\Achange = -Rnd(0.02,0.03)
+;					Next
+;				EndIf
+				
 			Next
 			If hitNPC <> Null Then Exit
 		Next
@@ -2899,10 +3065,12 @@ Function UpdateIronSight()
 	EndIf
 	
 	If aimCondition Then
-		If IronSightTimer >= 17 Then
+		If IronSightTimer >= 8 Then
 			ReadyToShowDot = True
+			;If g\HasAttachments[ATT_ACOG_SCOPE] Then ApplyScopeMaterial(True)
 		Else
 			ReadyToShowDot = False
+			;If g\HasAttachments[ATT_ACOG_SCOPE] Then ApplyScopeMaterial(False)
 		EndIf
 	EndIf
 	
@@ -3017,204 +3185,6 @@ Function GetWeaponMaxReloadAmmo(gunID%)
 		If g\ID = gunID Then
 			Return g\MaxReloadAmmo
 			Exit
-		EndIf
-	Next
-	
-End Function
-
-Function AddAttachment(g.Guns, Attachment)
-	Local isMultiplayer% = (gopt\GameMode = GAMEMODE_MULTIPLAYER)
-	
-	For g = Each Guns
-		If g_I\HoldingGun = g\ID Then
-			If g\CanSelectMenuAttachments Then
-				If g\CanHaveAttachments[ATT_SUPPRESSOR] Then ; ~ Suppressor
-					If (Not g\HasAttachments[ATT_SUPPRESSOR]) And Attachment = ATT_SUPPRESSOR Then
-						ScaleEntity FindChild(g\obj,"att_suppressor"),1,1,1
-						If g\CanHaveAttachments[ATT_MATCH] Then
-							If g\name = "usp" Then
-								ScaleEntity FindChild(g\obj,"att_match"),0,0,0
-							Else
-								ScaleEntity FindChild(g\obj,"att_compensator"),0,0,0
-							EndIf
-						EndIf
-						g\HasAttachments[ATT_SUPPRESSOR] = True
-					EndIf
-				EndIf
-				If g\CanHaveAttachments[ATT_MATCH] Then ; ~ Match\Compensator
-					If (Not g\HasAttachments[ATT_MATCH]) And Attachment = ATT_MATCH Then
-						ScaleEntity FindChild(g\obj,"att_suppressor"),0,0,0
-						If g\name = "usp" Then
-							ScaleEntity FindChild(g\obj,"att_match"),1,1,1
-						Else
-							ScaleEntity FindChild(g\obj,"att_compensator"),1,1,1
-						EndIf
-						g\HasAttachments[ATT_MATCH] = True
-					EndIf
-				EndIf
-				If g\CanHaveAttachments[ATT_EXT_MAG] Then ; ~ Extended Magazine
-					If (Not g\HasAttachments[ATT_EXT_MAG]) And Attachment = ATT_EXT_MAG Then
-						ScaleEntity FindChild(g\obj,"att_mag_ext"),1,1,1
-						ScaleEntity FindChild(g\obj,"att_mag"),0,0,0
-						If isMultiplayer Then
-							Players[mp_I\PlayerID]\ReloadAmmo[Players[mp_I\PlayerID]\SelectedSlot] = Players[mp_I\PlayerID]\ReloadAmmo[Players[mp_I\PlayerID]\SelectedSlot] + Players[mp_I\PlayerID]\Ammo[Players[mp_I\PlayerID]\SelectedSlot]
-							Players[mp_I\PlayerID]\Ammo[Players[mp_I\PlayerID]\SelectedSlot] = 0
-						Else
-							g\CurrReloadAmmo = g\CurrReloadAmmo + g\CurrAmmo
-							g\CurrAmmo = 0
-						EndIf
-						g\HasAttachments[ATT_EXT_MAG] = True
-					EndIf
-				EndIf
-				If g\CanHaveAttachments[ATT_ACOG_SCOPE] Then ; ~ Acog Scope
-					If (Not g\HasAttachments[ATT_ACOG_SCOPE]) And Attachment = ATT_ACOG_SCOPE Then
-						If g\name <> "mp5" And g\name <> "mp7" And g\name <> "m870" Then
-							ScaleEntity FindChild(g\obj,"att_rail"),0,0,0
-						ElseIf g\name = "mp5" Then
-							ScaleEntity FindChild(g\obj,"att_rail"),1,1,1
-						EndIf
-						ScaleEntity FindChild(g\obj,"att_acog_scope"),1,1,1
-						If g\name = "p90" Then
-							ScaleEntity FindChild(g\obj,"att_rail"),1,1,1
-							ScaleEntity FindChild(g\obj,"att_p90_std_scope"),0,0,0
-						EndIf
-						g\HasAttachments[ATT_ACOG_SCOPE] = True
-					EndIf
-				EndIf
-				If g\CanHaveAttachments[ATT_SPECIAL_SCOPE] Then ; ~ FN P90 Scope\EMR-P Scope
-					If (Not g\HasAttachments[ATT_SPECIAL_SCOPE]) And Attachment = ATT_SPECIAL_SCOPE Then
-						If g\name = "p90" Then
-							ScaleEntity FindChild(g\obj,"att_rail"),0,0,0
-							ScaleEntity FindChild(g\obj,"att_acog_scope"),0,0,0
-							ScaleEntity FindChild(g\obj,"att_p90_std_scope"),1,1,1
-						Else
-							ScaleEntity FindChild(g\obj,"att_reddot"),0,0,0
-							ScaleEntity FindChild(g\obj,"att_eotech"),0,0,0
-							ScaleEntity FindChild(g\obj,"att_emrp_std_scope"),1,1,1
-						EndIf
-						g\HasAttachments[ATT_SPECIAL_SCOPE] = True
-					EndIf
-				EndIf
-				If g\CanHaveAttachments[ATT_RED_DOT] Then ; ~ Red Dot Sight
-					If (Not g\HasAttachments[ATT_RED_DOT]) And Attachment = ATT_RED_DOT Then
-						If g\name <> "mp5" And g\name <> "mp7" And g\name <> "m870" Then
-							ScaleEntity FindChild(g\obj,"att_rail"),0,0,0
-						ElseIf g\name = "mp5" Then
-							ScaleEntity FindChild(g\obj,"att_rail"),1,1,1
-						EndIf
-						ScaleEntity FindChild(g\obj,"att_reddot"),1,1,1
-						If g\name = "p90" Then
-							ScaleEntity FindChild(g\obj,"att_rail"),1,1,1
-							ScaleEntity FindChild(g\obj,"att_p90_std_scope"),0,0,0
-						EndIf
-						g\HasAttachments[ATT_RED_DOT] = True
-					EndIf
-				EndIf
-				If g\CanHaveAttachments[ATT_EOTECH] Then ; ~ EoTech Sight
-					If (Not g\HasAttachments[ATT_EOTECH]) And Attachment = ATT_EOTECH Then
-						If g\name <> "mp5" And g\name <> "mp7" And g\name <> "m870" Then
-							ScaleEntity FindChild(g\obj,"att_rail"),0,0,0
-						ElseIf g\name = "mp5" Then
-							ScaleEntity FindChild(g\obj,"att_rail"),1,1,1
-						EndIf
-						ScaleEntity FindChild(g\obj,"att_eotech"),1,1,1
-						If g\name = "p90" Then
-							ScaleEntity FindChild(g\obj,"att_rail"),1,1,1
-							ScaleEntity FindChild(g\obj,"att_p90_std_scope"),0,0,0
-						EndIf
-						g\HasAttachments[ATT_EOTECH] = True
-					EndIf
-				EndIf
-			EndIf
-		EndIf
-	Next
-	
-End Function
-
-Function RemoveAttachment(g.Guns,Attachment)
-	Local isMultiplayer% = (gopt\GameMode = GAMEMODE_MULTIPLAYER)
-	
-	For g = Each Guns
-		If g_I\HoldingGun = g\ID Then
-			If g\CanSelectMenuAttachments Then
-				If g\CanHaveAttachments[ATT_SUPPRESSOR] Then ; ~ Suppressor
-					If g\HasAttachments[ATT_SUPPRESSOR] And Attachment = ATT_SUPPRESSOR Then
-						ScaleEntity FindChild(g\obj,"att_suppressor"),0,0,0
-						g\HasAttachments[ATT_SUPPRESSOR] = False
-					EndIf
-				EndIf
-				If g\CanHaveAttachments[ATT_MATCH] Then ; ~ Match\Compensator
-					If g\HasAttachments[ATT_MATCH] And Attachment = ATT_MATCH Then
-						If g\name = "usp" Then
-							ScaleEntity FindChild(g\obj,"att_match"),0,0,0
-						Else
-							ScaleEntity FindChild(g\obj,"att_compensator"),0,0,0
-						EndIf
-						g\HasAttachments[ATT_MATCH] = False
-					EndIf
-				EndIf
-				If g\CanHaveAttachments[ATT_EXT_MAG] Then ; ~ Extended Magazine
-					If g\HasAttachments[ATT_EXT_MAG] And Attachment = ATT_EXT_MAG Then
-						ScaleEntity FindChild(g\obj,"att_mag_ext"),0,0,0
-						ScaleEntity FindChild(g\obj,"att_mag"),1,1,1
-						If isMultiplayer Then
-							Players[mp_I\PlayerID]\ReloadAmmo[Players[mp_I\PlayerID]\SelectedSlot] = Players[mp_I\PlayerID]\ReloadAmmo[Players[mp_I\PlayerID]\SelectedSlot] + Players[mp_I\PlayerID]\Ammo[Players[mp_I\PlayerID]\SelectedSlot]
-							Players[mp_I\PlayerID]\Ammo[Players[mp_I\PlayerID]\SelectedSlot] = 0
-						Else
-							g\CurrReloadAmmo = g\CurrReloadAmmo + g\CurrAmmo
-							g\CurrAmmo = 0
-						EndIf
-						g\HasAttachments[ATT_EXT_MAG] = False
-					EndIf
-				EndIf
-				If g\CanHaveAttachments[ATT_ACOG_SCOPE] Then ; ~ Acog Scope
-					If g\HasAttachments[ATT_ACOG_SCOPE] And Attachment = ATT_ACOG_SCOPE Then
-						If g\name <> "mp5" And g\name <> "mp7" And g\name <> "m870" Then
-							ScaleEntity FindChild(g\obj,"att_rail"),1,1,1
-						ElseIf g\name = "mp5" Then
-							ScaleEntity FindChild(g\obj,"att_rail"),0,0,0
-						EndIf
-						ScaleEntity FindChild(g\obj,"att_acog_scope"),0,0,0
-						If g_I\HoldingGun = g\ID Then
-							;ReplaceTextureByMaterial("GFX\Weapons\Models\wpn_p90_dot_alt.png",g\obj,"wpn_p90_dot_alt",15) ; ~ Scope Material
-						EndIf
-						g\HasAttachments[ATT_ACOG_SCOPE] = False
-					EndIf
-				EndIf
-				If g\CanHaveAttachments[ATT_SPECIAL_SCOPE] Then ; ~ FN P90 Scope\EMR-P Scope
-					If g\HasAttachments[ATT_SPECIAL_SCOPE] And Attachment = ATT_SPECIAL_SCOPE Then
-						If g\name = "p90" Then
-							ScaleEntity FindChild(g\obj,"att_rail"),1,1,1
-							ScaleEntity FindChild(g\obj,"att_p90_std_scope"),0,0,0
-						Else
-							ScaleEntity FindChild(g\obj,"att_emrp_std_scope"),0,0,0
-						EndIf
-						g\HasAttachments[ATT_SPECIAL_SCOPE] = False
-					EndIf
-				EndIf
-				If g\CanHaveAttachments[ATT_RED_DOT] Then ; ~ Red Dot Sight
-					If g\HasAttachments[ATT_RED_DOT] And Attachment = ATT_RED_DOT Then
-						If g\name <> "mp5" And g\name <> "mp7" And g\name <> "m870" Then
-							ScaleEntity FindChild(g\obj,"att_rail"),1,1,1
-						ElseIf g\name = "mp5" Then
-							ScaleEntity FindChild(g\obj,"att_rail"),0,0,0
-						EndIf
-						ScaleEntity FindChild(g\obj,"att_reddot"),0,0,0
-						g\HasAttachments[ATT_RED_DOT] = False
-					EndIf
-				EndIf
-				If g\CanHaveAttachments[ATT_EOTECH] Then ; ~ EoTech Sight
-					If g\HasAttachments[ATT_EOTECH] And Attachment = ATT_EOTECH Then
-						If g\name <> "mp5" And g\name <> "mp7" And g\name <> "m870" Then
-							ScaleEntity FindChild(g\obj,"att_rail"),1,1,1
-						ElseIf g\name = "mp5" Then
-							ScaleEntity FindChild(g\obj,"att_rail"),0,0,0
-						EndIf
-						ScaleEntity FindChild(g\obj,"att_eotech"),0,0,0
-						g\HasAttachments[ATT_EOTECH] = False
-					EndIf
-				EndIf
-			EndIf
 		EndIf
 	Next
 	
@@ -3533,13 +3503,13 @@ Function UpdateAttachments()
 				
 				If g\CanHaveAttachments[ATT_ACOG_SCOPE] And g\HasAttachments[ATT_ACOG_SCOPE] Then
 					If g_I\HoldingGun = g\ID Then
-						ApplyAttachmentMaterial(g\obj,"wpn_p90_dot_alt",15,True)
+						ApplyScopeMaterial(True)
 					EndIf
 				EndIf
 				If g\name = "emrp" Then
 					If g\CanHaveAttachments[ATT_SPECIAL_SCOPE] And g\HasAttachments[ATT_SPECIAL_SCOPE] Then
 						If g_I\HoldingGun = g\ID Then
-							ApplyAttachmentMaterial(g\obj,"wpn_p90_dot_alt",15,True)
+							ApplyScopeMaterial(True)
 						EndIf
 					EndIf
 				EndIf
@@ -3752,18 +3722,16 @@ Function UpdateAttachments()
 				
 				For n = 0 To MaxAttachments - 1
 					If g\HasPickedAttachments[n] Then
-						If g\HasToggledAttachments[n] Then
-							If (Not g\HasAttachments[n]) Then
-								AddAttachment(g,n)
-								If AttachmentMenuOpen Then
-									PlaySound_Strict g_I\AttachSFX
+						If g\CanHaveAttachments[n] Then
+							If g\HasToggledAttachments[n] Then
+								If (Not g\HasAttachments[n]) Then
+									AddAttachment(g,n)
+									If AttachmentMenuOpen Then PlaySound_Strict g_I\AttachSFX
 								EndIf
-							EndIf
-						Else
-							If g\HasAttachments[n] Then
-								RemoveAttachment(g,n)
-								If AttachmentMenuOpen Then
-									PlaySound_Strict g_I\DetachSFX
+							Else
+								If g\HasAttachments[n] Then
+									RemoveAttachment(g,n)
+									If AttachmentMenuOpen Then PlaySound_Strict g_I\DetachSFX
 								EndIf
 							EndIf
 						EndIf
@@ -3778,42 +3746,46 @@ Function UpdateAttachments()
 	
 End Function
 
-Function ApplyAttachmentMaterial(Obj,MatAndTexName$,LettersNumber,IsScope%=False,IsMUI%=False)
+Function ApplyScopeMaterial(IsRenderScope%)
 	CatchErrors("ApplyAttachmentMaterial")
 	
 	Local temp#
 	Local i%, j%, sf%, b%, t1%, name$
+	Local ScopeTex%
+	Local g.Guns
 	
-	For i = 1 To CountSurfaces(Obj)
-		sf = GetSurface(Obj,i)
-		b = GetSurfaceBrush(sf)
-		If b<>0 Then
-			For j = 0 To 7
-				t1 = GetBrushTexture(b,j)
-				If t1<>0 Then
-					name$ = StripPath(TextureName(t1))
-					If Left(Lower(name),LettersNumber) = MatAndTexName$ Then
-						If IsScope Then
-							BrushTexture b, ScopeTexture, 0, j
+	For g = Each Guns
+		For i = 1 To CountSurfaces(g\obj)
+			sf = GetSurface(g\obj,i)
+			b = GetSurfaceBrush(sf)
+			If b<>0 Then
+				For j = 0 To 7
+					t1 = GetBrushTexture(b,j)
+					If t1<>0 Then
+						name$ = StripPath(TextureName(t1))
+						If Left(Lower(name),15) = "wpn_p90_dot_alt" Then
+							If IsRenderScope Then
+								ScopeTex = ScopeTexture
+							Else
+								ScopeTex = DarkTexture
+							EndIf
+							BrushTexture b, ScopeTex, 0, j
 							PaintSurface sf,b
-						ElseIf IsMUI Then
-							;BrushTexture b, MUITexture, 0, j
-							;PaintSurface sf,b
+							DeleteSingleTextureEntryFromCache t1
+							Exit
 						EndIf
-						DeleteSingleTextureEntryFromCache t1
-						Exit
+						If name<>"" Then DeleteSingleTextureEntryFromCache t1
 					EndIf
-					If name<>"" Then DeleteSingleTextureEntryFromCache t1
-				EndIf
-			Next
-			FreeBrush b
-		EndIf
+				Next
+				FreeBrush b
+			EndIf
+		Next
 	Next
 	
 	CatchErrors("Uncaught (ApplyAttachmentMaterial)")
 End Function
 
-Function UpdateAttachmentMaterial(Obj,MatAndTexName$,LettersNumber,IsScope%=False,IsMUI%=False)
+Function UpdateAttachmentMaterial(Obj,MatAndTexName$,LettersNumber,IsScope%=False)
 	CatchErrors("UpdateAttachmentMaterial")
 	
 	Local temp#
@@ -3834,9 +3806,6 @@ Function UpdateAttachmentMaterial(Obj,MatAndTexName$,LettersNumber,IsScope%=Fals
 							Else
 								BrushColor b,255,255,255
 							EndIf
-						ElseIf IsMUI Then
-							;BrushTexture b, MUITexture, 0, j
-							;PaintSurface sf,b
 						EndIf
 						DeleteSingleTextureEntryFromCache t1
 						Exit
@@ -4707,4 +4676,4 @@ End Function
 ;	Next
 ;End Function
 ;~IDEal Editor Parameters:
-;~C#Blitz3D
+;~C#Blitz3D TSS

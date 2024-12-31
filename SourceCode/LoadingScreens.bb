@@ -301,10 +301,10 @@ Function DrawLoading(percent%, shortloading=False, customloadingscreen$="", Asse
 ;				x% = opt\GraphicWidth-(width2)-(20*(opt\GraphicHeight/720.0))-450*MenuScale
 ;				y% = opt\GraphicHeight-(height2)-(20*(opt\GraphicHeight/720.0))-600*MenuScale
 ;				
-;				For z2 = 0 To MapGridSize - 1
-;					For x2 = 0 To MapGridSize - 1
+;				For z2 = 0 To Map_GridSize - 1
+;					For x2 = 0 To Map_GridSize - 1
 ;						
-;						If CurrGrid\Grid[x2 + (z2 * MapGridSize)] Then
+;						If CurrGrid\Grid[x2 + (z2 * Map_GridSize)] Then
 ;							Local drawx% = x + (PlayerX - x2) * 24 , drawy% = y - (PlayerZ - z2) * 24
 ;							
 ;							Color (255,255,255)
@@ -369,7 +369,7 @@ Function DrawLoading(percent%, shortloading=False, customloadingscreen$="", Asse
 			ElseIf percent > 80 Then
 				Imgframe = 7
 			EndIf
-			EntityTexture SelectedLoadingScreen\loadImg,SelectedLoadingScreen\loadimgtex,Imgframe
+			If SelectedLoadingScreen\loadImg <> 0 And SelectedLoadingScreen\loadimgtex <> 0 Then EntityTexture SelectedLoadingScreen\loadImg,SelectedLoadingScreen\loadimgtex,Imgframe
 		EndIf
 		FlushKeys()
 		FlushMouse()
@@ -420,4 +420,4 @@ Function DrawLoading(percent%, shortloading=False, customloadingscreen$="", Asse
 End Function
 
 ;~IDEal Editor Parameters:
-;~C#Blitz3D
+;~C#Blitz3D TSS

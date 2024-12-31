@@ -110,9 +110,9 @@ UpdateLang(Language$)
 Function SetLocalString(Section$, Parameter$)
 	
 	Local l.LocalString = New LocalString
-	l\value = GetLocalString(Section, Parameter)
-	l\section = Section
-	l\parameter = Parameter
+	l\Value = GetLocalString(Section, Parameter)
+	l\Section = Section
+	l\Parameter = Parameter
 	
 End Function
 
@@ -120,8 +120,8 @@ Function GetLocalString$(Section$, Parameter$)
 	Local l.LocalString
 	
 	For l.LocalString = Each LocalString
-		If l\section = Section And l\parameter = Parameter Then
-			Return l\value
+		If l\Section = Section And l\Parameter = Parameter Then
+			Return l\Value
 		EndIf
 	Next
 	
@@ -131,9 +131,9 @@ Function GetLocalString$(Section$, Parameter$)
 		temp=GetINIString(I_Loc\LangPath + "Data\local.ini", Section, Parameter)
 		If temp <> "" Then
 			l.LocalString = New LocalString
-            l\section = Section
-            l\parameter = Parameter
-            l\value = temp
+            l\Section = Section
+            l\Parameter = Parameter
+            l\Value = temp
 			Return temp
 		EndIf
 	EndIf
@@ -141,9 +141,9 @@ Function GetLocalString$(Section$, Parameter$)
 	temp = GetINIString("Data\Local.ini", Section, Parameter)
 	If temp <> "" Then
 		l.LocalString = New LocalString
-		l\section = Section
-		l\parameter = Parameter
-		l\value = temp
+		l\Section = Section
+		l\Parameter = Parameter
+		l\Value = temp
 		Return temp
 	EndIf
 	
@@ -187,8 +187,8 @@ End Type
 
 InitController()
 
-Const VersionNumber$ = "0.1.0"
-Const CompatibleNumber$ = "0.1.0"
+Const VersionNumber$ = "0.1.1"
+Const CompatibleNumber$ = "0.1.1"
 
 Global ButtonSFX[4]
 
@@ -941,9 +941,11 @@ End Type
 
 ;[End Block]
 
-InitErrorMsgs(2)
-SetErrorMsg(0, GetLocalString("Errors","error_occured"))
-SetErrorMsg(1, Chr(10)+GetLocalString("Errors","dont_report"))
+InitErrorMsgs(9)
+SetErrorMsg(0, GetLocalString("Errors","error_occured")+VersionNumber+Chr(10)+GetLocalString("Errors","save_compatible")+CompatibleNumber+GetLocalString("Errors","engine_version")+SystemProperty("blitzversion"))
+SetErrorMsg(1, "OS: "+SystemProperty("os")+" "+gv\OSBit+" bit (Build: "+SystemProperty("osbuild")+")")
+SetErrorMsg(2, "CPU: "+Trim(SystemProperty("cpuname"))+" (Arch: "+SystemProperty("cpuarch")+", "+GetEnv("NUMBER_OF_PROCESSORS")+" Threads)")
+SetErrorMsg(8, Chr(10)+GetLocalString("Errors","dont_report"))
 
 ;----------------------------------------------------------------------------------------------------------------------------------------------------
 ;----------------------------------------------       		MAIN LOOP                 ---------------------------------------------------------------
@@ -1511,60 +1513,60 @@ Function MainLoop()
 				EndIf
 			EndIf
 			
-			;Local BlinkCondition
+			If BlinkEffectTimer > 0 Then
+				BlinkEffectTimer = BlinkEffectTimer - (FPSfactor/70)
+			Else
+				If BlinkEffect <> 1.0 Then BlinkEffect = 1.0
+			EndIf
 			
-			;If BlinkTimer = -10 Then BlinkCondition = False
+			; ~ Blinking Logic
+			;[Block]
 			
-			If (EntityVisible(Camera, Curr173\Collider)) Lor IsCutscene Then ; ~ Makes sure that blinking works only when 173 sees player or if cutscene plays.
-				If BlinkTimer < 0 Then
-					If BlinkTimer > - 5 Then
-						darkA = Max(darkA, Sin(Abs(BlinkTimer * 18.0)))
-					ElseIf BlinkTimer > - 15
-						darkA = 1.0
-					Else
-						darkA = Max(darkA, Abs(Sin(BlinkTimer * 18.0)))
-					EndIf
-					
-					If BlinkTimer <= - 20 Then
-						;Randomizes the frequency of blinking. Scales with difficulty.
-						Select SelectedDifficulty\OtherFactors
-							Case EASY
-								BLINKFREQ = Rnd(490,700)
-							Case NORMAL
-								BLINKFREQ = Rnd(455,665)
-							Case HARD
-								BLINKFREQ = Rnd(420,630)
-							Case HARDER
-								BLINKFREQ = Rnd(385,595)
-							Case IMPOSSIBLE
-								BLINKFREQ = Rnd(350,555)
-						End Select 
-						BlinkTimer = BLINKFREQ
-					EndIf
-					
-					BlinkTimer = BlinkTimer - FPSfactor
+;			If (Not (EntityVisible(Camera, Curr173\Collider)) Lor IsCutscene) Then
+;				If BlinkTimer < BLINKFREQ And BlinkTimer > -3 Then BlinkTimer = BlinkTimer + FPSfactor * 0.6 * BlinkEffect
+;			EndIf
+			
+			If BlinkTimer < 0 Then
+				If BlinkTimer > - 5 Then
+					darkA = Max(darkA, Sin(Abs(BlinkTimer * 18.0)))
+				ElseIf BlinkTimer > - 15
+					darkA = 1.0
 				Else
-					BlinkTimer = BlinkTimer - FPSfactor * 0.6 * BlinkEffect
-					If EyeIrritation > 0 Then BlinkTimer=BlinkTimer-Min(EyeIrritation / 100.0 + 1.0, 5.0) * FPSfactor
-					
-					darkA = Max(darkA, 0.0)
+					darkA = Max(darkA, Abs(Sin(BlinkTimer * 18.0)))
 				EndIf
 				
-				If BlinkEffectTimer > 0 Then
-					BlinkEffectTimer = BlinkEffectTimer - (FPSfactor/70)
-				Else
-					If BlinkEffect <> 1.0 Then BlinkEffect = 1.0
+				If BlinkTimer <= - 20 Then
+					;Randomizes the frequency of blinking. Scales with difficulty.
+					Select SelectedDifficulty\OtherFactors
+						Case EASY
+							BLINKFREQ = Rnd(490,700)
+						Case NORMAL
+							BLINKFREQ = Rnd(455,665)
+						Case HARD
+							BLINKFREQ = Rnd(420,630)
+						Case HARDER
+							BLINKFREQ = Rnd(385,595)
+						Case IMPOSSIBLE
+							BLINKFREQ = Rnd(350,555)
+					End Select 
+					BlinkTimer = BLINKFREQ
 				EndIf
+				
+				BlinkTimer = BlinkTimer - FPSfactor
 			Else
-				BlinkTimer = BlinkTimer
+				BlinkTimer = BlinkTimer - FPSfactor * 0.6 * BlinkEffect
+				If EyeIrritation > 0 Then BlinkTimer=BlinkTimer-Min(EyeIrritation / 100.0 + 1.0, 5.0) * FPSfactor
+				
+				darkA = Max(darkA, 0.0)
 			EndIf
+			;[End Block]
 			
 			LightBlink = Max(LightBlink - (FPSfactor / 35.0), 0)
 			If LightBlink > 0 Then darkA = Min(Max(darkA, LightBlink * Rnd(0.3, 0.8)), 1.0)
 			
 			If Using294 Then darkA=1.0
 			
-			If (Not mpl\NightVisionEnabled) Lor Inventory[SLOT_HEAD] <> Null And Left(Inventory[SLOT_HEAD]\itemtemplate\tempname, 3) <> "nvg" Then
+			If (Not mpl\NightVisionEnabled) Lor (Inventory[SLOT_HEAD] <> Null And Left(Inventory[SLOT_HEAD]\itemtemplate\tempname, 3) <> "nvg") Then
 				darkA = Max((1.0-SecondaryLightOn)*0.9, darkA)
 			EndIf
 			
@@ -1783,7 +1785,7 @@ Function MainLoop()
 	Color 255, 255, 255
 	SetFont fo\ConsoleFont
 	If opt\ShowFPS Then
-		Text 20, 20, "FPS: " + ft\fps : SetFont fo\Font[Font_Default]
+		Text 20, 20, "FPS: " + ft\FPS : SetFont fo\Font[Font_Default]
 	EndIf
 	
 End Function
@@ -1795,7 +1797,7 @@ Function RenderMainLoop%()
 	
 	For g = Each Guns
 		If opt\RenderScope Then
-			If IsSPPlayerAlive() And g_I\HoldingGun = g\ID And g\HasAttachments[ATT_ACOG_SCOPE] Then
+			If IsSPPlayerAlive() And g_I\HoldingGun = g\ID And g\HasAttachments[ATT_ACOG_SCOPE]; And ReadyToShowDot Then
 				RenderScope()
 			ElseIf IsSPPlayerAlive() And g\ID = GUN_EMRP And g_I\HoldingGun = g\ID Then
 				RenderScope()
@@ -1807,7 +1809,7 @@ Function RenderMainLoop%()
 		RenderWater(ShouldUpdateWater)
 	EndIf
 	
-	RenderWorld2(Max(0.0,1.0+(ft\accumulator/ft\tickDuration)))
+	RenderWorld2(Max(0.0,1.0+(ft\Accumulator/ft\TickDuration)))
 	
 	UpdateBlur(BlurVolume)
 	
@@ -2784,17 +2786,17 @@ Function MovePlayer()
 	EndIf
 	If Playable Then
 		If (Not co\Enabled)
-			If (EntityVisible(Camera, Curr173\Collider)) Lor IsCutscene Then
+			;If (EntityVisible(Camera, Curr173\Collider)) Lor IsCutscene Then
 				If KeyHit(KEY_BLINK) Then BlinkTimer = 0 : BlurTimer = BlurTimer - 5
 				If KeyDown(KEY_BLINK) And BlinkTimer < - 10 Then BlinkTimer = -10
-			EndIf
+			;EndIf
 		Else
 			
 			; ~ [CONTROLLER]
-			If (EntityVisible(Camera, Curr173\Collider)) Lor IsCutscene Then
+			;If (EntityVisible(Camera, Curr173\Collider)) Lor IsCutscene Then
 				If JoyHit(CK_Blink) Then BlinkTimer = 0 : BlurTimer = BlurTimer - 5
 				If JoyDown(CK_Blink) And BlinkTimer < - 10 Then BlinkTimer = -10
-			EndIf
+			;EndIf
 		EndIf
 	EndIf
 	If HeartBeatVolume > 0 Then
@@ -3526,6 +3528,25 @@ Function LoadEntities()
 	CatchErrors("Uncaught LoadEntities")
 End Function
 
+Function AddGearToPlayer(Slot%, ItemName$, Item$, State, State2)
+	Local it.Items
+	
+	;[Block]
+	it = CreateItem(ItemName$, Item$, 1, 1, 1)
+	it\Picked = True
+	it\Dropped = -1
+	it\itemtemplate\found=True
+	it\state = State
+	it\state2 = State2
+	Inventory[Slot] = it
+	HideEntity(it\collider)
+	EntityType (it\collider, HIT_ITEM)
+	EntityParent(it\collider, 0)
+	ItemAmount = ItemAmount + 1
+	;[End Block]
+	
+End Function
+
 Function InitChapters()
 	CatchErrors("InitChapters")
 	Local it.Items, g.Guns, i%, randm% = Rand(0, 12)
@@ -3539,10 +3560,10 @@ Function InitChapters()
 					;[Block]
 					If gopt\CurrZone = LCZ Then
 						AddGearToPlayer(SLOT_HOLSTER, "M9 Beretta", "beretta", 15, 30)
-						AddGearToPlayer(SLOT_HEAD, GetLocalString("Item Names", "helmet"), "helmet", 100)
-						AddGearToPlayer(SLOT_SCABBARD, GetLocalString("Item Names", "knife"), "knife")
-						AddGearToPlayer(0, GetLocalString("Item Names", "key_2"), "key2")
-						AddGearToPlayer(1, GetLocalString("Item Names", "radio"), "radio", 1000)
+						AddGearToPlayer(SLOT_HEAD, GetLocalString("Item Names", "helmet"), "helmet", 100, 0)
+						AddGearToPlayer(SLOT_SCABBARD, GetLocalString("Item Names", "knife"), "knife", 0, 0)
+						AddGearToPlayer(0, GetLocalString("Item Names", "key_2"), "key2", 0, 0)
+						AddGearToPlayer(1, GetLocalString("Item Names", "radio"), "radio", 1000, 0)
 					EndIf
 					;[End Block]
 				Case 2
@@ -3563,8 +3584,8 @@ Function InitChapters()
 					
 					;[Block]
 					AddGearToPlayer(SLOT_HOLSTER, "FN Five-Seven", "fiveseven", 20, 60)
-					AddGearToPlayer(SLOT_SCABBARD, GetLocalString("Item Names", "crowbar"), "crowbar")
-					AddGearToPlayer(0, GetLocalString("Item Names", "key_3"), "key3")
+					AddGearToPlayer(SLOT_SCABBARD, GetLocalString("Item Names", "crowbar"), "crowbar", 0, 0)
+					AddGearToPlayer(0, GetLocalString("Item Names", "key_3"), "key3", 0, 0)
 					;[End Block]
 				Case 3
 					;[Block]
@@ -3588,8 +3609,8 @@ Function InitChapters()
 					;[Block]
 					AddGearToPlayer(SLOT_HOLSTER, "FN Five-Seven", "fiveseven", 20, 60)
 					AddGearToPlayer(SLOT_PRIMARY, "FN P90", "p90", 50, 150)
-					AddGearToPlayer(SLOT_SCABBARD, GetLocalString("Item Names", "crowbar"), "crowbar")
-					AddGearToPlayer(0, GetLocalString("Item Names", "key_4"), "key4")
+					AddGearToPlayer(SLOT_SCABBARD, GetLocalString("Item Names", "crowbar"), "crowbar", 0, 0)
+					AddGearToPlayer(0, GetLocalString("Item Names", "key_4"), "key4", 0, 0)
 					;[End Block]
 				Case 4
 					;[Block]
@@ -3620,8 +3641,8 @@ Function InitChapters()
 					AddGearToPlayer(SLOT_HOLSTER, "FN Five-Seven", "fiveseven", 20, 60)
 					AddGearToPlayer(SLOT_PRIMARY, "FN P90", "p90", 50, 150)
 					AddGearToPlayer(SLOT_SECONDARY, "Franchi SPAS-12", "spas12", 6, 42)
-					AddGearToPlayer(SLOT_SCABBARD, GetLocalString("Item Names", "crowbar"), "crowbar")
-					AddGearToPlayer(0, GetLocalString("Item Names", "key_4"), "key4")
+					AddGearToPlayer(SLOT_SCABBARD, GetLocalString("Item Names", "crowbar"), "crowbar", 0, 0)
+					AddGearToPlayer(0, GetLocalString("Item Names", "key_4"), "key4", 0, 0)
 					;[End Block]
 				Case 5
 					;[Block]
@@ -3654,8 +3675,8 @@ Function InitChapters()
 					AddGearToPlayer(SLOT_HOLSTER, "FN Five-Seven", "fiveseven", 20, 60)
 					AddGearToPlayer(SLOT_PRIMARY, "FN P90", "p90", 50, 150)
 					AddGearToPlayer(SLOT_SECONDARY, "Franchi SPAS-12", "spas12", 6, 42)
-					AddGearToPlayer(SLOT_SCABBARD, GetLocalString("Item Names", "crowbar"), "crowbar")
-					AddGearToPlayer(0, GetLocalString("Item Names", "key_5"), "key5")
+					AddGearToPlayer(SLOT_SCABBARD, GetLocalString("Item Names", "crowbar"), "crowbar", 0, 0)
+					AddGearToPlayer(0, GetLocalString("Item Names", "key_5"), "key5", 0, 0)
 					;[End Block]
 				Case 6
 					;[Block]
@@ -3688,8 +3709,8 @@ Function InitChapters()
 					AddGearToPlayer(SLOT_HOLSTER, "FN Five-Seven", "fiveseven", 20, 60)
 					AddGearToPlayer(SLOT_PRIMARY, "FN P90", "p90", 50, 150)
 					AddGearToPlayer(SLOT_SECONDARY, "Franchi SPAS-12", "spas12", 6, 42)
-					AddGearToPlayer(SLOT_SCABBARD, GetLocalString("Item Names", "crowbar"), "crowbar")
-					AddGearToPlayer(0, GetLocalString("Item Names", "key_5"), "key5")
+					AddGearToPlayer(SLOT_SCABBARD, GetLocalString("Item Names", "crowbar"), "crowbar", 0, 0)
+					AddGearToPlayer(0, GetLocalString("Item Names", "key_5"), "key5", 0, 0)
 					;[End Block]
 				Case 7
 					;[Block]
@@ -3725,8 +3746,8 @@ Function InitChapters()
 					AddGearToPlayer(SLOT_HOLSTER, "FN Five-Seven", "fiveseven", 20, 60)
 					AddGearToPlayer(SLOT_PRIMARY, "Colt M4A1", "m4a1", 30, 90)
 					AddGearToPlayer(SLOT_SECONDARY, "Franchi SPAS-12", "spas12", 6, 42)
-					AddGearToPlayer(SLOT_SCABBARD, GetLocalString("Item Names", "crowbar"), "crowbar")
-					AddGearToPlayer(0, GetLocalString("Item Names", "key_5"), "key5")
+					AddGearToPlayer(SLOT_SCABBARD, GetLocalString("Item Names", "crowbar"), "crowbar", 0, 0)
+					AddGearToPlayer(0, GetLocalString("Item Names", "key_5"), "key5", 0, 0)
 					AddGearToPlayer(1, "FN P90", "p90", 50, 150)
 					;[End Block]
 				Case 8
@@ -3765,8 +3786,8 @@ Function InitChapters()
 					AddGearToPlayer(SLOT_HOLSTER, "FN Five-Seven", "fiveseven", 20, 60)
 					AddGearToPlayer(SLOT_PRIMARY, "Colt M4A1", "m4a1", 30, 90)
 					AddGearToPlayer(SLOT_SECONDARY, "Franchi SPAS-12", "spas12", 6, 42)
-					AddGearToPlayer(SLOT_SCABBARD, GetLocalString("Item Names", "crowbar"), "crowbar")
-					AddGearToPlayer(0, GetLocalString("Item Names", "key_5"), "key5")
+					AddGearToPlayer(SLOT_SCABBARD, GetLocalString("Item Names", "crowbar"), "crowbar", 0, 0)
+					AddGearToPlayer(0, GetLocalString("Item Names", "key_5"), "key5", 0, 0)
 					AddGearToPlayer(1, "FN P90", "p90", 50, 150)
 					;[End Block]
 				Case 9
@@ -3806,8 +3827,8 @@ Function InitChapters()
 					AddGearToPlayer(SLOT_HOLSTER, "FN Five-Seven", "fiveseven", 20, 60)
 					AddGearToPlayer(SLOT_PRIMARY, "Colt M4A1", "m4a1", 30, 90)
 					AddGearToPlayer(SLOT_SECONDARY, "Franchi SPAS-12", "spas12", 6, 42)
-					AddGearToPlayer(SLOT_SCABBARD, GetLocalString("Item Names", "crowbar"), "crowbar")
-					AddGearToPlayer(0, GetLocalString("Item Names", "key_5"), "key5")
+					AddGearToPlayer(SLOT_SCABBARD, GetLocalString("Item Names", "crowbar"), "crowbar", 0, 0)
+					AddGearToPlayer(0, GetLocalString("Item Names", "key_5"), "key5", 0, 0)
 					AddGearToPlayer(1, "FN P90", "p90", 50, 150)
 					;[End Block]
 			End Select
@@ -3821,87 +3842,52 @@ Function InitChapters()
 						For i = 0 To MaxAttachments - 1
 							g\HasPickedAttachments[i] = True
 						Next
-						Select g\ID
-							Case GUN_M4A1
-								g\CurrAmmo = 30
-								g\CurrReloadAmmo = 210
-							Case GUN_SPAS12
-								g\CurrAmmo = 6
-								g\CurrReloadAmmo = 42
-							Case GUN_M870
-								g\CurrAmmo = 8
-								g\CurrReloadAmmo = 64
-							Case GUN_P90
-								g\CurrAmmo = 50
-								g\CurrReloadAmmo = 200
-							Case GUN_MP5
-								g\CurrAmmo = 30
-								g\CurrReloadAmmo = 210
-							Case GUN_MP7
-								g\CurrAmmo = 40
-								g\CurrReloadAmmo = 280
-							Case GUN_FIVESEVEN
-								g\CurrAmmo = 20
-								g\CurrReloadAmmo = 60
-								g\Found = True
-							Case GUN_USP
-								g\CurrAmmo = 12
-								g\CurrReloadAmmo = 36
-								g\Found = True
-							Case GUN_BERETTA
-								g\CurrAmmo = 15
-								g\CurrReloadAmmo = 45
-								g\Found = True
-							Case GUN_KNIFE
-								g\Found = True
-						End Select
-						
 						Select randm
 							Case 0, 1, 2
-								AddGearToPlayer(SLOT_PRIMARY, "FN P90", "p90")
-								AddGearToPlayer(SLOT_HOLSTER, "FN Five-Seven", "fiveseven")
+								AddGearToPlayer(SLOT_PRIMARY, "FN P90", "p90", 50, 200)
+								AddGearToPlayer(SLOT_HOLSTER, "FN Five-Seven", "fiveseven", 20, 60)
 								
 								g_I\Weapon_InSlot[QUICKSLOT_PRIMARY] = "p90"
 								g_I\Weapon_InSlot[QUICKSLOT_HOLSTER] = "fiveseven"
 								
 								g_I\HoldingGun = GUN_P90
 							Case 3, 4, 5
-								AddGearToPlayer(SLOT_PRIMARY, "H&K MP5", "mp5")
-								AddGearToPlayer(SLOT_HOLSTER, "M9 Beretta", "beretta")
+								AddGearToPlayer(SLOT_PRIMARY, "H&K MP5", "mp5", 30, 210)
+								AddGearToPlayer(SLOT_HOLSTER, "M9 Beretta", "beretta", 15, 45)
 								
 								g_I\Weapon_InSlot[QUICKSLOT_PRIMARY] = "mp5"
 								g_I\Weapon_InSlot[QUICKSLOT_HOLSTER] = "beretta"
 								
 								g_I\HoldingGun = GUN_MP5
 							Case 6
-								AddGearToPlayer(SLOT_PRIMARY, "H&K MP7", "mp7")
-								AddGearToPlayer(SLOT_HOLSTER, "H&K USP", "usp")
+								AddGearToPlayer(SLOT_PRIMARY, "H&K MP7", "mp7", 40, 280)
+								AddGearToPlayer(SLOT_HOLSTER, "H&K USP", "usp", 12, 36)
 								
 								g_I\Weapon_InSlot[QUICKSLOT_PRIMARY] = "mp7"
 								g_I\Weapon_InSlot[QUICKSLOT_HOLSTER] = "usp"
 								
 								g_I\HoldingGun = GUN_MP7
 							Case 7, 8
-								AddGearToPlayer(SLOT_PRIMARY, "Franchi SPAS-12", "spas12")
-								AddGearToPlayer(SLOT_HOLSTER, "H&K USP", "usp")
-								AddGearToPlayer(3, GetLocalString("Item Names", "grenade_m67"), "m67")
+								AddGearToPlayer(SLOT_PRIMARY, "Franchi SPAS-12", "spas12", 6, 42)
+								AddGearToPlayer(SLOT_HOLSTER, "H&K USP", "usp", 12, 36)
+								AddGearToPlayer(3, GetLocalString("Item Names", "grenade_m67"), "m67", 0, 0)
 								
 								g_I\Weapon_InSlot[QUICKSLOT_PRIMARY] = "spas12"
 								g_I\Weapon_InSlot[QUICKSLOT_HOLSTER] = "usp"
 								
 								g_I\HoldingGun = GUN_SPAS12
 							Case 9
-								AddGearToPlayer(SLOT_PRIMARY, "Remington M870", "m870")
-								AddGearToPlayer(SLOT_HOLSTER, "H&K USP", "usp")
-								AddGearToPlayer(3, GetLocalString("Item Names", "grenade_m67"), "m67")
+								AddGearToPlayer(SLOT_PRIMARY, "Remington M870", "m870", 8, 64)
+								AddGearToPlayer(SLOT_HOLSTER, "H&K USP", "usp", 12, 36)
+								AddGearToPlayer(3, GetLocalString("Item Names", "grenade_m67"), "m67", 0, 0)
 								
 								g_I\Weapon_InSlot[QUICKSLOT_PRIMARY] = "m870"
 								g_I\Weapon_InSlot[QUICKSLOT_HOLSTER] = "usp"
 								
 								g_I\HoldingGun = GUN_M870
 							Case 10, 11, 12
-								AddGearToPlayer(SLOT_PRIMARY, "Colt M4A1", "m4a1")
-								AddGearToPlayer(SLOT_HOLSTER, "FN Five-Seven", "fiveseven")
+								AddGearToPlayer(SLOT_PRIMARY, "Colt M4A1", "m4a1", 30, 210)
+								AddGearToPlayer(SLOT_HOLSTER, "FN Five-Seven", "fiveseven", 20, 60)
 								
 								g_I\Weapon_InSlot[QUICKSLOT_PRIMARY] = "m4a1"
 								g_I\Weapon_InSlot[QUICKSLOT_HOLSTER] = "fiveseven"
@@ -3910,13 +3896,13 @@ Function InitChapters()
 						End Select
 					Next
 					
-					AddGearToPlayer(SLOT_SCABBARD, GetLocalString("Item Names", "knife"), "knife")
-					AddGearToPlayer(SLOT_HEAD, GetLocalString("Item Names", "ntf_helmet"), "ntf_helmet", 150)
-					AddGearToPlayer(SLOT_TORSO, GetLocalString("Item Names", "vest"), "vest", 150)
-					AddGearToPlayer(SLOT_BACKPACK, GetLocalString("Item Names", "backpack"), "backpack")
-					AddGearToPlayer(0, GetLocalString("Item Names", "key_5"), "key5")
-					AddGearToPlayer(1, GetLocalString("Item Names", "radio"), "radio", 1000)
-					AddGearToPlayer(2, GetLocalString("Item Names", "nav_310"), "nav", 1000)
+					AddGearToPlayer(SLOT_SCABBARD, GetLocalString("Item Names", "knife"), "knife", 0, 0)
+					AddGearToPlayer(SLOT_HEAD, GetLocalString("Item Names", "ntf_helmet"), "ntf_helmet", 150, 0)
+					AddGearToPlayer(SLOT_TORSO, GetLocalString("Item Names", "vest"), "vest", 150, 0)
+					AddGearToPlayer(SLOT_BACKPACK, GetLocalString("Item Names", "backpack"), "backpack", 0, 0)
+					AddGearToPlayer(0, GetLocalString("Item Names", "key_5"), "key5", 0, 0)
+					AddGearToPlayer(1, GetLocalString("Item Names", "radio"), "radio", 1000, 0)
+					AddGearToPlayer(2, GetLocalString("Item Names", "nav_310"), "nav", 1000, 0)
 					
 					psp\Helmet = 150
 					psp\Kevlar = 150
@@ -3933,87 +3919,52 @@ Function InitChapters()
 							For i = 0 To MaxAttachments - 1
 								g\HasPickedAttachments[i] = True
 							Next
-							Select g\ID
-								Case GUN_M4A1
-									g\CurrAmmo = 30
-									g\CurrReloadAmmo = 210
-								Case GUN_SPAS12
-									g\CurrAmmo = 6
-									g\CurrReloadAmmo = 42
-								Case GUN_M870
-									g\CurrAmmo = 8
-									g\CurrReloadAmmo = 64
-								Case GUN_P90
-									g\CurrAmmo = 50
-									g\CurrReloadAmmo = 200
-								Case GUN_MP5
-									g\CurrAmmo = 30
-									g\CurrReloadAmmo = 210
-								Case GUN_MP7
-									g\CurrAmmo = 40
-									g\CurrReloadAmmo = 280
-								Case GUN_FIVESEVEN
-									g\CurrAmmo = 20
-									g\CurrReloadAmmo = 60
-									g\Found = True
-								Case GUN_USP
-									g\CurrAmmo = 12
-									g\CurrReloadAmmo = 36
-									g\Found = True
-								Case GUN_BERETTA
-									g\CurrAmmo = 15
-									g\CurrReloadAmmo = 45
-									g\Found = True
-								Case GUN_KNIFE
-									g\Found = True
-							End Select
-							
 							Select randm
 								Case 0, 1, 2
-									AddGearToPlayer(SLOT_PRIMARY, "FN P90", "p90")
-									AddGearToPlayer(SLOT_HOLSTER, "FN Five-Seven", "fiveseven")
+									AddGearToPlayer(SLOT_PRIMARY, "FN P90", "p90", 50, 200)
+									AddGearToPlayer(SLOT_HOLSTER, "FN Five-Seven", "fiveseven", 20, 60)
 									
 									g_I\Weapon_InSlot[QUICKSLOT_PRIMARY] = "p90"
 									g_I\Weapon_InSlot[QUICKSLOT_HOLSTER] = "fiveseven"
 									
 									g_I\HoldingGun = GUN_P90
 								Case 3, 4, 5
-									AddGearToPlayer(SLOT_PRIMARY, "H&K MP5", "mp5")
-									AddGearToPlayer(SLOT_HOLSTER, "M9 Beretta", "beretta")
+									AddGearToPlayer(SLOT_PRIMARY, "H&K MP5", "mp5", 30, 210)
+									AddGearToPlayer(SLOT_HOLSTER, "M9 Beretta", "beretta", 15, 45)
 									
 									g_I\Weapon_InSlot[QUICKSLOT_PRIMARY] = "mp5"
 									g_I\Weapon_InSlot[QUICKSLOT_HOLSTER] = "beretta"
 									
 									g_I\HoldingGun = GUN_MP5
 								Case 6
-									AddGearToPlayer(SLOT_PRIMARY, "H&K MP7", "mp7")
-									AddGearToPlayer(SLOT_HOLSTER, "H&K USP", "usp")
+									AddGearToPlayer(SLOT_PRIMARY, "H&K MP7", "mp7", 40, 280)
+									AddGearToPlayer(SLOT_HOLSTER, "H&K USP", "usp", 12, 36)
 									
 									g_I\Weapon_InSlot[QUICKSLOT_PRIMARY] = "mp7"
 									g_I\Weapon_InSlot[QUICKSLOT_HOLSTER] = "usp"
 									
 									g_I\HoldingGun = GUN_MP7
 								Case 7, 8
-									AddGearToPlayer(SLOT_PRIMARY, "Franchi SPAS-12", "spas12")
-									AddGearToPlayer(SLOT_HOLSTER, "H&K USP", "usp")
-									AddGearToPlayer(3, GetLocalString("Item Names", "grenade_m67"), "m67")
+									AddGearToPlayer(SLOT_PRIMARY, "Franchi SPAS-12", "spas12", 6, 42)
+									AddGearToPlayer(SLOT_HOLSTER, "H&K USP", "usp", 12, 36)
+									AddGearToPlayer(3, GetLocalString("Item Names", "grenade_m67"), "m67", 0, 0)
 									
 									g_I\Weapon_InSlot[QUICKSLOT_PRIMARY] = "spas12"
 									g_I\Weapon_InSlot[QUICKSLOT_HOLSTER] = "usp"
 									
 									g_I\HoldingGun = GUN_SPAS12
 								Case 9
-									AddGearToPlayer(SLOT_PRIMARY, "Remington M870", "m870")
-									AddGearToPlayer(SLOT_HOLSTER, "H&K USP", "usp")
-									AddGearToPlayer(3, GetLocalString("Item Names", "grenade_m67"), "m67")
+									AddGearToPlayer(SLOT_PRIMARY, "Remington M870", "m870", 8, 64)
+									AddGearToPlayer(SLOT_HOLSTER, "H&K USP", "usp", 12, 36)
+									AddGearToPlayer(3, GetLocalString("Item Names", "grenade_m67"), "m67", 0, 0)
 									
 									g_I\Weapon_InSlot[QUICKSLOT_PRIMARY] = "m870"
 									g_I\Weapon_InSlot[QUICKSLOT_HOLSTER] = "usp"
 									
 									g_I\HoldingGun = GUN_M870
 								Case 10, 11, 12
-									AddGearToPlayer(SLOT_PRIMARY, "Colt M4A1", "m4a1")
-									AddGearToPlayer(SLOT_HOLSTER, "FN Five-Seven", "fiveseven")
+									AddGearToPlayer(SLOT_PRIMARY, "Colt M4A1", "m4a1", 30, 210)
+									AddGearToPlayer(SLOT_HOLSTER, "FN Five-Seven", "fiveseven", 20, 60)
 									
 									g_I\Weapon_InSlot[QUICKSLOT_PRIMARY] = "m4a1"
 									g_I\Weapon_InSlot[QUICKSLOT_HOLSTER] = "fiveseven"
@@ -4022,13 +3973,13 @@ Function InitChapters()
 							End Select
 						Next
 						
-						AddGearToPlayer(SLOT_SCABBARD, GetLocalString("Item Names", "knife"), "knife")
-						AddGearToPlayer(SLOT_HEAD, GetLocalString("Item Names", "ntf_helmet"), "ntf_helmet", 150)
-						AddGearToPlayer(SLOT_TORSO, GetLocalString("Item Names", "vest"), "vest", 150)
-						AddGearToPlayer(SLOT_BACKPACK, GetLocalString("Item Names", "backpack"), "backpack")
-						AddGearToPlayer(0, GetLocalString("Item Names", "key_5"), "key5")
-						AddGearToPlayer(1, GetLocalString("Item Names", "radio"), "radio", 1000)
-						AddGearToPlayer(2, GetLocalString("Item Names", "nav_310"), "nav", 1000)
+						AddGearToPlayer(SLOT_SCABBARD, GetLocalString("Item Names", "knife"), "knife", 0, 0)
+						AddGearToPlayer(SLOT_HEAD, GetLocalString("Item Names", "ntf_helmet"), "ntf_helmet", 150, 0)
+						AddGearToPlayer(SLOT_TORSO, GetLocalString("Item Names", "vest"), "vest", 150, 0)
+						AddGearToPlayer(SLOT_BACKPACK, GetLocalString("Item Names", "backpack"), "backpack", 0, 0)
+						AddGearToPlayer(0, GetLocalString("Item Names", "key_5"), "key5", 0, 0)
+						AddGearToPlayer(1, GetLocalString("Item Names", "radio"), "radio", 1000, 0)
+						AddGearToPlayer(2, GetLocalString("Item Names", "nav_310"), "nav", 1000, 0)
 						
 						psp\Helmet = 150
 						psp\Kevlar = 150
@@ -4056,32 +4007,13 @@ Function InitChapters()
 			Select cpt\DCurrent
 				Case 1
 					;[Block]
-					AddGearToPlayer(0, GetLocalString("Item Names", "key_class_d"), "key_class_d")
+					AddGearToPlayer(0, GetLocalString("Item Names", "key_class_d"), "key_class_d", 0, 0)
 					;[End Block]
 			End Select
 			
 	End Select
 	
 	CatchErrors("Uncaught : InitChapters")
-End Function
-
-Function AddGearToPlayer(Slot%, ItemName$, Item$, State%=0, State2%=0)
-	Local it.Items
-	
-	;[Block]
-	it = CreateItem(ItemName$, Item$, 1, 1, 1)
-	it\Picked = True
-	it\Dropped = -1
-	it\itemtemplate\found=True
-	it\state = State
-	it\state2 = State2
-	Inventory[Slot] = it
-	HideEntity(it\collider)
-	EntityType (it\collider, HIT_ITEM)
-	EntityParent(it\collider, 0)
-	ItemAmount = ItemAmount + 1
-	;[End Block]
-	
 End Function
 
 Function InitNewGame()
@@ -6241,4 +6173,4 @@ Function UpdateRichPresence()
 	EndIf
 End Function	
 ;~IDEal Editor Parameters:
-;~C#Blitz3D
+;~C#Blitz3D TSS

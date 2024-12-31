@@ -137,8 +137,8 @@ Function FillRoom_Cores(r.Rooms)
 			it = CreateItem(GetLocalString("Item Names","first_aid_small"), "finefirstaid", r\x,r\y+10.0*RoomScale,r\z-1300.0*RoomScale)
 			EntityParent(it\collider, r\obj)
 			
-			;it = CreateItem("Extended Magazines Box", "extmag_box", r\x-242.0*RoomScale,r\y+10.0*RoomScale,r\z-290.0*RoomScale)
-			;EntityParent(it\collider, r\obj)
+			it = CreateItem(GetLocalString("Item Names","mag"), "extmag", r\x-242.0*RoomScale,r\y+10.0*RoomScale,r\z-290.0*RoomScale)
+			EntityParent(it\collider, r\obj)
 			
 		Case EZ
 			
@@ -220,9 +220,11 @@ Function UpdateEvent_Cores(e.Events)
 					EndIf
 				Case HCZ
 					
-					If PlayerInNewElevator And e\EventState[8] = 0 Then
-						PlaySound_Strict(LoadTempSound("SFX\Room\Vincent_Wound.ogg"))
-						e\EventState[8] = 1
+					If gopt\GameMode = GAMEMODE_DEFAULT And cpt\Current = 1 Then
+						If PlayerInNewElevator And e\EventState[8] = 0 Then
+							PlaySound_Strict(LoadTempSound("SFX\Room\Vincent_Wound.ogg"))
+							e\EventState[8] = 1
+						EndIf
 					EndIf
 					
 					If (Not ecst\WasInO5) Then
@@ -585,10 +587,9 @@ Function UpdateEvent_Cores(e.Events)
 		
 ;! ~ Actual Core Functionality
 		
-		If PlayerInNewElevator Then
+		;If PlayerInNewElevator Then
 			
-			IsZombie = False
-			ForceMove = 0.0
+		If PlayerInNewElevator Then IsZombie = False : ForceMove = 0.0
 			
 			;If e\room\Objects[1] <> 0 Then
 			;	PositionEntity e\room\Objects[1],EntityX(e\room\Objects[1]),-EntityY(e\room\Objects[0]) - (7300 * (gopt\CurrZone = EZ)),EntityZ(e\room\Objects[1])
@@ -710,7 +711,7 @@ Function UpdateEvent_Cores(e.Events)
 				EndIf
 			EndIf
 			
-		EndIf
+		;EndIf
 		
 		Local p.Particles
 		
@@ -772,7 +773,7 @@ Function UpdateEvent_Cores(e.Events)
 							UseDoor(e\room\RoomDoors[2])
 						EndIf
 						
-						PlaySound_Strict(AlarmSFX[6])
+						PlaySound_Strict(AlarmSFX[4])
 					Else
 						PlaySound_Strict(ButtonSFX[0])
 						; ~ For Ryan's story
@@ -870,4 +871,4 @@ Function UpdateEvent_Cores(e.Events)
 End Function
 
 ;~IDEal Editor Parameters:
-;~C#Blitz3D
+;~C#Blitz3D TSS

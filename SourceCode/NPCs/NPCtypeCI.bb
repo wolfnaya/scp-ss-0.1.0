@@ -403,4 +403,4 @@ Function UpdateNPCtypeCI(n.NPCs)
 	RotateEntity n\obj, EntityPitch(n\Collider), EntityYaw(n\Collider), 0
 End Function
 ;~IDEal Editor Parameters:
-;~C#Blitz3D
+;~C#Blitz3D TSS

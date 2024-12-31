@@ -659,7 +659,7 @@ Function UpdateNPCtypeZombieMP(n.NPCs)
 							it\Dropped = 1
 						EndIf
 					Else
-						Random = Rand(0,3)
+						Random = Rand(0,8)
 						Select Random
 							Case 0
 								it = CreateItem(GetLocalString("Item Names","vest"),"vest",EntityX(bone%,True),EntityY(bone%,True),EntityZ(bone%,True))
@@ -669,6 +669,16 @@ Function UpdateNPCtypeZombieMP(n.NPCs)
 								it = CreateItem(GetLocalString("Item Names","vest_heavy"),"heavyvest",EntityX(bone%,True),EntityY(bone%,True),EntityZ(bone%,True))
 							Case 3	
 								it = CreateItem(GetLocalString("Item Names","ammo_big"),"bigammocrate",EntityX(bone%,True),EntityY(bone%,True),EntityZ(bone%,True))
+							Case 4	
+								it = CreateItem(GetLocalString("Item Names","suppressor"),"suppressor",EntityX(bone%,True),EntityY(bone%,True),EntityZ(bone%,True))
+							Case 5	
+								it = CreateItem(GetLocalString("Item Names","match"),"match",EntityX(bone%,True),EntityY(bone%,True),EntityZ(bone%,True))
+							Case 6	
+								it = CreateItem(GetLocalString("Item Names","acog"),"acog",EntityX(bone%,True),EntityY(bone%,True),EntityZ(bone%,True))
+							Case 7	
+								it = CreateItem(GetLocalString("Item Names","eotech"),"eotech",EntityX(bone%,True),EntityY(bone%,True),EntityZ(bone%,True))
+							Case 8	
+								it = CreateItem(GetLocalString("Item Names","red_dot"),"reddot",EntityX(bone%,True),EntityY(bone%,True),EntityZ(bone%,True))
 						End Select
 						If it <> Null Then
 							EntityType it\collider, HIT_ITEM
@@ -691,4 +701,4 @@ Function UpdateNPCtypeZombieMP(n.NPCs)
 	
 End Function
 ;~IDEal Editor Parameters:
-;~C#Blitz3D
+;~C#Blitz3D TSS

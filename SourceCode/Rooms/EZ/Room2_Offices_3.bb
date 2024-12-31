@@ -93,7 +93,7 @@ Function UpdateEvent_Room2_Offices_3(e.Events)
 					e\room\NPC[0]=CreateNPC(NPC_Human,e\room\x,0.5,e\room\z)
 					RotateEntity e\room\NPC[0]\Collider,0,e\room\angle+180,0
 					MoveEntity e\room\NPC[0]\Collider,0,0,-0.5
-					e\room\NPC[0]\State[0] = 3
+					e\room\NPC[0]\State[0] = STATE_SCRIPT
 					ChangeNPCTexture(e\room\NPC[0],"GFX\npcs\035victim.jpg")
 					SetNPCFrame(e\room\NPC[0],19)
 				EndIf
@@ -118,4 +118,4 @@ Function UpdateEvent_Room2_Offices_3(e.Events)
 End Function
 
 ;~IDEal Editor Parameters:
-;~C#Blitz3D
+;~C#Blitz3D TSS

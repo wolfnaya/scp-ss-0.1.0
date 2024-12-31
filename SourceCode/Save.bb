@@ -108,17 +108,6 @@ Function SaveGame(File$, Auto% = False, NewZone%= -1)
 		WriteFloat f, g\JamTimer
 		WriteFloat f, g\JamTimer2
 		WriteFloat f, g\JamAmount
-		
-		For i = 0 To MaxAttachments - 1
-			WriteByte f, g\HasAttachments[i]
-			WriteByte f, g\HasToggledAttachments[i]
-			WriteByte f, g\HasPickedAttachments[i]
-		Next
-		WriteInt f, g\BarrelAttachments
-		WriteInt f, g\MountAttachments
-		WriteInt f, g\GripAttachments
-		WriteInt f, g\MagazineAttachments
-		WriteInt f, g\MiscAttachments
 	Next
 	WriteByte f, AttachmentMenuOpen
 	WriteInt f, g_I\HoldingGun
@@ -132,6 +121,19 @@ Function SaveGame(File$, Auto% = False, NewZone%= -1)
 	For i = 0 To MaxGunSlots-1
 		WriteString f, g_I\Weapon_InSlot[i]
 	Next
+	For g = Each Guns
+		WriteInt f, g\BarrelAttachments
+		WriteInt f, g\MountAttachments
+		WriteInt f, g\GripAttachments
+		WriteInt f, g\MagazineAttachments
+		WriteInt f, g\MiscAttachments
+		For i = 0 To MaxAttachments - 1
+			WriteByte f, g\HasAttachments[i]
+			WriteByte f, g\HasToggledAttachments[i]
+			WriteByte f, g\HasPickedAttachments[i]
+		Next
+	Next
+	
 	WriteByte f, psp\Checkpoint106Passed
 	
 	For t = Each NewTask
@@ -726,31 +728,6 @@ Function LoadPlayerData(file$, f%)
 		g\JamTimer = ReadFloat(f)
 		g\JamTimer2 = ReadFloat(f)
 		g\JamAmount = ReadFloat(f)
-		
-		For i = 0 To MaxAttachments - 1
-			g\HasAttachments[i] = ReadByte(f)
-			g\HasToggledAttachments[i] = ReadByte(f)
-			g\HasPickedAttachments[i] = ReadByte(f)
-			
-			If g\HasPickedAttachments[i] Then
-				If g\HasToggledAttachments[i] Then
-					If (Not g\HasAttachments[i]) Then
-						AddAttachment(g, i)
-						If AttachmentMenuOpen Then PlaySound_Strict g_I\AttachSFX
-					EndIf
-				Else
-					If g\HasAttachments[i] Then
-						RemoveAttachment(g, i)
-						If AttachmentMenuOpen Then PlaySound_Strict g_I\DetachSFX
-					EndIf
-				EndIf
-			EndIf
-		Next
-		g\BarrelAttachments = ReadInt(f)
-		g\MountAttachments = ReadInt(f)
-		g\GripAttachments = ReadInt(f)
-		g\MagazineAttachments = ReadInt(f)
-		g\MiscAttachments = ReadInt(f)
 	Next
 	AttachmentMenuOpen = ReadByte(f)
 	g_I\HoldingGun = ReadInt(f)
@@ -766,6 +743,21 @@ Function LoadPlayerData(file$, f%)
 	Next
 	DeselectIronSight()
 	g_I\GunChangeFLAG = False
+	
+	For g = Each Guns
+		g\BarrelAttachments = ReadInt(f)
+		g\MountAttachments = ReadInt(f)
+		g\GripAttachments = ReadInt(f)
+		g\MagazineAttachments = ReadInt(f)
+		g\MiscAttachments = ReadInt(f)
+		For i = 0 To MaxAttachments - 1
+			g\HasAttachments[i] = ReadByte(f)
+			g\HasToggledAttachments[i] = ReadByte(f)
+			g\HasPickedAttachments[i] = ReadByte(f)
+			If g\HasAttachments[i] Then AddAttachment(g,i)
+		Next
+	Next
+	
 	psp\Checkpoint106Passed = ReadByte(f)
 	
 	Delete Each NewTask
@@ -1518,7 +1510,7 @@ Function LoadGame(File$, ZoneToLoad% = -1)
 		Next
 		
 		For do.Doors = Each Doors
-			If (do\KeyCard = 0) And (do\Code="") Then
+			If (do\KeyCard = -1) And (do\Code="") Then
 				If EntityZ(do\frameobj,True)=r\z Then
 					If EntityX(do\frameobj,True)=r\x+4.0 Then
 						r\AdjDoor[0] = do
@@ -1565,7 +1557,7 @@ Function LoadGame(File$, ZoneToLoad% = -1)
 		Next
 		
 		For do.Doors = Each Doors
-			If (do\KeyCard = 0) And (do\Code="") Then
+			If (do\KeyCard = -1) And (do\Code="") Then
 				If EntityZ(do\frameobj,True)=r\z Then
 					If EntityX(do\frameobj,True)=r\x+4.0 Then
 						r\AdjDoor[0] = do
@@ -2083,22 +2075,6 @@ Function LoadGameQuick(file$, showmsg%=True)
 	CameraFogMode(Camera, 1)
 	HideDistance# = 15.0
 	
-	For g = Each Guns
-		For i = 0 To MaxAttachments - 1
-			If g\HasPickedAttachments[i] Then
-				If g\HasToggledAttachments[i] Then
-					If (Not g\HasAttachments[i]) Then
-						AddAttachment(g,i)
-					EndIf
-				Else
-					If g\HasAttachments[i] Then
-						RemoveAttachment(g,i)
-					EndIf
-				EndIf
-			EndIf
-		Next
-	Next
-	
 	CatchErrors("Uncaught (LoadGameQuick(" + file + "))")
 End Function
 
@@ -2231,4 +2207,4 @@ Function LoadChaptersValueFile%()
 End Function
 
 ;~IDEal Editor Parameters:
-;~C#Blitz3D
+;~C#Blitz3D TSS

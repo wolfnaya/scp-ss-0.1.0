@@ -60,7 +60,7 @@ Function UpdateEvent_Room2_GW_B(e.Events)
 		
 		p\Achange = -0.02
 		
-		e\SoundCHN[0] = LoopSound2(AlarmSFX[5],e\SoundCHN[0],Camera,e\room\Objects[3],5)
+		e\SoundCHN[0] = LoopSound2(AlarmSFX[3],e\SoundCHN[0],Camera,e\room\Objects[3],5)
 	EndIf
 	
 End Function
@@ -76,4 +76,4 @@ Function CreateEvent_Room2_GW_B(e.Events)
 End Function
 
 ;~IDEal Editor Parameters:
-;~C#Blitz3D
+;~C#Blitz3D TSS

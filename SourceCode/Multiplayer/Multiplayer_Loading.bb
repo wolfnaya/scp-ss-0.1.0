@@ -316,7 +316,7 @@ Function CreateMPGame()
 			Select mp_I\MapInList\BossNPC
 				Case "SCP-035"
 					mp_I\BossModel = LoadAnimMesh_Strict("GFX\npcs\035.b3d")
-				Case "SCP-076-2"
+				Case "SCP-076"
 					mp_I\BossModel = LoadAnimMesh_Strict("GFX\npcs\076.b3d")
 				Case "SCP-457"
 					mp_I\BossModel = LoadAnimMesh_Strict("GFX\npcs\457.b3d")
@@ -777,4 +777,4 @@ Function LeaveMPGame(playbuttonsfx%=False)
 End Function
 
 ;~IDEal Editor Parameters:
-;~C#Blitz3D
+;~C#Blitz3D TSS

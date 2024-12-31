@@ -97,7 +97,7 @@ Function UpdateEvent_Cont_106(e.Events)
 		
 		ShouldPlay = MUS_CONT_106
 		
-		e\room\NPC[0]\State[0]=6
+		e\room\NPC[0]\State[0]=STATE_SCRIPT
 		If e\room\NPC[0]\Idle = 0 Then
 			AnimateNPC(e\room\NPC[0], 17.0, 19.0, 0.01, False)
 			If e\room\NPC[0]\Frame = 19.0 Then e\room\NPC[0]\Idle = 1
@@ -283,4 +283,4 @@ Function UpdateEvent_Cont_106(e.Events)
 End Function
 
 ;~IDEal Editor Parameters:
-;~C#Blitz3D
+;~C#Blitz3D TSS

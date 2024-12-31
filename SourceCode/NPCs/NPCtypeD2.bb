@@ -186,7 +186,7 @@ Function UpdateNPCTypeD2(n.NPCs)
 					Next
 				Wend
 				
-				NPC_GoTo(n, FindNPCAnimation("Class-D-Armed", "idle"), FindNPCAnimation("Class-D-Armed", "walk"), r\obj, 0.3)
+				NPC_GoTo(n, FindNPCAnimation(n\NPCtype, "idle"), FindNPCAnimation(n\NPCtype, "walk"), r\obj, 0.3)
 				;AnimateNPC(n, 212, 235, 0.1)
 				;[End Block]
 			Case D2_ATTACK
@@ -264,7 +264,7 @@ Function UpdateNPCTypeD2(n.NPCs)
 						EndIf
 					EndIf
 					
-					v3d = FindNPCAnimation("Class-D-Armed", GetNPCWeaponAnim(n\Gun\AnimType) + "_idle")
+					v3d = FindNPCAnimation(n\NPCtype, GetNPCWeaponAnim(n\Gun\AnimType) + "_idle")
 					AnimateNPC(n, v3d\x, v3d\y, v3d\z)
 				EndIf
 				;[End Block]
@@ -272,9 +272,9 @@ Function UpdateNPCTypeD2(n.NPCs)
 				;[Block]
 				If n\Gun\Ammo <= 0 Then
 					If n\Target<>Null Then
-						temp2 = NPC_GoToCover(n, FindNPCAnimation("Class-D-Armed", GetNPCWeaponAnim(n\Gun\AnimType) + "_walk"), n\Target\Collider, 0.8)
+						temp2 = NPC_GoToCover(n, FindNPCAnimation(n\NPCtype, GetNPCWeaponAnim(n\Gun\AnimType) + "_walk"), n\Target\Collider, 0.8)
 					Else
-						temp2 = NPC_GoToCover(n, FindNPCAnimation("Class-D-Armed", GetNPCWeaponAnim(n\Gun\AnimType) + "_walk"), Collider, 0.8)
+						temp2 = NPC_GoToCover(n, FindNPCAnimation(n\NPCtype, GetNPCWeaponAnim(n\Gun\AnimType) + "_walk"), Collider, 0.8)
 					EndIf
 				EndIf
 				If temp2 Then
@@ -283,14 +283,14 @@ Function UpdateNPCTypeD2(n.NPCs)
 				;[End Block]
 			Case D2_GO_AFTER
 				;[Block]
-				NPC_GoTo(n, FindNPCAnimation("Class-D-Armed", GetNPCWeaponAnim(n\Gun\AnimType) + "_idle"), FindNPCAnimation("Class-D-Armed", GetNPCWeaponAnim(n\Gun\AnimType) + "_walk"), Collider, 0.8)
+				NPC_GoTo(n, FindNPCAnimation(n\NPCtype, GetNPCWeaponAnim(n\Gun\AnimType) + "_idle"), FindNPCAnimation(n\NPCtype, GetNPCWeaponAnim(n\Gun\AnimType) + "_walk"), Collider, 0.8)
 				If n\IdleTimer = 0.0 Then
 					n\State[0] = D2_IDLE
 				EndIf
 				;[End Block]
 			Case D2_RELOAD
 				;[Block]
-				v3d = FindNPCAnimation("Class-D-Armed", GetNPCWeaponAnim(n\Gun\AnimType) + "_reload")
+				v3d = FindNPCAnimation(n\NPCtype, GetNPCWeaponAnim(n\Gun\AnimType) + "_reload")
 				AnimateNPC(n, v3d\x, v3d\y, v3d\z, False)
 				If n\Frame >= v3d\y Then
 					n\Gun\Ammo = n\Gun\MaxAmmo
@@ -418,16 +418,16 @@ Function UpdateNPCTypeD2(n.NPCs)
 		
 		Select n\State[1]
 			Case 0.0
-				v3d = FindNPCAnimation("Class-D-Armed", "death_front")
+				v3d = FindNPCAnimation(n\NPCtype, "death_front")
 				AnimateNPC(n, v3d\x, v3d\y, v3d\z, False) ;from front
 			Case 1.0
-				v3d = FindNPCAnimation("Class-D-Armed", "death_left")
+				v3d = FindNPCAnimation(n\NPCtype, "death_left")
 				AnimateNPC(n, v3d\x, v3d\y, v3d\z, False) ;from left
 			Case 2.0
-				v3d = FindNPCAnimation("Class-D-Armed", "death_back")
+				v3d = FindNPCAnimation(n\NPCtype, "death_back")
 				AnimateNPC(n, v3d\x, v3d\y, v3d\z, False) ;from back
 			Case 3.0
-				v3d = FindNPCAnimation("Class-D-Armed", "death_right")
+				v3d = FindNPCAnimation(n\NPCtype, "death_right")
 				AnimateNPC(n, v3d\x, v3d\y, v3d\z, False) ;from right
 		End Select
 		n\LastSeen = 0.0
@@ -506,4 +506,4 @@ Function UpdateNPCTypeD2(n.NPCs)
 End Function
 
 ;~IDEal Editor Parameters:
-;~C#Blitz3D
+;~C#Blitz3D TSS

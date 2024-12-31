@@ -88,7 +88,7 @@ Const MaxPlayers = 12
 Global Players.Player[MaxPlayers]
 
 Function CreatePlayer(playerID%)
-	Local temp#
+	Local temp#, teamSTR$
 	
 	Players[playerID]\Collider = CreatePivot()
 	EntityRadius Players[playerID]\Collider,0.15,0.30
@@ -100,14 +100,40 @@ Function CreatePlayer(playerID%)
 	Local g.Guns, n%
 	
 	For g = Each Guns
-		If g\IsSeparate Then
-			ReplaceTextureByMaterial("GFX\weapons\models\hands\hands_ntf.png",g\HandsObj,"hands",5)
+		If mp_O\OtherTeams Then
+			Select mp_I\Gamemode\ID
+				Case Gamemode_Deathmatch
+					If Players[mp_I\PlayerID]\Team = Team_CI Then
+						teamSTR = "sh"
+					Else
+						teamSTR = "rrh"
+					EndIf
+				Case Gamemode_EAF
+					teamSTR = "sh"
+				Default
+					teamSTR = "sne"
+			End Select
 		Else
-			ReplaceTextureByMaterial("GFX\weapons\models\hands\hands_ntf.png",g\obj,"hands",5)
+			Select mp_I\Gamemode\ID
+				Case Gamemode_Deathmatch
+					If Players[mp_I\PlayerID]\Team = Team_CI Then
+						teamSTR = "ci"
+					Else
+						teamSTR = "ntf"
+					EndIf
+				Case Gamemode_EAF
+					teamSTR = "ci"
+				Default
+					teamSTR = "ntf"
+			End Select
 		EndIf
 		
-		For n = 0 To MaxAttachments - 1
-			g\HasPickedAttachments[n] = True
+		For g = Each Guns
+			If g\IsSeparate Then
+				ReplaceTextureByMaterial("GFX\weapons\models\hands\hands_" + teamSTR + ".png",g\HandsObj,"hands",5)
+			Else
+				ReplaceTextureByMaterial("GFX\weapons\models\hands\hands_" + teamSTR + ".png",g\obj,"hands",5)
+			EndIf
 		Next
 	Next
 	
@@ -1374,34 +1400,38 @@ Function SetupTeam(playerid%)
 	
 	If mp_I\PlayerID = playerid Then
 		If mp_O\OtherTeams Then
-			If Players[mp_I\PlayerID]\Team = Team_CI Then
-				teamSTR = "_sh.png"
-			Else
-				If mp_I\Gamemode\ID = Gamemode_Deathmatch Then
-					teamSTR = "_rrh.png"
-				ElseIf mp_I\Gamemode\ID = Gamemode_EAF Then
-					teamSTR = "_sh.png"
-				Else
-					teamSTR = "_sne.png"
-				EndIf
-			EndIf
+			Select mp_I\Gamemode\ID
+				Case Gamemode_Deathmatch
+					If Players[mp_I\PlayerID]\Team = Team_CI Then
+						teamSTR = "sh"
+					Else
+						teamSTR = "rrh"
+					EndIf
+				Case Gamemode_EAF
+					teamSTR = "sh"
+				Default
+					teamSTR = "sne"
+			End Select
 		Else
-			If mp_I\Gamemode\ID = Gamemode_EAF Then
-				teamSTR = "_ci.png"
-			Else
-				If Players[mp_I\PlayerID]\Team = Team_CI Then
-					teamSTR = "_ci.png"
-				Else
-					teamSTR = "_ntf.png"
-				EndIf
-			EndIf
+			Select mp_I\Gamemode\ID
+				Case Gamemode_Deathmatch
+					If Players[mp_I\PlayerID]\Team = Team_CI Then
+						teamSTR = "ci"
+					Else
+						teamSTR = "ntf"
+					EndIf
+				Case Gamemode_EAF
+					teamSTR = "ci"
+				Default
+					teamSTR = "ntf"
+			End Select
 		EndIf
 		
 		For g = Each Guns
 			If g\IsSeparate Then
-				ReplaceTextureByMaterial("GFX\weapons\models\hands\hands" + teamSTR,g\HandsObj,"hands",5)
+				ReplaceTextureByMaterial("GFX\weapons\models\hands\hands_" + teamSTR + ".png",g\HandsObj,"hands",5)
 			Else
-				ReplaceTextureByMaterial("GFX\weapons\models\hands\hands" + teamSTR,g\obj,"hands",5)
+				ReplaceTextureByMaterial("GFX\weapons\models\hands\hands_" + teamSTR + ".png",g\obj,"hands",5)
 			EndIf
 		Next
 		
@@ -1491,4 +1521,4 @@ Function IsSpectator(playerid%)
 End Function
 
 ;~IDEal Editor Parameters:
-;~C#Blitz3D
+;~C#Blitz3D TSS

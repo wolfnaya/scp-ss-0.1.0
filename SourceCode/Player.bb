@@ -254,42 +254,50 @@ Function UpdatePlayerModel()
 		PositionEntity mpl\ModelCollider, EntityX(Camera), EntityY(Camera)-0.9, EntityZ(Camera)
 		RotateEntity mpl\ModelCollider, 0,EntityYaw(Camera), 0
 		
-		If CurrSpeed > 0 And (Not IsPlayerSprinting) And (Not Crouch) Then
-			If KeyDown(KEY_UP) Then															; ~ Walk North
-				Animate2(model,AnimTime(model),2,32,0.45)
-			ElseIf KeyDown(KEY_DOWN) Then													; ~ Walk South
-				Animate2(model,AnimTime(model),33,61,0.45)
-			ElseIf KeyDown(KEY_RIGHT) Then													; ~ Walk East
-				Animate2(model,AnimTime(model),62,88,0.45)
-			ElseIf KeyDown(KEY_LEFT) Then													; ~ Walk West
-				Animate2(model,AnimTime(model),89,115,0.45)
+		If CurrSpeed > 0 Then
+			If IsPlayerSprinting Then
+				If KeyDown(KEY_UP) Then															; ~ Run North
+					Animate2(model,AnimTime(model),2,32,0.7)
+				ElseIf KeyDown(KEY_DOWN) Then													; ~ Run South
+					Animate2(model,AnimTime(model),33,61,0.7)
+				ElseIf KeyDown(KEY_RIGHT) Then													; ~ Run East
+					Animate2(model,AnimTime(model),62,88,0.7)
+				ElseIf KeyDown(KEY_LEFT) Then													; ~ Run West
+					Animate2(model,AnimTime(model),89,115,0.7)
+				EndIf
+			Else
+				If Crouch Then
+					If KeyDown(KEY_UP) Then														; ~ Crouch Walk North
+						Animate2(model,AnimTime(model),136,166,0.24)
+					ElseIf KeyDown(KEY_DOWN) Then												; ~ Crouch Walk South
+						Animate2(model,AnimTime(model),167,197,0.24)
+					ElseIf KeyDown(KEY_RIGHT) Then												; ~ Crouch Walk East
+						Animate2(model,AnimTime(model),198,228,0.24)
+					ElseIf KeyDown(KEY_LEFT) Then												; ~ Crouch Walk West
+						Animate2(model,AnimTime(model),229,259,0.24)
+					EndIf
+				Else
+					If KeyDown(KEY_UP) Then														; ~ Walk North
+						Animate2(model,AnimTime(model),2,32,0.45)
+					ElseIf KeyDown(KEY_DOWN) Then												; ~ Walk South
+						Animate2(model,AnimTime(model),33,61,0.45)
+					ElseIf KeyDown(KEY_RIGHT) Then												; ~ Walk East
+						Animate2(model,AnimTime(model),62,88,0.45)
+					ElseIf KeyDown(KEY_LEFT) Then												; ~ Walk West
+						Animate2(model,AnimTime(model),89,115,0.45)
+					EndIf
+				EndIf
 			EndIf
-		ElseIf CurrSpeed > 0 And IsPlayerSprinting And (Not Crouch) Then
-			If KeyDown(KEY_UP) Then															; ~ Run North
-				Animate2(model,AnimTime(model),2,32,0.7)
-			ElseIf KeyDown(KEY_DOWN) Then													; ~ Run South
-				Animate2(model,AnimTime(model),33,61,0.7)
-			ElseIf KeyDown(KEY_RIGHT) Then													; ~ Run East
-				Animate2(model,AnimTime(model),62,88,0.7)
-			ElseIf KeyDown(KEY_LEFT) Then													; ~ Run West
-				Animate2(model,AnimTime(model),89,115,0.7)
+		Else
+			If Crouch Then																		; ~ Crouch
+				Animate2(model,AnimTime(model),116,135,0.5,False)
+			Else																				; ~ Un crouch
+				If AnimTime(model) >= 116 And AnimTime(model) <= 135 Then
+					Animate2(model,AnimTime(model),135,116,-0.5,False)
+				Else																			; ~ Idle
+					SetAnimTime(model,1)
+				EndIf
 			EndIf
-		ElseIf CurrSpeed < 1 And (Not IsPlayerSprinting) And (Not Crouch) Then				; ~ Idle
-			SetAnimTime(model,1)
-		ElseIf CurrSpeed < 1 And Crouch Then												; ~ Crouch
-			Animate2(model,AnimTime(model),116,135,0.5,False)
-		ElseIf CurrSpeed > 0 And Crouch Then
-			If KeyDown(KEY_UP) Then															; ~ Crouch Walk North
-				Animate2(model,AnimTime(model),136,166,0.24)
-			ElseIf KeyDown(KEY_DOWN) Then													; ~ Crouch Walk South
-				Animate2(model,AnimTime(model),167,197,0.24)
-			ElseIf KeyDown(KEY_RIGHT) Then													; ~ Crouch Walk East
-				Animate2(model,AnimTime(model),198,228,0.24)
-			ElseIf KeyDown(KEY_LEFT) Then													; ~ Crouch Walk West
-				Animate2(model,AnimTime(model),229,259,0.24)
-			EndIf
-		ElseIf CurrSpeed < 1 And (Not Crouch) Then											; ~ (Should be standup from crouch, but apparently doesn't work)
-			Animate2(model,AnimTime(model),135,116,-0.5,False)
 		EndIf
 	Else
 		If (Not EntityHidden(model)) Then HideEntity(model)
@@ -1303,4 +1311,4 @@ End Function
 Include "SourceCode\PlayerAnimations.bb"
 
 ;~IDEal Editor Parameters:
-;~C#Blitz3D
+;~C#Blitz3D TSS

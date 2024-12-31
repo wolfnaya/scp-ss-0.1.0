@@ -16,6 +16,14 @@ Function InitMPItemTemplates()
 	it = CreateItemTemplate(GetLocalString("Item Names","syringe"), "syringe", "GFX\items\Consumable\syringe.b3d", "GFX\items\Icons\Icon_misc.jpg", "", 0.005) : it\sound = 2 : it\IsUsable = True
 	it = CreateItemTemplate(GetLocalString("Item Names","fuse"), "fuse", "GFX\items\Usable\fuse.b3d", "GFX\items\Icons\Icon_fuse.jpg", "", 0.025)
 	it = CreateItemTemplate("SCP-500-01", "scp500", "GFX\items\SCPs\scp_500_pill.b3d", "GFX\items\Icons\Icon_misc.jpg", "", 0.0001) : it\sound = 2 : it\IsUsable = True
+	it = CreateItemTemplate(GetLocalString("Item Names", "suppressor"), "suppressor", "GFX\Weapons\Models\Suppressor_Worldmodel.b3d","GFX\items\Icons\Icon_misc.jpg","",0.015) : it\sound = 2
+	it = CreateItemTemplate(GetLocalString("Item Names", "match"), "match", "GFX\Weapons\Models\Match_Worldmodel.b3d","GFX\items\Icons\Icon_misc.jpg","",0.03) : it\sound = 2
+	it = CreateItemTemplate(GetLocalString("Item Names", "acog"), "acog", "GFX\Weapons\Models\Acog_Worldmodel.b3d","GFX\items\Icons\Icon_misc.jpg","",0.02) : it\sound = 2
+	it = CreateItemTemplate(GetLocalString("Item Names", "eotech"), "eotech", "GFX\Weapons\Models\EoTech_Worldmodel.b3d","GFX\items\Icons\Icon_misc.jpg","",0.04) : it\sound = 2
+	it = CreateItemTemplate(GetLocalString("Item Names", "red_dot"), "reddot", "GFX\Weapons\Models\RedDot_Worldmodel.b3d","GFX\items\Icons\Icon_misc.jpg","",0.04) : it\sound = 2
+;	it = CreateItemTemplate(GetLocalString("Item Names", "laser"), "lasersight", "GFX\Weapons\Models\Attachments\lasersight.b3d","GFX\items\Icons\Icon_misc.jpg","",0.04) : it\sound = 2
+	it = CreateItemTemplate(GetLocalString("Item Names", "mag"), "extmag", "GFX\Weapons\Models\extmag_box.b3d","GFX\items\Icons\Icon_misc.jpg","",0.02) : it\sound = 2
+;	it = CreateItemTemplate(GetLocalString("Item Names", "m_u"), "mui", "GFX\Weapons\Models\Attachments\emr-p_mui.b3d","GFX\items\Icons\Icon_misc.jpg","",0.01) : it\sound = 2
 	
 	For it = Each ItemTemplates
 		If (it\tex<>0) Then
@@ -57,7 +65,7 @@ Function CreateItemSpawner.ItemSpawner(x#,y#,z#,itemtype%,rstime%,rndtime1%=0,rn
 End Function
 
 Function UpdateItemSpawners()
-	Local its.ItemSpawner,Random%
+	Local its.ItemSpawner,Random%, RandomIt%
 	Local g.Guns,gunAmount%
 	
 	Local stopItemSpawn% = False
@@ -107,12 +115,32 @@ Function UpdateItemSpawners()
 							End Select
 							EntityType its\item\collider,HIT_ITEM
 						Case ITEMTYPE_KEVLAR
-							Random = Rand(0,1)
-							Select Random
-								Case 0
-									its\item = CreateItem(GetLocalString("Item Names","vest"),"vest",EntityX(its\obj),EntityY(its\obj),EntityZ(its\obj))
-								Case 1
-									its\item = CreateItem(GetLocalString("Item Names","vest_heavy"),"heavyvest",EntityX(its\obj),EntityY(its\obj),EntityZ(its\obj))
+							RandomIt = Rand(0,2)
+							Select RandomIt
+								Case 0 ; ~ Kevlar
+									Random = Rand(0,1)
+									Select Random
+										Case 0
+											its\item = CreateItem(GetLocalString("Item Names","vest"),"vest",EntityX(its\obj),EntityY(its\obj),EntityZ(its\obj))
+										Case 1
+											its\item = CreateItem(GetLocalString("Item Names","vest_heavy"),"heavyvest",EntityX(its\obj),EntityY(its\obj),EntityZ(its\obj))
+									End Select
+								Case 1,2 ; ~ Attachments
+									Random = Rand(0,5)
+									Select Random
+										Case 0
+											its\item = CreateItem(GetLocalString("Item Names", "suppressor"), "suppressor",EntityX(its\obj),EntityY(its\obj),EntityZ(its\obj))
+										Case 1
+											its\item = CreateItem(GetLocalString("Item Names", "match"), "match",EntityX(its\obj),EntityY(its\obj),EntityZ(its\obj))
+										Case 2
+											its\item = CreateItem(GetLocalString("Item Names", "acog"), "acog",EntityX(its\obj),EntityY(its\obj),EntityZ(its\obj))
+										Case 3
+											its\item = CreateItem(GetLocalString("Item Names", "eotech"), "eotech",EntityX(its\obj),EntityY(its\obj),EntityZ(its\obj))
+										Case 4
+											its\item = CreateItem(GetLocalString("Item Names", "red_dot"), "reddot",EntityX(its\obj),EntityY(its\obj),EntityZ(its\obj))
+										Case 5
+											its\item = CreateItem(GetLocalString("Item Names", "mag"), "extmag",EntityX(its\obj),EntityY(its\obj),EntityZ(its\obj))
+									End Select
 							End Select
 							EntityType its\item\collider,HIT_ITEM
 						Case ITEMTYPE_AMMO
@@ -346,8 +374,56 @@ Function PickMPItem(item.Items,playerID%)
 					Players[playerID]\Item = CreateInventoryItem(item)
 				EndIf
 			EndIf
+		Case "suppressor"
+			For g = Each Guns
+				g\HasPickedAttachments[ATT_SUPPRESSOR] = True
+			Next
+			picked = True
+;			If mp_I\PlayState = GAME_SERVER Then
+;				Players[playerID]\Item = CreateInventoryItem(item)
+;			EndIf
+		Case "match"
+			For g = Each Guns
+				g\HasPickedAttachments[ATT_MATCH] = True
+			Next
+			picked = True
+;			If mp_I\PlayState = GAME_SERVER Then
+;				Players[playerID]\Item = CreateInventoryItem(item)
+;			EndIf
+		Case "acog"
+			For g = Each Guns
+				g\HasPickedAttachments[ATT_ACOG_SCOPE] = True
+			Next
+			picked = True
+;			If mp_I\PlayState = GAME_SERVER Then
+;				Players[playerID]\Item = CreateInventoryItem(item)
+;			EndIf
+		Case "eotech"
+			For g = Each Guns
+				g\HasPickedAttachments[ATT_EOTECH] = True
+			Next
+			picked = True
+;			If mp_I\PlayState = GAME_SERVER Then
+;				Players[playerID]\Item = CreateInventoryItem(item)
+;			EndIf
+		Case "reddot"
+			For g = Each Guns
+				g\HasPickedAttachments[ATT_RED_DOT] = True
+			Next
+			picked = True
+;			If mp_I\PlayState = GAME_SERVER Then
+;				Players[playerID]\Item = CreateInventoryItem(item)
+;			EndIf
+		Case "extmag"
+			For g = Each Guns
+				g\HasPickedAttachments[ATT_EXT_MAG] = True
+			Next
+			picked = True
+;			If mp_I\PlayState = GAME_SERVER Then
+;				Players[playerID]\Item = CreateInventoryItem(item)
+;			EndIf
 		Default
-			If item\itemtemplate\isGun Then
+			If item\itemtemplate\IsGun Then
 				Local found = False
 				For i = 0 To MaxSlots-SlotsWithNoAmmo
 					For g = Each Guns
@@ -443,7 +519,7 @@ Function PlayItemPickSoundMP(item.Items,playerID%)
 				PlaySound2(LoadTempSound("SFX\Interact\PickUpKevlar.ogg"),Camera,item\collider,5)
 			EndIf
 		Default
-			If item\itemtemplate\isGun Then
+			If item\itemtemplate\IsGun Then
 				For g = Each Guns
 					If g\name = item\itemtemplate\tempname Then
 						If playerID=mp_I\PlayerID Then
@@ -479,4 +555,4 @@ Function CreateInventoryItem.InventoryItem(item.Items)
 End Function
 
 ;~IDEal Editor Parameters:
-;~C#Blitz3D
+;~C#Blitz3D TSS

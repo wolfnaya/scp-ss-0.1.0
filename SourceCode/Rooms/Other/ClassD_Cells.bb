@@ -125,9 +125,9 @@ Function UpdateEvent_ClassD_Cells_Checkpoint(e.Events)
 			If g_I\HoldingGun > GUN_UNARMED Then
 				If EntityDistanceSquared(e\room\Objects[n], Collider) < PowTwo(0.6) Then
 					If e\SoundCHN[1] = 0 Then
-						e\SoundCHN[1] = PlaySound_Strict(AlarmSFX[7])
+						e\SoundCHN[1] = PlaySound_Strict(AlarmSFX[5])
 					Else
-						If (Not ChannelPlaying(e\SoundCHN[1])) Then e\SoundCHN[1] = PlaySound_Strict(AlarmSFX[7])
+						If (Not ChannelPlaying(e\SoundCHN[1])) Then e\SoundCHN[1] = PlaySound_Strict(AlarmSFX[5])
 					EndIf
 				Else
 					StopStream_Strict(e\SoundCHN[1]) : e\SoundCHN[1] = 0
@@ -168,7 +168,7 @@ Function UpdateEvent_ClassD_Cells_Checkpoint(e.Events)
 							UseDoor(e\room\RoomDoors[2])
 						EndIf
 						
-						PlaySound_Strict(AlarmSFX[6])
+						PlaySound_Strict(AlarmSFX[4])
 					Else
 						CreateMsg(GetLocalString("Doors","keycard_required3"))
 					EndIf
@@ -213,10 +213,10 @@ Function UpdateEvent_ClassD_Cells_Checkpoint(e.Events)
 					
 					If e\EventState[9] = 0.0 Then
 						UseDoor(e\room\RoomDoors[2])
-						PlaySound_Strict(AlarmSFX[13])
+						PlaySound_Strict(AlarmSFX[11])
 					Else
 						UseDoor(e\room\RoomDoors[1])
-						PlaySound_Strict(AlarmSFX[13])
+						PlaySound_Strict(AlarmSFX[11])
 					EndIf
 					
 					e\EventState[10] = 0.0
@@ -900,7 +900,7 @@ Function UpdateEvent_ClassD_Cells_Zone(e.Events)
 		If e\EventState[10] = 0 Then
 			Local n.NPCs = CreateNPC(NPC_Human,3114*RoomScale,4250*RoomScale,5748*RoomScale)
 			RotateEntity n\Collider,0,e\room\angle,0
-			n\State[0] = 3
+			n\State[0] = STATE_SCRIPT
 			SetNPCFrame(n,555)
 			n\IsDead = True
 			ChangeNPCTexture(n,"GFX\npcs\body2.jpg")
@@ -1161,9 +1161,9 @@ Function UpdateEvent_ClassD_Cells_Zone(e.Events)
 					EndIf
 					
 					If e\EventState[2] >= 70*10 And e\EventState[2] < 70*10.02 Then
-						If HUDenabled Then
+;						If HUDenabled Then
 							psp\IsShowingHUD = True
-						EndIf
+;						EndIf
 						psp\NoMove = False
 						psp\NoRotation = False
 					ElseIf e\EventState[2] < 70*10.0 Then
@@ -1379,9 +1379,9 @@ Function UpdateEvent_ClassD_Cells_Zone(e.Events)
 					EndIf
 					
 					If e\EventState[2] >= 70*4 And e\EventState[2] < 70*4.02 Then
-						If HUDenabled Then
+						;If HUDenabled Then
 							psp\IsShowingHUD = True
-						EndIf
+						;EndIf
 						psp\NoMove = False
 						psp\NoRotation = False
 					ElseIf e\EventState[2] < 70*4.0 Then
@@ -1564,9 +1564,9 @@ Function UpdateEvent_ClassD_Cells_Zone(e.Events)
 					EndIf
 					
 					If e\EventState[2] >= 70*4 And e\EventState[2] < 70*4.02 Then
-						If HUDenabled Then
+						;If HUDenabled Then
 							psp\IsShowingHUD = True
-						EndIf
+						;EndIf
 						psp\NoMove = False
 						psp\NoRotation = False
 					ElseIf e\EventState[2] < 70*4.0 Then
@@ -1767,4 +1767,4 @@ Function UpdateEvent_ClassD_Cells_Zone(e.Events)
 	
 End Function
 ;~IDEal Editor Parameters:
-;~C#Blitz3D
+;~C#Blitz3D TSS

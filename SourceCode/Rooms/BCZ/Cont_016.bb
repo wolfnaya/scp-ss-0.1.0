@@ -41,10 +41,10 @@ Function UpdateEvent_Cont_016(e.Events)
 		e\room\NPC[0] = CreateNPC(NPC_Human,EntityX(e\room\Objects[0],True),1.0,EntityZ(e\room\Objects[0],True))
 		ChangeNPCTexture(e\room\NPC[0],"GFX\npcs\scientist.jpg")
 		SetNPCFrame e\room\NPC[0], 559
-		e\room\NPC[0]\State[0]=3
+		e\room\NPC[0]\State[0]=STATE_SCRIPT
 		e\room\NPC[0]\IsDead=True
 	EndIf
 	
 End Function
 ;~IDEal Editor Parameters:
-;~C#Blitz3D
+;~C#Blitz3D TSS

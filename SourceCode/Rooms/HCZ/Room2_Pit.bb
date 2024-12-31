@@ -113,7 +113,7 @@ Function UpdateEvent_Room2_Pit_Body(e.Events)
 		e\room\NPC[0]=CreateNPC(NPC_Human, EntityX(e\room\Objects[0],True), 0.5, EntityZ(e\room\Objects[0],True))
 		RotateEntity e\room\NPC[0]\Collider, 0, e\room\angle-45.0, 0
 		SetNPCFrame e\room\NPC[0], 559
-		e\room\NPC[0]\State[0]=3
+		e\room\NPC[0]\State[0]=STATE_SCRIPT
 		e\room\NPC[0]\IsDead=True
 		
 		RemoveEvent(e)
@@ -121,4 +121,4 @@ Function UpdateEvent_Room2_Pit_Body(e.Events)
 	
 End Function	
 ;~IDEal Editor Parameters:
-;~C#Blitz3D
+;~C#Blitz3D TSS

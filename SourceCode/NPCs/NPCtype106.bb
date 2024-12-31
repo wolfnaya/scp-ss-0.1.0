@@ -127,10 +127,10 @@ Function UpdateNPCtype106(n.NPCs)
 					
 					If PlayerRoom\RoomTemplate\Name = "area_106_escape" Lor (PlayerRoom\RoomTemplate\Name = "class_d_cells" And gopt\GameMode = GAMEMODE_CLASS_D) Then
 						ShouldPlay = MUS_CHASE_106_3
-					ElseIf PlayerRoom\RoomTemplate\Name = "room3_ct"
+					ElseIf PlayerRoom\RoomTemplate\Name = "room3_ct" And EntityY(Collider)<-6000.0*RoomScale Then
 						ShouldPlay = MUS_GENERATOR_CHASE
 					Else
-						ShouldPlay = (Rand(MUS_CHASE_106,MUS_CHASE_106_2))
+						ShouldPlay = (Rand(MUS_CHASE_106, MUS_CHASE_106_2))
 					EndIf
 						
 					Local Visible% = False
@@ -586,4 +586,4 @@ Function UpdateNPCtype106MP(n.NPCs)
 	
 End Function
 ;~IDEal Editor Parameters:
-;~C#Blitz3D
+;~C#Blitz3D TSS

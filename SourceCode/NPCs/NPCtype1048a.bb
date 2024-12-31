@@ -165,6 +165,7 @@ Function UpdateNPCtype1048a(n.NPCs)
 		HideEntity(n\obj)
 		n\IsDead = True
 	EndIf
+	If n\IsDead Then RemoveNPC(n)
 End Function
 
 Function UpdateNPCtype1048aMP(n.NPCs)
@@ -375,4 +376,4 @@ End Function
 
 
 ;~IDEal Editor Parameters:
-;~C#Blitz3D
+;~C#Blitz3D TSS

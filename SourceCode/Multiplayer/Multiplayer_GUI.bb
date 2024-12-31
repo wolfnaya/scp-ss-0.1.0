@@ -17,8 +17,6 @@ Function DrawGUIMP()
 		playerid = mp_I\SpectatePlayer
 	EndIf
 	
-	DrawScopeDots()
-	
 	Local plAmount%
 	If HUDenabled And (Not InLobby()) And Players[playerid]\Team > Team_Unknown Then ;CHECK FOR IMPLEMENTATION
 		
@@ -1246,4 +1244,4 @@ Function IsVoteCompleted%()
 End Function
 
 ;~IDEal Editor Parameters:
-;~C#Blitz3D
+;~C#Blitz3D TSS

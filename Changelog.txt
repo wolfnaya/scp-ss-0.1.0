@@ -1,3 +1,43 @@
+v0.1.1
+
+`[Surprise!]
+`(Yes, it's an official update)
+
+- [Known bugs:] ^
+* Core elevator might not properly load zone from time to time.
+* Core elevator always breaks after reactor area (Chapter 3 as Ryan).
+* Secondary weapon slot might sometimes bug out.
+- [How to deal with those bugs:] ^
+* Try reloading the game.
+* Try loading zones manually using console command "loadzone" or "lz" and typing index of zone (from 0 to 14).
+- [Fixes:] >
+* Fixed Ryan couldn't use elevator because of NTF units in chapter 4 and beyond.
+* Fixed Communication wheel for NTF in chapter 2 was available even though chapter is literally named "Contact Lost"...
+* Interaction widget now shows binded key instead of constantly being "E".
+* Fixed attachment spawning when loading game by optimizing the system.
+* Reduced lag spike caused by SCP-049's Containment by replasing the room mesh to the old unfinished one. [sadly :(]
+* Fixed radio caused game to crash.
+* Fixed player could pick up any item into the equipment slots.
+* Fixed game would crash when loading game through pause menu.
+* Fixed Alarm SoundFX loading array was improperly declared, thus caused some issues.
+* Restored blinking system to the original state.
+* Fixed SCP-106 had generator chase music on the top level of Room3_CT.
+* Fixed Chaos Insurgency didn't have any animations.
+* Fixed player couldn't drink SCP-207.
+* Fixed SCP-1048-A appeared after it's death when loading the game.
+* Fixed non-working un crouch and crouch walk animations on player model.
+* Fixed sight crosshairs (now they're actually sprites that are attached to the gun rather than being screen images).
+* Reimplemented extended magazines box.
+* Fixed player couldn't bind NVG button.
+* Hand textures in multiplayer are now accurate to player's role.
+- [Features:] <
+* Added more changelog colors.
+* Added RCZ doors.
+* Updated most of RCZ rooms.
+* Updated SCP-076-2 soundtrack to the one I've created before but scrapped for some reason.
+* Reduced zone size.
+* Added attachment item spawning in Multiplayer (instead of attachments being pre-unlocked).
+
 v0.1.0
 
 ~ Added chatwheel for NTF in Singleplayer.

@@ -658,4 +658,4 @@ Function UpdateEvent_Room3_CT(e.Events)
 	
 End Function
 ;~IDEal Editor Parameters:
-;~C#Blitz3D
+;~C#Blitz3D TSS

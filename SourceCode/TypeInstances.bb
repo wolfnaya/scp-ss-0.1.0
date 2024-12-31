@@ -64,4 +64,4 @@ Global g_I.GunInstance
 Global mi_I.MissionInstance
 
 ;~IDEal Editor Parameters:
-;~C#Blitz3D
+;~C#Blitz3D TSS

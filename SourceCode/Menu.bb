@@ -461,7 +461,9 @@ Function UpdateMainMenu()
 				
 				RandomSeed = InputBox(x+150*MenuScale, y+55*MenuScale, 200*MenuScale, 30*MenuScale, RandomSeed, 3, 15, 2, MainMenuTab)
 					
-				opt\IntroEnabled = DrawTick(x + 280 * MenuScale, y + 110 * MenuScale, opt\IntroEnabled, False, 3, MainMenuTab)
+				;opt\IntroEnabled = DrawTick(x + 280 * MenuScale, y + 110 * MenuScale, opt\IntroEnabled, False, 3, MainMenuTab)
+				
+				;Map_GridSize = Slider3(x+280*MenuScale,y+110*MenuScale,150*MenuScale,Map_GridSize,2,9,12,18,2,MainMenuTab,0)
 				
 				For i = SAFE To ESOTERIC
 					Local PrevSelectedDifficulty.Difficulty = SelectedDifficulty
@@ -935,14 +937,15 @@ Function UpdateMainMenu()
 					InputBox(x + 320 * MenuScale, y + 240 * MenuScale,140*MenuScale,20*MenuScale,KeyName[Min(KEY_BLINK,210)],7)
 					InputBox(x + 320 * MenuScale, y + 260 * MenuScale,140*MenuScale,20*MenuScale,KeyName[Min(KEY_INV,210)],9)
 					InputBox(x + 320 * MenuScale, y + 280 * MenuScale,140*MenuScale,20*MenuScale,KeyName[Min(KEY_USE,210)],19)
+					InputBox(x + 320 * MenuScale, y + 300 * MenuScale,140*MenuScale,20*MenuScale,KeyName[Min(kb\NVToggleKey,210)],16)
 					
-					InputBox(x + 320 * MenuScale, y + 320 * MenuScale,140*MenuScale,20*MenuScale,KeyName[Min(kb\ChatKey,210)],21)
-					InputBox(x + 320 * MenuScale, y + 340 * MenuScale,140*MenuScale,20*MenuScale,KeyName[Min(kb\CommandWheelKey,210)],14)
-					InputBox(x + 320 * MenuScale, y + 360 * MenuScale,140*MenuScale,20*MenuScale,KeyName[Min(kb\SocialWheelKey,210)],15)
+					InputBox(x + 320 * MenuScale, y + 340 * MenuScale,140*MenuScale,20*MenuScale,KeyName[Min(kb\ChatKey,210)],21)
+					InputBox(x + 320 * MenuScale, y + 360 * MenuScale,140*MenuScale,20*MenuScale,KeyName[Min(kb\CommandWheelKey,210)],14)
+					InputBox(x + 320 * MenuScale, y + 380 * MenuScale,140*MenuScale,20*MenuScale,KeyName[Min(kb\SocialWheelKey,210)],15)
 					
-					InputBox(x + 320 * MenuScale, y + 400 * MenuScale,140*MenuScale,20*MenuScale,KeyName[Min(KEY_CONSOLE,210)],12)
-					InputBox(x + 320 * MenuScale, y + 420 * MenuScale,140*MenuScale,20*MenuScale,KeyName[Min(KEY_SAVE,210)],11)
-					InputBox(x + 320 * MenuScale, y + 440 * MenuScale,140*MenuScale,20*MenuScale,KeyName[Min(KEY_LOAD,210)],23)
+					InputBox(x + 320 * MenuScale, y + 420 * MenuScale,140*MenuScale,20*MenuScale,KeyName[Min(KEY_CONSOLE,210)],12)
+					InputBox(x + 320 * MenuScale, y + 440 * MenuScale,140*MenuScale,20*MenuScale,KeyName[Min(KEY_SAVE,210)],11)
+					InputBox(x + 320 * MenuScale, y + 460 * MenuScale,140*MenuScale,20*MenuScale,KeyName[Min(KEY_LOAD,210)],23)
 					
 					Local KEY%
 					If SelectedInputBox <> 0 Then
@@ -2119,12 +2122,11 @@ Function RenderMainMenu()
 				Color 255,255,255
 				
 				Text (x + 20 * MenuScale, y + 60 * MenuScale, GetLocalString("Menu","map_seed")+":")
-					
-				Text(x + 20 * MenuScale, y + 110 * MenuScale, GetLocalString("Menu","enable_intro")+":")
-				;Text(x + 20 * MenuScale, y + 110 * MenuScale, GetLocalString("Menu","classic_mode")+":")
-				If MouseOn(x + 280 * MenuScale, y + 110 * MenuScale, 20 * MenuScale, 20 * MenuScale)
-					DrawOptionsTooltip("intro_txt")
-				EndIf
+				
+				;Text(x + 20 * MenuScale, y + 110 * MenuScale, GetLocalString("Menu","map_size")+":")
+				;If MouseOn(x + 280 * MenuScale, y + 110 * MenuScale, 150 * MenuScale, 30 * MenuScale)
+				;	DrawOptionsTooltip("map_size_txt")
+				;EndIf
 				
 				Text (x + 20 * MenuScale, y + 150 * MenuScale, GetLocalString("Menu","difficulty")+":")
 				For i = SAFE To ESOTERIC
@@ -2380,7 +2382,7 @@ Function RenderMainMenu()
 					If MainMenuTab <> MenuTab_Options_ControlsBinding Then
 						height = 480 * MenuScale
 					Else
-						height = 500 * MenuScale
+						height = 520 * MenuScale
 					EndIf
 					DrawFrame(x, y, width, height)
 					SetFont fo\Font[Font_Default]
@@ -2623,14 +2625,15 @@ Function RenderMainMenu()
 					Text(x + 20 * MenuScale, y + 235 * MenuScale, GetLocalString("Options","cont_blink"))
 					Text(x + 20 * MenuScale, y + 255 * MenuScale, GetLocalString("Options","cont_inventory"))
 					Text(x + 20 * MenuScale, y + 275 * MenuScale, GetLocalString("Options","cont_interact"))
+					Text(x + 20 * MenuScale, y + 295 * MenuScale, GetLocalString("Options","cont_nvg"))
 					
-					Text(x + 20 * MenuScale, y + 315 * MenuScale, GetLocalString("Options","cont_chat"))
-					Text(x + 20 * MenuScale, y + 335 * MenuScale, GetLocalString("Options","cont_commandwheel"))
-					Text(x + 20 * MenuScale, y + 355 * MenuScale, GetLocalString("Options","cont_socialwheel"))
+					Text(x + 20 * MenuScale, y + 335 * MenuScale, GetLocalString("Options","cont_chat"))
+					Text(x + 20 * MenuScale, y + 355 * MenuScale, GetLocalString("Options","cont_commandwheel"))
+					Text(x + 20 * MenuScale, y + 375 * MenuScale, GetLocalString("Options","cont_socialwheel"))
 					
-					Text(x + 20 * MenuScale, y + 395 * MenuScale, GetLocalString("Options","cont_console"))
-					Text(x + 20 * MenuScale, y + 415 * MenuScale, GetLocalString("Options","cont_save"))
-					Text(x + 20 * MenuScale, y + 435 * MenuScale, GetLocalString("Options","cont_load"))
+					Text(x + 20 * MenuScale, y + 415 * MenuScale, GetLocalString("Options","cont_console"))
+					Text(x + 20 * MenuScale, y + 435 * MenuScale, GetLocalString("Options","cont_save"))
+					Text(x + 20 * MenuScale, y + 455 * MenuScale, GetLocalString("Options","cont_load"))
 					
 					If MouseOn(x+20*MenuScale,y,width-40*MenuScale,420*MenuScale)
 						DrawOptionsTooltip("controls")
@@ -3961,6 +3964,16 @@ Function UpdateLauncher()
 			For chl.ChangeLogLines = Each ChangeLogLines
 				Color 255,255,255
 				If Instr(chl\txt,"v"+VersionNumber)>0 Then
+					Color 0,80,200
+				ElseIf Instr(chl\txt,"`")>0 Then
+					Color 200,80,0
+				ElseIf Instr(chl\txt,"$")>0 Then
+					Color 170,0,200
+				ElseIf Instr(chl\txt,">")>0 Then
+					Color 200,200,0
+				ElseIf Instr(chl\txt,"<")>0 Then
+					Color 0,200,0
+				ElseIf Instr(chl\txt,"^")>0 Then
 					Color 200,0,0
 				EndIf
 				RowText(chl\txt$,5,y-195,390,440)
@@ -3978,6 +3991,16 @@ Function UpdateLauncher()
 			For chl.ChangeLogLines = Each ChangeLogLines
 				Color 255,255,255
 				If Instr(chl\txt,"v"+VersionNumber)>0 Then
+					Color 0,80,200
+				ElseIf Instr(chl\txt,"`")>0 Then
+					Color 200,80,0
+				ElseIf Instr(chl\txt,"$")>0 Then
+					Color 170,0,200
+				ElseIf Instr(chl\txt,">")>0 Then
+					Color 200,200,0
+				ElseIf Instr(chl\txt,"<")>0 Then
+					Color 0,200,0
+				ElseIf Instr(chl\txt,"^")>0 Then
 					Color 200,0,0
 				EndIf
 				RowText(chl\txt$,205,y-150,390,440)
@@ -5512,6 +5535,8 @@ Function DrawOptionsTooltip(option$,value#=0,ingame%=False)
 		Case "classic_mode_txt"
 			txt = GetLocalString("Menu", "classic_mode_txt")
 			;[End Block]
+		Case "map_size_txt"
+			txt = GetLocalString("Menu", "map_size_txt")
 		;Multiplayer options
 			;[Block]
 		Case "private"
@@ -6539,4 +6564,4 @@ Function UpdateMenuNews()
 	
 End Function
 ;~IDEal Editor Parameters:
-;~C#Blitz3D
+;~C#Blitz3D TSS

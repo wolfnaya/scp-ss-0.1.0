@@ -65,6 +65,8 @@ Const TASK_FIND_NOTE = 48
 Const TASK_FIND_CLASS_D_KEY = 49
 Const TASK_GO_TO_EZ = 50
 Const TASK_GO_TO_LCZ = 51
+Const TASK_WAIT_TRAM = 52
+Const TASK_ASK_WORKER = 53
 
 ; ~ [SANDERS' TASKS]
 
@@ -113,7 +115,7 @@ Function BeginTask.NewTask(ID%)
 	t\ID = ID
 	Select t\ID
 			
-		; ~ Story Mode Tasks
+		; ~ Ryan's Tasks
 			
 		Case TASK_GO_TO_EZ
 			t\txt = GetLocalString("Tasks", "go_to_ez")
@@ -211,8 +213,12 @@ Function BeginTask.NewTask(ID%)
 			t\txt = GetLocalString("Tasks", "find_note")
 		Case TASK_FIND_CLASS_D_KEY
 			t\txt = GetLocalString("Tasks", "find_d_key")
+		Case TASK_WAIT_TRAM
+			t\txt = GetLocalString("Tasks", "wait_for_tram")
+		Case TASK_ASK_WORKER
+			t\txt = GetLocalString("Tasks", "ask_worker")
 			
-		; ~ NTF Tasks
+		; ~ NTF's Tasks
 			
 		Case TASK_NTF_ARRIVE_AT_SITE
 			t\txt = GetLocalString("Tasks", "ntf_arrive_at_site")

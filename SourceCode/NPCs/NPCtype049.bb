@@ -213,7 +213,7 @@ Function UpdateNPCtype049(n.NPCs)
 									temp = True
 									If n\Path[n\PathLocation]\door <> Null Then
 										If (Not n\Path[n\PathLocation]\door\IsElevatorDoor)
-											If (n\Path[n\PathLocation]\door\locked Lor n\Path[n\PathLocation]\door\KeyCard<>0 Lor n\Path[n\PathLocation]\door\Code<>"") And (Not n\Path[n\PathLocation]\door\open) Then
+											If (n\Path[n\PathLocation]\door\locked Lor n\Path[n\PathLocation]\door\KeyCard<>-1 Lor n\Path[n\PathLocation]\door\Code<>"") And (Not n\Path[n\PathLocation]\door\open) Then
 												temp = False
 											Else
 												If n\Path[n\PathLocation]\door\open = False And (n\Path[n\PathLocation]\door\buttons[0]<>0 Lor n\Path[n\PathLocation]\door\buttons[1]<>0) Then
@@ -323,7 +323,7 @@ Function UpdateNPCtype049(n.NPCs)
 									If n\PathStatus = 1 Then
 										If n\Path[1]<>Null Then
 											If n\Path[1]\door<>Null Then
-												If (n\Path[1]\door\locked Lor n\Path[1]\door\KeyCard<>0 Lor n\Path[1]\door\Code<>"") And (Not n\Path[1]\door\open) Then
+												If (n\Path[1]\door\locked Lor n\Path[1]\door\KeyCard<>-1 Lor n\Path[1]\door\Code<>"") And (Not n\Path[1]\door\open) Then
 													Repeat
 														If n\PathLocation > 19
 															n\PathLocation = 0 : n\PathStatus = 0 : Exit
@@ -455,7 +455,7 @@ Function UpdateNPCtype049(n.NPCs)
 							If n\PathLocation>0 Then
 								If n\Path[n\PathLocation-1] <> Null
 									If n\Path[n\PathLocation-1]\door <> Null Then
-										If n\Path[n\PathLocation-1]\door\KeyCard=0
+										If n\Path[n\PathLocation-1]\door\KeyCard=-1
 											If EntityDistanceSquared(n\Path[n\PathLocation-1]\obj,n\Collider)>PowTwo(0.3)
 												If n\Path[n\PathLocation-1]\door\open Then UseDoorNPC(n\Path[n\PathLocation-1]\door, n)
 											EndIf
@@ -526,4 +526,4 @@ Function UpdateNPCtype049(n.NPCs)
 End Function
 
 ;~IDEal Editor Parameters:
-;~C#Blitz3D
+;~C#Blitz3D TSS

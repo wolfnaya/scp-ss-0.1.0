@@ -130,7 +130,7 @@ Function UpdateEvent_Room1_O5(e.Events)
 						EntityTexture e\room\Objects[2], O5_Screen[0]
 					ElseIf e\EventState[4] > 70*5 Then
 						EntityTexture e\room\Objects[2], O5_Screen[1], Floor(((e\EventState[4]-70*5)/70) Mod 2.0)
-						e\SoundCHN[0] = LoopSound2(AlarmSFX[7], e\SoundCHN[0], Camera, e\room\Objects[1], 15.0, 1)
+						e\SoundCHN[0] = LoopSound2(AlarmSFX[8], e\SoundCHN[0], Camera, e\room\Objects[1], 15.0, 1)
 						
 						If (Not ecst\WasInPO) Then
 							If TaskExists(TASK_SEARCH_O5_AGAIN) Then
@@ -194,4 +194,4 @@ Function UpdateEvent_Room1_O5(e.Events)
 	
 End Function
 ;~IDEal Editor Parameters:
-;~C#Blitz3D
+;~C#Blitz3D TSS

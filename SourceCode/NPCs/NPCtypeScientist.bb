@@ -411,5 +411,74 @@ Function UpdateNPCtypeScientist(n.NPCs)
 	
 End Function
 
+Function UpdateNPCTypeHuman(n.NPCs)
+	Local prevFrame, sfxstep
+	
+	RotateEntity(n\Collider, 0, EntityYaw(n\Collider), EntityRoll(n\Collider), True)
+	
+	prevFrame = AnimTime(n\obj)
+	
+	Select n\State[0]
+		Case 0 ;idle
+			n\CurrSpeed = CurveValue(0.0, n\CurrSpeed, 5.0)
+			Animate2(n\obj, AnimTime(n\obj), 210, 235, 0.1)
+		Case 1 ;walking
+			If n\State[1] = 1.0
+				n\CurrSpeed = CurveValue(n\Speed*0.7, n\CurrSpeed, 20.0)
+			Else
+				n\CurrSpeed = CurveValue(0.015, n\CurrSpeed, 5.0)
+			EndIf
+			Animate2(n\obj, AnimTime(n\obj), 236, 260, n\CurrSpeed * 18)
+		Case 2 ;running
+			n\CurrSpeed = CurveValue(0.03, n\CurrSpeed, 5.0)
+			Animate2(n\obj, AnimTime(n\obj), 301, 319, n\CurrSpeed * 18)
+		Case 3 ;Looking at object
+			Animate2(n\obj, AnimTime(n\obj), 210, 235, 0.1)
+			n\BoneToManipulate = "Bip01_Head"
+			n\ManipulateBone = True
+			n\ManipulationType = 1
+			n\Angle = EntityYaw(n\Collider)
+		Case STATE_SCRIPT
+			
+	End Select
+	
+	If n\State[1] <> 2
+		If n\State[0] = 1
+			If n\CurrSpeed > 0.01 Then
+				If prevFrame < 244 And AnimTime(n\obj)=>244 Then
+					sfxstep = GetStepSound(n\Collider,n\CollRadius)
+					PlaySound2(StepSFX(sfxstep,0,Rand(0,7)),Camera, n\Collider, 8.0, Rnd(0.3,0.5))
+				ElseIf prevFrame < 256 And AnimTime(n\obj)=>256
+					sfxstep = GetStepSound(n\Collider,n\CollRadius)
+					PlaySound2(StepSFX(sfxstep,0,Rand(0,7)),Camera, n\Collider, 8.0, Rnd(0.3,0.5))
+				EndIf
+			EndIf
+		ElseIf n\State[0] = 2
+			If n\CurrSpeed > 0.01 Then
+				If prevFrame < 309 And AnimTime(n\obj)=>309
+					sfxstep = GetStepSound(n\Collider,n\CollRadius)
+					PlaySound2(StepSFX(sfxstep,1,Rand(0,7)),Camera, n\Collider, 8.0, Rnd(0.3,0.5))
+				ElseIf prevFrame =< 319 And AnimTime(n\obj)=<301
+					sfxstep = GetStepSound(n\Collider,n\CollRadius)
+					PlaySound2(StepSFX(sfxstep,1,Rand(0,7)),Camera, n\Collider, 8.0, Rnd(0.3,0.5))
+				EndIf
+			EndIf
+		EndIf
+	EndIf
+	
+	If n\Frame = 19 Lor n\Frame = 60
+		n\IsDead = True
+	EndIf
+	If AnimTime(n\obj)=19 Lor AnimTime(n\obj)=60
+		n\IsDead = True
+	EndIf
+	
+	MoveEntity(n\Collider, 0, 0, n\CurrSpeed * FPSfactor)
+	
+	PositionEntity(n\obj, EntityX(n\Collider), EntityY(n\Collider) - 0.32, EntityZ(n\Collider))
+	
+	RotateEntity n\obj, EntityPitch(n\Collider), EntityYaw(n\Collider)-180.0, 0
+End Function
+
 ;~IDEal Editor Parameters:
-;~C#Blitz3D
+;~C#Blitz3D TSS

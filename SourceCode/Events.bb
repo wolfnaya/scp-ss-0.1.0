@@ -12,6 +12,7 @@ Include "SourceCode\Events\Room3_Servers.bb"
 Include "SourceCode\Events\Room4_Tunnel.bb"
 Include "SourceCode\Events\Room4_1.bb"
 Include "SourceCode\Events\Distant_Explosion.bb"
+Include "SourceCode\Events\Random_Loot.bb"
 
 Const MaxEventStates% = 20
 Const MaxEventChannels% = 4
@@ -255,6 +256,11 @@ Function InitEvents()
 	CreateEvent("zombie_spawn", "room3_bcz", 0, 0.4 + (0.1*SelectedDifficulty\AggressiveNPCs))
 	CreateEvent("zombie_spawn", "room3_1", 0, 0.4 + (0.1*SelectedDifficulty\AggressiveNPCs))
 	CreateEvent("zombie_spawn", "room3_2", 0, 0.4 + (0.1*SelectedDifficulty\AggressiveNPCs))
+	
+	CreateEvent("random_loot","room2_rcz",0);,0.3)
+	;CreateEvent("random_loot","room3_rcz",0,0.3)
+	;CreateEvent("random_loot","room3_2_rcz",0,0.3)
+	;CreateEvent("random_loot","room4_rcz",0,0.3)
 	
 	If Rand(5)<5 Then
 		Select Rand(3)
@@ -501,6 +507,10 @@ Function UpdateEvents()
 				UpdateEvent_Room4_Tunnel(e)
 			Case "buttghost"
 				UpdateEvent_Buttghost(e)
+			Case "distant_explosion"
+				UpdateEvent_Distant_Explosion(e)
+			Case "random_loot"
+				UpdateEvent_Random_Loot(e, e\room\RoomTemplate\Name)
 	;		Case "classd_spawn_group"
 	;			UpdateEvent_ClassD_Spawn_Group(e)
 			Case "room2_tesla"
@@ -692,4 +702,4 @@ Function UpdateEventValues()
 End Function
 
 ;~IDEal Editor Parameters:
-;~C#Blitz3D
+;~C#Blitz3D TSS

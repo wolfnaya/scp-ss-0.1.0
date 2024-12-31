@@ -1005,7 +1005,7 @@ Function MPMainLoop()
 	ElseIf PlayerRoom<>Null
 		AmbientLight Brightness, Brightness, Brightness
 	EndIf
-	RenderWorld(Max(0.0,1.0+(ft\accumulator/ft\tickDuration)))
+	RenderWorld(Max(0.0,1.0+(ft\Accumulator/ft\TickDuration)))
 	CurrTrisAmount = TrisRendered()
 	;render sprites
 	CameraProjMode ark_blur_cam,2
@@ -1022,7 +1022,7 @@ Function MPMainLoop()
 	
 	For g = Each Guns
 		If opt\RenderScope Then
-			If Players[mp_I\PlayerID]\CurrHP > 0 And g_I\HoldingGun = g\ID And g\HasAttachments[ATT_ACOG_SCOPE] Then
+			If Players[mp_I\PlayerID]\CurrHP > 0 And g_I\HoldingGun = g\ID And g\HasAttachments[ATT_ACOG_SCOPE]; And ReadyToShowDot Then
 				RenderScope()
 			EndIf
 		EndIf
@@ -1039,7 +1039,7 @@ Function MPMainLoop()
 	Color 255, 255, 255
 	SetFont fo\ConsoleFont
 	If opt\ShowFPS Then
-		Text 20, 20, "FPS: " + ft\fps : SetFont fo\Font[Font_Default]
+		Text 20, 20, "FPS: " + ft\FPS : SetFont fo\Font[Font_Default]
 	EndIf
 	
 	RenderAchievementMsg()
@@ -1052,9 +1052,9 @@ Function MPMainLoopClient()
 	Local i%
 	Local prevGun[MaxPlayers-1]
 	
-	While (ft\accumulator>0.0)
-		ft\accumulator = ft\accumulator-GetTickDuration()
-		If (ft\accumulator<=0.0) Then CaptureWorld()
+	While (ft\Accumulator>0.0)
+		ft\Accumulator = ft\Accumulator-GetTickDuration()
+		If (ft\Accumulator<=0.0) Then CaptureWorld()
 		
 		For i=0 To (mp_I\MaxPlayers-1)
 			If Players[i]<>Null Then
@@ -1257,7 +1257,7 @@ Function MPMainLoopClient()
 	ElseIf PlayerRoom<>Null
 		AmbientLight Brightness, Brightness, Brightness
 	EndIf
-	RenderWorld(Max(0.0,1.0+(ft\accumulator/ft\tickDuration)))
+	RenderWorld(Max(0.0,1.0+(ft\Accumulator/ft\TickDuration)))
 	CurrTrisAmount = TrisRendered()
 	;render sprites
 	CameraProjMode ark_blur_cam,2
@@ -2744,4 +2744,4 @@ Function CountdownBeep(timer#,startAt%)
 End Function
 
 ;~IDEal Editor Parameters:
-;~C#Blitz3D
+;~C#Blitz3D TSS

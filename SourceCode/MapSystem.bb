@@ -130,10 +130,12 @@ Const MaxRoomLights% = 512 ;128
 Const MaxRoomEmitters% = 16
 Const MaxRoomObjects% = 30
 Const MaxZones% = 15
+Const MaxRandomLoot% = 20
 
 Const ROOM1% = 1, ROOM2% = 2, ROOM2C% = 3, ROOM3% = 4, ROOM4% = 5
 
-Const MapGridSize% = 18 ;12
+Const MapGridSize% = 12 ;18
+Global Map_GridSize = MapGridSize
 Const MapGrid_NoTile% = 0
 Const MapGrid_Tile% = 1
 Const MapGrid_StartTile% = 2
@@ -174,7 +176,7 @@ Const FogColor_Area_106_Escape$ = 		"005005005"
 Function FillRoom(r.Rooms)
 	CatchErrors("Uncaught (FillRoom)")
 	Local em.Emitters,lt.LightTemplates,ts.TempScreens,tw.TempWayPoints
-	Local i%
+	Local i%, newlt
 	Local t1
 	
 	Local tfll.TempFluLight,fll.FluLight
@@ -489,8 +491,9 @@ End Function
 ;RMESH STUFF;;;;
 
 Function StripFilename$(file$)
-	Local mi$=""
+	Local mi$="", i%
 	Local lastSlash%=0
+	
 	If Len(file)>0
 		For i%=1 To Len(file)
 			mi=Mid(file$,i,1)
@@ -934,6 +937,8 @@ Function LoadRMesh(file$,rt.RoomTemplates, doublesided=True)
 	EndIf
 	;[End Block]
 	
+	Local tb
+	
 	;trigger boxes
 	;[Block]
 	If hasTriggerBox
@@ -1335,7 +1340,8 @@ End Function
 ;------------------------------------
 
 Function StripPath$(file$) 
-	Local name$=""
+	Local name$="", i, midd$
+	
 	If Len(file$)>0 
 		For i=Len(file$) To 1 Step -1 
 			
@@ -1351,6 +1357,8 @@ Function StripPath$(file$)
 End Function
 
 Function Piece$(s$,entry,char$=" ")
+	Local n, p, a$
+	
 	While Instr(s,char+char)
 		s=Replace(s,char+char,char)
 	Wend
@@ -1368,6 +1376,8 @@ Function Piece$(s$,entry,char$=" ")
 End Function
 
 Function KeyValue$(entity,key$,defaultvalue$="")
+	Local properties$, test$, testkey$, value$, p
+	
 	properties$=EntityName(entity)
 	properties$=Replace(properties$,Chr(13),"")
 	key$=Lower(key)
@@ -1388,7 +1398,6 @@ Function KeyValue$(entity,key$,defaultvalue$="")
 		properties=Right(properties,Len(properties)-p)
 	Forever 
 End Function
-
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1452,6 +1461,8 @@ End Function
 
 Function GenForestGrid(fr.Forest)
 	CatchErrors("Uncaught (GenForestGrid)")
+	Local LastForestID, cobble_chance, leftmost, rightmost, n
+	
 	fr\ID=LastForestID+1
 	LastForestID=LastForestID+1
 	
@@ -1764,6 +1775,8 @@ Function PlaceForest(fr.Forest,x#,y#,z#,r.Rooms)
 						;EntityParent(it\collider, tile_entity)
 					EndIf
 					
+					Local width, tempf4#, lx, ly, d
+					
 					;place trees and other details
 					;only placed on spots where the value of the heightmap is above 100
 					SetBuffer ImageBuffer(hmap[tile_type])
@@ -1860,7 +1873,7 @@ Function PlaceForest(fr.Forest,x#,y#,z#,r.Rooms)
 				EntityParent fr\Door[i],fr\DetailEntities[i]
 				;SetAnimTime fr\Door[i], 0
 				
-				frame = CopyEntity(r\Objects[2],fr\Door[i])
+				Local frame = CopyEntity(r\Objects[2],fr\Door[i])
 				PositionEntity frame,0,32.0*RoomScale,0,True
 				ScaleEntity frame,48*RoomScale,45*RoomScale,48*RoomScale,True
 				EntityParent frame,fr\DetailEntities[i]
@@ -2128,6 +2141,8 @@ Type Rooms
 	Field NPC.NPCs[12]
 	Field grid.Grids
 	
+	Field RandomLoot%[MaxRandomLoot], RandomLootX%[MaxRandomLoot], RandomLootY%[MaxRandomLoot], RandomLootZ%[MaxRandomLoot]
+	
 	Field Adjacent.Rooms[4]
 	Field AdjDoor.Doors[4]
 	
@@ -2167,6 +2182,7 @@ Type Triggerbox
 End Type
 
 Const gridsz%=20
+
 Type Grids
 	Field grid%[gridsz*gridsz]
 	Field angles%[gridsz*gridsz]
@@ -2239,7 +2255,8 @@ Function CreateRoom.Rooms(zone%, roomshape%, x#, y#, z#, name$ = "", angle%=0)
 	
 	;debuglog "Still use old randomroom mechanic!"
 	
-	Local temp% = 0
+	Local temp% = 0, i
+	
 	For rt.RoomTemplates = Each RoomTemplates
 		
 		For i = 0 To 4
@@ -2290,6 +2307,7 @@ Function SetupTriggerBoxes(r.Rooms)
 	Local pxmin#, pxmax#
 	Local pzmin#, pzmax#
 	Local t.Triggerbox
+	Local i
 	
 	For i = 0 To r\TriggerboxAmount-1
 		t = r\Triggerboxes[i]
@@ -2328,6 +2346,8 @@ End Function
 
 ;[Block]
 Function CheckTriggers$()
+	Local i
+	
 	If PlayerRoom\TriggerboxAmount = 0
 		Return
 	Else
@@ -2478,8 +2498,11 @@ Function UpdateRooms()
 End Function
 
 Function IsRoomAdjacent(this.Rooms,that.Rooms)
+	Local i
+	
 	If this=Null Then Return False
 	If this=that Then Return True
+	
 	For i=0 To 3
 		If that=this\Adjacent[i] Then Return True
 	Next
@@ -2591,7 +2614,7 @@ Type LightTemplates
 End Type 
 
 Function AddTempLight.LightTemplates(rt.RoomTemplates, x#, y#, z#, ltype%, range#, r%, g%, b%)
-	lt.lighttemplates = New LightTemplates
+	Local lt.LightTemplates = New LightTemplates
 	lt\roomtemplate = rt
 	lt\x = x
 	lt\y = y
@@ -3015,7 +3038,7 @@ Type TempScreens
 End Type
 
 Function CreateScreen.Screens(x#,y#,z#,imgpath$,r.Rooms)
-	s.screens = New Screens
+	Local s.Screens = New Screens
 	s\obj = CreatePivot()
 	EntityPickMode(s\obj, 1)	
 	EntityRadius s\obj, 0.1
@@ -3434,17 +3457,17 @@ Function UpdateLever(obj, locked=False, axis%=LEVER_AXIS_PITCH, lever_min%=-80, 
 						prevvalue# = EntityRoll(obj)
 				End Select
 				
-				If (keydownuse Lor keyhituse) Then
+				If (KeyDownUse Lor KeyHitUse) Then
 					If GrabbedEntity <> 0 Then
 						If GrabbedEntity = obj Then
 							DrawHandIcon = True
 							Select axis
 								Case LEVER_AXIS_PITCH
-									RotateEntity(GrabbedEntity, Max(Min(EntityPitch(obj)+Max(Min(mouse_y_speed_1 * 8,30.0),-30), lever_max), lever_min), EntityYaw(obj), 0)
+									RotateEntity(GrabbedEntity, Max(Min(EntityPitch(obj)+Max(Min(Mouse_Y_Speed_1 * 8,30.0),-30), lever_max), lever_min), EntityYaw(obj), 0)
 								Case LEVER_AXIS_YAW
-									RotateEntity(GrabbedEntity, EntityPitch(obj), Max(Min(EntityYaw(obj)+Max(Min(mouse_y_speed_1 * 8,30.0),-30), lever_max), lever_min), 0)
+									RotateEntity(GrabbedEntity, EntityPitch(obj), Max(Min(EntityYaw(obj)+Max(Min(Mouse_Y_Speed_1 * 8,30.0),-30), lever_max), lever_min), 0)
 								Case LEVER_AXIS_ROLL
-									RotateEntity(GrabbedEntity, EntityPitch(obj), EntityYaw(obj), Max(Min(EntityRoll(obj)+Max(Min(mouse_y_speed_1 * 8,30.0),-30), lever_max), lever_min))
+									RotateEntity(GrabbedEntity, EntityPitch(obj), EntityYaw(obj), Max(Min(EntityRoll(obj)+Max(Min(Mouse_Y_Speed_1 * 8,30.0),-30), lever_max), lever_min))
 							End Select
 							DrawArrowIcon[0] = True
 							DrawArrowIcon[2] = True
@@ -3860,7 +3883,7 @@ Function CreateMap()
 	CatchErrors("CreateMap(), Stage 0, Map seed:"+RandomSeed)
 	If gopt\CurrZone > GATE_A_INTRO And gopt\CurrZone < REACTOR_AREA Then
 		;Set a starting position
-		startX = Rand(0,MapGridSize-1)
+		startX = Rand(0,Map_GridSize-1)
 		CurrGrid\Grid[startX] = MapGrid_StartTile
 		
 		;Set the variables that determin the overall generation
@@ -3872,7 +3895,7 @@ Function CreateMap()
 		i = 1
 		y = 1
 		x = startX
-		CurrGrid\Grid[x+MapGridSize] = MapGrid_Tile
+		CurrGrid\Grid[x+Map_GridSize] = MapGrid_Tile
 		CatchErrors("CreateMap(), Stage 1, Map seed:"+RandomSeed)
 		Repeat
 			dir = Rand(0,3)
@@ -3885,10 +3908,10 @@ Function CreateMap()
 			success = False
 			Select dir
 				Case 0 ;down
-					If y < MapGridSize-(dimensions+1) Then
+					If y < Map_GridSize-(dimensions+1) Then
 						y = y + dimensions
 						For n = 1 To dimensions-1
-							CurrGrid\Grid[x+((y-n)*MapGridSize)] = MapGrid_Tile
+							CurrGrid\Grid[x+((y-n)*Map_GridSize)] = MapGrid_Tile
 						Next
 						success = True
 					EndIf
@@ -3896,7 +3919,7 @@ Function CreateMap()
 					If x >= dimensions Then
 						x = x - dimensions
 						For n = 1 To dimensions-1
-							CurrGrid\Grid[(x+n)+(y*MapGridSize)] = MapGrid_Tile
+							CurrGrid\Grid[(x+n)+(y*Map_GridSize)] = MapGrid_Tile
 						Next
 						success = True
 					EndIf
@@ -3904,54 +3927,54 @@ Function CreateMap()
 					If y > dimensions Then
 						y = y - dimensions
 						For n = 1 To dimensions-1
-							CurrGrid\Grid[x+((y+n)*MapGridSize)] = MapGrid_Tile
+							CurrGrid\Grid[x+((y+n)*Map_GridSize)] = MapGrid_Tile
 						Next
 						success = True
 					EndIf
 				Case 3 ;right
-					If x <= MapGridSize-(dimensions+1) Then
+					If x <= Map_GridSize-(dimensions+1) Then
 						x = x + dimensions
 						For n = 1 To dimensions-1
-							CurrGrid\Grid[(x-n)+(y*MapGridSize)] = MapGrid_Tile
+							CurrGrid\Grid[(x-n)+(y*Map_GridSize)] = MapGrid_Tile
 						Next
 						success = True
 					EndIf
 			End Select
 			If success Then
-				CurrGrid\Grid[x+(y*MapGridSize)] = MapGrid_Tile
+				CurrGrid\Grid[x+(y*Map_GridSize)] = MapGrid_Tile
 				i = i + 1
 			EndIf
-		Until ((i >= loopamount) And (y>=MapGridSize-2))
+		Until ((i >= loopamount) And (y>=Map_GridSize-2))
 		
 		;debuglog "Map Generator Stage 1 complete"
 		
 		;Add the end position
 		endX = x
-		CurrGrid\Grid[endX+((MapGridSize-1)*MapGridSize)] = MapGrid_EndTile
+		CurrGrid\Grid[endX+((Map_GridSize-1)*Map_GridSize)] = MapGrid_EndTile
 		
 		;Force more rooms to spawn (10 to 20 more)
 		i = 0
 		iterator_check = 0
 		CatchErrors("CreateMap(), Stage 2, Map seed:"+RandomSeed)
 		Repeat
-			For x = 1 To MapGridSize-2
-				For y = 1 To MapGridSize-2
-					If CurrGrid\Grid[x+(y*MapGridSize)]=MapGrid_NoTile And Rand(1,15)=1 Then
+			For x = 1 To Map_GridSize-2
+				For y = 1 To Map_GridSize-2
+					If CurrGrid\Grid[x+(y*Map_GridSize)]=MapGrid_NoTile And Rand(1,15)=1 Then
 						adj_amount = 0
-						If CurrGrid\Grid[x+((y+1)*MapGridSize)]>MapGrid_NoTile Then
+						If CurrGrid\Grid[x+((y+1)*Map_GridSize)]>MapGrid_NoTile Then
 							adj_amount = adj_amount + 1
 						EndIf
-						If CurrGrid\Grid[x+((y-1)*MapGridSize)]>MapGrid_NoTile Then
+						If CurrGrid\Grid[x+((y-1)*Map_GridSize)]>MapGrid_NoTile Then
 							adj_amount = adj_amount + 1
 						EndIf
-						If CurrGrid\Grid[(x+1)+(y*MapGridSize)]>MapGrid_NoTile Then
+						If CurrGrid\Grid[(x+1)+(y*Map_GridSize)]>MapGrid_NoTile Then
 							adj_amount = adj_amount + 1
 						EndIf
-						If CurrGrid\Grid[(x-1)+(y*MapGridSize)]>MapGrid_NoTile Then
+						If CurrGrid\Grid[(x-1)+(y*Map_GridSize)]>MapGrid_NoTile Then
 							adj_amount = adj_amount + 1
 						EndIf
 						If adj_amount = 1 Then
-							CurrGrid\Grid[x+(y*MapGridSize)]=MapGrid_Tile
+							CurrGrid\Grid[x+(y*Map_GridSize)]=MapGrid_Tile
 							i = i + Rand(1,2)
 							iterator_check = 0
 						EndIf
@@ -3966,73 +3989,73 @@ Function CreateMap()
 		;Assign the room types and rotation for each room
 		CatchErrors("CreateMap(), Stage 3, Map seed:"+RandomSeed)
 		Local temp = 0
-		For y = 1 To MapGridSize-2
-			For x = 0 To MapGridSize-1
-				If CurrGrid\Grid[x+(y*MapGridSize)] > 0 Then
+		For y = 1 To Map_GridSize-2
+			For x = 0 To Map_GridSize-1
+				If CurrGrid\Grid[x+(y*Map_GridSize)] > 0 Then
 					temp = 0
-					If x < MapGridSize-1 Then
-						temp=Min(CurrGrid\Grid[(x+1)+(y*MapGridSize)],1)
+					If x < Map_GridSize-1 Then
+						temp=Min(CurrGrid\Grid[(x+1)+(y*Map_GridSize)],1)
 					EndIf
 					If x > 0 Then
-						temp=temp+Min(CurrGrid\Grid[(x-1)+(y*MapGridSize)],1)
+						temp=temp+Min(CurrGrid\Grid[(x-1)+(y*Map_GridSize)],1)
 					EndIf
-					temp=temp+Min(CurrGrid\Grid[x+((y+1)*MapGridSize)],1)+Min(CurrGrid\Grid[x+((y-1)*MapGridSize)],1)
+					temp=temp+Min(CurrGrid\Grid[x+((y+1)*Map_GridSize)],1)+Min(CurrGrid\Grid[x+((y-1)*Map_GridSize)],1)
 					
 					;debuglog temp
 					
 					Select temp
 						Case 1
-							If CurrGrid\Grid[x+((y+1)*MapGridSize)]>0 Then
-								CurrGrid\RoomAngle[x+(y*MapGridSize)] = 2
-							ElseIf CurrGrid\Grid[(x-1)+(y*MapGridSize)]>0 And (x>=0) Then
-								CurrGrid\RoomAngle[x+(y*MapGridSize)] = 3
-							ElseIf CurrGrid\Grid[(x+1)+(y*MapGridSize)]>0 And (x<MapGridSize-1) Then
-								CurrGrid\RoomAngle[x+(y*MapGridSize)] = 1
+							If CurrGrid\Grid[x+((y+1)*Map_GridSize)]>0 Then
+								CurrGrid\RoomAngle[x+(y*Map_GridSize)] = 2
+							ElseIf CurrGrid\Grid[(x-1)+(y*Map_GridSize)]>0 And (x>=0) Then
+								CurrGrid\RoomAngle[x+(y*Map_GridSize)] = 3
+							ElseIf CurrGrid\Grid[(x+1)+(y*Map_GridSize)]>0 And (x<Map_GridSize-1) Then
+								CurrGrid\RoomAngle[x+(y*Map_GridSize)] = 1
 							Else
-								CurrGrid\RoomAngle[x+(y*MapGridSize)] = 0
+								CurrGrid\RoomAngle[x+(y*Map_GridSize)] = 0
 							EndIf
-							CurrGrid\RoomType[x+(y*MapGridSize)] = ROOM1
+							CurrGrid\RoomType[x+(y*Map_GridSize)] = ROOM1
 						Case 2
-							If CurrGrid\Grid[(x-1)+(y*MapGridSize)]>0 And CurrGrid\Grid[(x+1)+(y*MapGridSize)]>0 And (x>=0) And (x<MapGridSize-1) Then
+							If CurrGrid\Grid[(x-1)+(y*Map_GridSize)]>0 And CurrGrid\Grid[(x+1)+(y*Map_GridSize)]>0 And (x>=0) And (x<Map_GridSize-1) Then
 								If Rand(2) = 1 Then
-									CurrGrid\RoomAngle[x+(y*MapGridSize)] = 1
+									CurrGrid\RoomAngle[x+(y*Map_GridSize)] = 1
 								Else
-									CurrGrid\RoomAngle[x+(y*MapGridSize)] = 3
+									CurrGrid\RoomAngle[x+(y*Map_GridSize)] = 3
 								EndIf
-								CurrGrid\RoomType[x+(y*MapGridSize)] = ROOM2
-							ElseIf CurrGrid\Grid[x+((y-1)*MapGridSize)]>0 And CurrGrid\Grid[x+((y+1)*MapGridSize)]>0 Then
+								CurrGrid\RoomType[x+(y*Map_GridSize)] = ROOM2
+							ElseIf CurrGrid\Grid[x+((y-1)*Map_GridSize)]>0 And CurrGrid\Grid[x+((y+1)*Map_GridSize)]>0 Then
 								If Rand(2) = 1 Then
-									CurrGrid\RoomAngle[x+(y*MapGridSize)] = 2
+									CurrGrid\RoomAngle[x+(y*Map_GridSize)] = 2
 								Else
-									CurrGrid\RoomAngle[x+(y*MapGridSize)] = 0
+									CurrGrid\RoomAngle[x+(y*Map_GridSize)] = 0
 								EndIf
-								CurrGrid\RoomType[x+(y*MapGridSize)] = ROOM2
+								CurrGrid\RoomType[x+(y*Map_GridSize)] = ROOM2
 							Else
-								If CurrGrid\Grid[(x-1)+(y*MapGridSize)]>0 And CurrGrid\Grid[x+((y+1)*MapGridSize)]>0 And (x>=0) Then
-									CurrGrid\RoomAngle[x+(y*MapGridSize)] = 2
-								ElseIf CurrGrid\Grid[(x+1)+(y*MapGridSize)]>0 And CurrGrid\Grid[x+((y+1)*MapGridSize)]>0 And(x<MapGridSize-1) Then
-									CurrGrid\RoomAngle[x+(y*MapGridSize)] = 1
-								ElseIf CurrGrid\Grid[(x-1)+(y*MapGridSize)]>0 And CurrGrid\Grid[x+((y-1)*MapGridSize)]>0 And (x>=0) Then
-									CurrGrid\RoomAngle[x+(y*MapGridSize)] = 3
+								If CurrGrid\Grid[(x-1)+(y*Map_GridSize)]>0 And CurrGrid\Grid[x+((y+1)*Map_GridSize)]>0 And (x>=0) Then
+									CurrGrid\RoomAngle[x+(y*Map_GridSize)] = 2
+								ElseIf CurrGrid\Grid[(x+1)+(y*Map_GridSize)]>0 And CurrGrid\Grid[x+((y+1)*Map_GridSize)]>0 And(x<Map_GridSize-1) Then
+									CurrGrid\RoomAngle[x+(y*Map_GridSize)] = 1
+								ElseIf CurrGrid\Grid[(x-1)+(y*Map_GridSize)]>0 And CurrGrid\Grid[x+((y-1)*Map_GridSize)]>0 And (x>=0) Then
+									CurrGrid\RoomAngle[x+(y*Map_GridSize)] = 3
 								Else
-									CurrGrid\RoomAngle[x+(y*MapGridSize)] = 0
+									CurrGrid\RoomAngle[x+(y*Map_GridSize)] = 0
 								EndIf
-								CurrGrid\RoomType[x+(y*MapGridSize)] = ROOM2C
+								CurrGrid\RoomType[x+(y*Map_GridSize)] = ROOM2C
 							EndIf
 						Case 3
-							If (Not CurrGrid\Grid[x+((y-1)*MapGridSize)]) Then
-								CurrGrid\RoomAngle[x+(y*MapGridSize)] = 2
-							ElseIf (Not CurrGrid\Grid[(x-1)+(y*MapGridSize)]) And (x>=0) Then
-								CurrGrid\RoomAngle[x+(y*MapGridSize)] = 1
-							ElseIf (Not CurrGrid\Grid[(x+1)+(y*MapGridSize)]) And (x<=MapGridSize-1) Then
-								CurrGrid\RoomAngle[x+(y*MapGridSize)] = 3
+							If (Not CurrGrid\Grid[x+((y-1)*Map_GridSize)]) Then
+								CurrGrid\RoomAngle[x+(y*Map_GridSize)] = 2
+							ElseIf (Not CurrGrid\Grid[(x-1)+(y*Map_GridSize)]) And (x>=0) Then
+								CurrGrid\RoomAngle[x+(y*Map_GridSize)] = 1
+							ElseIf (Not CurrGrid\Grid[(x+1)+(y*Map_GridSize)]) And (x<=Map_GridSize-1) Then
+								CurrGrid\RoomAngle[x+(y*Map_GridSize)] = 3
 							Else
-								CurrGrid\RoomAngle[x+(y*MapGridSize)] = 0
+								CurrGrid\RoomAngle[x+(y*Map_GridSize)] = 0
 							EndIf
-							CurrGrid\RoomType[x+(y*MapGridSize)] = ROOM3
+							CurrGrid\RoomType[x+(y*Map_GridSize)] = ROOM3
 						Case 4
-							CurrGrid\RoomAngle[x+(y*MapGridSize)] = Rand(0,3)
-							CurrGrid\RoomType[x+(y*MapGridSize)] = ROOM4
+							CurrGrid\RoomAngle[x+(y*Map_GridSize)] = Rand(0,3)
+							CurrGrid\RoomType[x+(y*Map_GridSize)] = ROOM4
 					End Select
 				EndIf
 			Next
@@ -4040,10 +4063,10 @@ Function CreateMap()
 		
 		;debuglog "Map Generator Stage 3 complete"
 		
-		For y = 1 To MapGridSize-2
-			For x = 0 To MapGridSize-1
-				If CurrGrid\Grid[x+(y*MapGridSize)]>0 Then
-					;debuglog CurrGrid\RoomType[x+(y*MapGridSize)]
+		For y = 1 To Map_GridSize-2
+			For x = 0 To Map_GridSize-1
+				If CurrGrid\Grid[x+(y*Map_GridSize)]>0 Then
+					;debuglog CurrGrid\RoomType[x+(y*Map_GridSize)]
 				EndIf
 			Next
 		Next
@@ -4071,20 +4094,20 @@ Function CreateMap()
 					y = 1
 					;debuglog "Trying to spawn "+rt\Name+" with shape "+rt\Shape
 					Repeat
-						If CurrGrid\Grid[x+(y*MapGridSize)]>0 And CurrGrid\RoomName[x+(y*MapGridSize)]="" Then
-							If CurrGrid\RoomType[x+(y*MapGridSize)] = rt\Shape Then
+						If CurrGrid\Grid[x+(y*Map_GridSize)]>0 And CurrGrid\RoomName[x+(y*Map_GridSize)]="" Then
+							If CurrGrid\RoomType[x+(y*Map_GridSize)] = rt\Shape Then
 								If Rand(1,5)=1 Then
-									CurrGrid\RoomName[x+(y*MapGridSize)] = rt\Name
+									CurrGrid\RoomName[x+(y*Map_GridSize)] = rt\Name
 									;debuglog "Spawned "+rt\Name+" successfully"
 									Exit
 								EndIf
 							EndIf
 						EndIf
 						x = x + 1
-						If x > MapGridSize-1 Then
+						If x > Map_GridSize-1 Then
 							x = 0
 							y = y + 1
-							If y > MapGridSize-2 Then
+							If y > Map_GridSize-2 Then
 								y = 0
 							EndIf
 						EndIf
@@ -4098,14 +4121,14 @@ Function CreateMap()
 		;Then assign all other rooms (commonness between 1 and 100)
 		CatchErrors("CreateMap(), Stage 5, Map seed:"+RandomSeed)
 		Local RandomRoom%
-		For y = 1 To MapGridSize-2
-			For x = 0 To MapGridSize-1
-				If CurrGrid\Grid[x+(y*MapGridSize)]>0 And CurrGrid\RoomName[x+(y*MapGridSize)]="" Then
+		For y = 1 To Map_GridSize-2
+			For x = 0 To Map_GridSize-1
+				If CurrGrid\Grid[x+(y*Map_GridSize)]>0 And CurrGrid\RoomName[x+(y*Map_GridSize)]="" Then
 					;First, add all the commonness amounts as one
 					temp = 0
 					For rt.RoomTemplates = Each RoomTemplates
 						If rt\Commonness > 0 Then
-							If rt\Shape = CurrGrid\RoomType[x+(y*MapGridSize)] Then
+							If rt\Shape = CurrGrid\RoomType[x+(y*Map_GridSize)] Then
 								correctzone = False
 								If rt\zone[0]=0 Then
 									correctzone = True
@@ -4126,7 +4149,7 @@ Function CreateMap()
 					temp = 0
 					For rt.RoomTemplates = Each RoomTemplates
 						If rt\Commonness > 0 Then
-							If rt\Shape = CurrGrid\RoomType[x+(y*MapGridSize)] Then
+							If rt\Shape = CurrGrid\RoomType[x+(y*Map_GridSize)] Then
 								correctzone = False
 								If rt\zone[0]=0 Then
 									correctzone = True
@@ -4140,7 +4163,7 @@ Function CreateMap()
 								If correctzone Then
 									temp=temp+rt\Commonness
 									If RandomRoom > temp - rt\Commonness And RandomRoom <= temp Then
-										CurrGrid\RoomName[x+(y*MapGridSize)] = rt\Name
+										CurrGrid\RoomName[x+(y*Map_GridSize)] = rt\Name
 										;debuglog "Added room "+rt\Name+" successfully"
 										Exit
 									EndIf
@@ -4159,12 +4182,12 @@ Function CreateMap()
 		
 		Local zone = gopt\CurrZone
 		
-		For y = 1 To MapGridSize-2
-			For x = 0 To MapGridSize-1
-				If CurrGrid\Grid[x+(y*MapGridSize)] > 0 Then
-					r = CreateRoom(zone, CurrGrid\RoomType[x+(y*MapGridSize)],x*spacing,0,y*spacing,CurrGrid\RoomName[x+(y*MapGridSize)],CurrGrid\RoomAngle[x+(y*MapGridSize)]*90)
+		For y = 1 To Map_GridSize-2
+			For x = 0 To Map_GridSize-1
+				If CurrGrid\Grid[x+(y*Map_GridSize)] > 0 Then
+					r = CreateRoom(zone, CurrGrid\RoomType[x+(y*Map_GridSize)],x*spacing,0,y*spacing,CurrGrid\RoomName[x+(y*Map_GridSize)],CurrGrid\RoomAngle[x+(y*Map_GridSize)]*90)
 					If r = Null Then
-						RuntimeError "Attempt to create room "+CurrGrid\RoomName[x+(y*MapGridSize)]+" was unsuccessful"
+						RuntimeError "Attempt to create room "+CurrGrid\RoomName[x+(y*Map_GridSize)]+" was unsuccessful"
 					EndIf
 				EndIf
 			Next
@@ -4177,17 +4200,17 @@ Function CreateMap()
 				r = CreateRoom(zone, ROOM1, startX*spacing, 0, 0, "gate_a_entrance")
 				r\angle = 180
 				TurnEntity(r\obj, 0, r\angle, 0)
-				r = CreateRoom(zone, ROOM1, endX*spacing, 0, (MapGridSize-1)*spacing, "core_ez")
+				r = CreateRoom(zone, ROOM1, endX*spacing, 0, (Map_GridSize-1)*spacing, "core_ez")
 				r\angle = 0
 				CreateRoom(0, ROOM1, 0,100,100,"area_035_ntf_encounter")
 			Case BCZ
 				r = CreateRoom(zone, ROOM1, startX*spacing, 0, 0, "cont_008")
 				r\angle = 180
 				TurnEntity(r\obj, 0, r\angle, 0)
-				r = CreateRoom(zone, ROOM1, endX*spacing, 0, (MapGridSize-1)*spacing, "checkpoint_bcz")
+				r = CreateRoom(zone, ROOM1, endX*spacing, 0, (Map_GridSize-1)*spacing, "checkpoint_bcz")
 				r\angle = 0
 			Case LCZ
-				r = CreateRoom(zone, ROOM1, endX*spacing, 0, (MapGridSize-1)*spacing, "core_lcz")
+				r = CreateRoom(zone, ROOM1, endX*spacing, 0, (Map_GridSize-1)*spacing, "core_lcz")
 				r\angle = 0
 				TurnEntity(r\obj, 0, r\angle, 0)
 				r = CreateRoom(zone, ROOM1, startX*spacing, 0, 0, "room1_start")
@@ -4195,7 +4218,7 @@ Function CreateMap()
 				TurnEntity(r\obj, 0, r\angle, 0)
 				If opt\IntroEnabled Then
 					If gopt\GameMode = GAMEMODE_DEFAULT Then
-						r = CreateRoom(0, ROOM1, (MapGridSize+20) * spacing, 0, (MapGridSize+20) * spacing, "room1_intro")
+						r = CreateRoom(0, ROOM1, (Map_GridSize+20) * spacing, 0, (Map_GridSize+20) * spacing, "room1_intro")
 						TurnEntity(r\obj, 0, r\angle, 0)
 					EndIf
 				EndIf
@@ -4203,19 +4226,19 @@ Function CreateMap()
 				r = CreateRoom(zone, ROOM1, startX*spacing, 0, 0, "checkpoint_acz")
 				r\angle = 180
 				TurnEntity(r\obj, 0, r\angle, 0)
-				r = CreateRoom(zone, ROOM1, endX*spacing, 0, (MapGridSize-1)*spacing, "core_hcz")
+				r = CreateRoom(zone, ROOM1, endX*spacing, 0, (Map_GridSize-1)*spacing, "core_hcz")
 				r\angle = 0
 			Case RCZ
 				r = CreateRoom(zone, ROOM1, startX*spacing, 0, 0, "checkpoint_rcz")
 				r\angle = 180
 				TurnEntity(r\obj, 0, r\angle, 0)
-				r = CreateRoom(zone, ROOM1, endX*spacing, 0, (MapGridSize-1)*spacing, "area_076_entrance")
+				r = CreateRoom(zone, ROOM1, endX*spacing, 0, (Map_GridSize-1)*spacing, "area_076_entrance")
 				r\angle = 0
 		End Select
 		
 		; ~ Spawn some rooms that are neccesary for the zone
 		
-		CreateRoom(0, ROOM1, (MapGridSize+1) * spacing, 0, (MapGridSize+1) * spacing, "pocketdimension")
+		CreateRoom(0, ROOM1, (Map_GridSize+1) * spacing, 0, (Map_GridSize+1) * spacing, "pocketdimension")
 		
 		;CreateRoom(0, ROOM1, 0,-300,100,"area_1102_ru")
 		
@@ -4225,7 +4248,7 @@ Function CreateMap()
 		CreateRoom(zone, ROOM1, 0, 0, 0, "class_d_cells")
 	ElseIf gopt\CurrZone = REACTOR_AREA
 		CreateRoom(zone, ROOM1, 0, 0, 0, "facility_reactor")
-	ElseIf gopt\CurrZone = 0 Then
+	ElseIf gopt\CurrZone = GATE_A_INTRO Then
 		CreateRoom(0, ROOM1, 8, 0, 8, "gate_a_intro")
 	ElseIf gopt\CurrZone = GATE_A_TOPSIDE Then
 		CreateRoom(0, ROOM1, 8, 0, 8, "gate_a_topside")
@@ -4251,11 +4274,11 @@ Function CreateMap()
 	;Add adjacent doors and assign them to the corresponding rooms
 	Local d.Doors
 	Local shouldSpawnDoor%
-	For y = MapGridSize-1 To 0 Step -1
+	For y = Map_GridSize-1 To 0 Step -1
 		zone = gopt\CurrZone
-		For x = MapGridSize-1 To 0 Step -1
-			If CurrGrid\Grid[x+(y*MapGridSize)] > 0 Then
-				If zone = HCZ Then temp = DOOR_HCZ ElseIf zone = LCZ Then temp = DOOR_LCZ ElseIf zone = RCZ Then temp = DOOR_HCZ ElseIf zone = BCZ Then temp = DOOR_ONE_SIDED Else temp = DOOR_EZ
+		For x = Map_GridSize-1 To 0 Step -1
+			If CurrGrid\Grid[x+(y*Map_GridSize)] > 0 Then
+				If zone = HCZ Then temp = DOOR_HCZ ElseIf zone = LCZ Then temp = DOOR_LCZ ElseIf zone = RCZ Then temp = DOOR_RCZ ElseIf zone = BCZ Then temp = DOOR_ONE_SIDED Else temp = DOOR_EZ
                 
                 For r.Rooms = Each Rooms
 					r\angle = WrapAngle(r\angle)
@@ -4282,8 +4305,8 @@ Function CreateMap()
 								shouldSpawnDoor = True
 						End Select
 						If shouldSpawnDoor Then
-							If (x+1)<(MapGridSize+1) Then
-								If CurrGrid\Grid[x+(y*MapGridSize)] > 0 Then
+							If (x+1)<(Map_GridSize+1) Then
+								If CurrGrid\Grid[x+(y*Map_GridSize)] > 0 Then
 									d.Doors = CreateDoor(r\zone, Float(x) * spacing + spacing / 2.0, 0, Float(y) * spacing, 90, r, Max(Rand(-3, 1), 0), temp)
 									r\AdjDoor[0] = d
 								EndIf
@@ -4312,8 +4335,8 @@ Function CreateMap()
 								shouldSpawnDoor = True
 						End Select
 						If shouldSpawnDoor Then
-							If (y+1)<(MapGridSize+1) Then
-								If CurrGrid\Grid[x+(y*MapGridSize)] > 0 Then
+							If (y+1)<(Map_GridSize+1) Then
+								If CurrGrid\Grid[x+(y*Map_GridSize)] > 0 Then
 									d.Doors = CreateDoor(r\zone, Float(x) * spacing, 0, Float(y) * spacing + spacing / 2.0, 0, r, Max(Rand(-3, 1), 0), temp)
 									r\AdjDoor[3] = d
 								EndIf
@@ -4366,6 +4389,7 @@ End Function
 ;-------------------------------------------------------------------------------------------------------
 
 Function load_terrain(hmap,yscale#=0.7,t1%,t2%,mask%)
+	Local RGB1, r
 	
 	;debuglog "load_terrain: "+hmap
 	
@@ -4943,18 +4967,5 @@ Function PreventRoomOverlap(r.Rooms)
 	;debuglog "Couldn't fix overlap issue for room "+r\RoomTemplate\Name
 	Return False
 End Function
-
-
-
-
-
-
-
-
-
-
-
-
-
 ;~IDEal Editor Parameters:
-;~C#Blitz3D
+;~C#Blitz3D TSS

@@ -92,9 +92,9 @@ Function UpdateEvent_Gate_D_Topside(e.Events)
 			EndIf
 			
 			If e\EventState[0] > 70*10 And e\EventState[0] < 70*10.1 Then
-				If HUDenabled Then
-					psp\IsShowingHUD = True
-				EndIf
+				;If HUDenabled Then
+				psp\IsShowingHUD = True
+				;EndIf
 				psp\NoMove = False
 				psp\NoRotation = False
 				If (Not TaskExists(TASK_GO_TO_EZ)) Then

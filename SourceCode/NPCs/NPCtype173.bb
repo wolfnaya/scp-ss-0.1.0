@@ -187,7 +187,7 @@ Function UpdateNPCtype173(n.NPCs)
 							;try to open doors
 							If Rand(20) = 1 Then
 								For d.Doors = Each Doors
-									If (Not d\locked) And d\open = False And d\Code = "" And d\KeyCard=0 Then
+									If (Not d\locked) And d\open = False And d\Code = "" And d\KeyCard=-1 Then
 										For i% = 0 To 1
 											If d\buttons[i] <> 0 Then
 												If Abs(EntityX(n\Collider) - EntityX(d\buttons[i])) < 0.5 Then
@@ -370,4 +370,4 @@ Function UpdateNPCtype173(n.NPCs)
 End Function
 
 ;~IDEal Editor Parameters:
-;~C#Blitz3D
+;~C#Blitz3D TSS

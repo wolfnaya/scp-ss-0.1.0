@@ -387,7 +387,7 @@ Function UpdateEvent_Room1_Start(e.Events)
 						DeleteSingleTextureEntryFromCache tex
 						SetNPCFrame(e\room\NPC[1],560)
 						e\room\NPC[1]\IsDead = True
-						e\room\NPC[1]\State[0] = 0
+						e\room\NPC[1]\State[0] = STATE_SCRIPT
 						PlayPlayerSPVoiceLine("SFX\Player\Voice\Ryan\cantgetthrough")
 						BeginTask(TASK_FINDWAY_START)
 					EndIf
@@ -512,9 +512,9 @@ Function UpdateEvent_Room1_Start(e.Events)
 						If e\EventState[0] >= 5.0 Then
 							psp\NoMove = False
 							psp\NoRotation = False
-							If HUDenabled Then
+;							If HUDenabled Then
 								psp\IsShowingHUD = True
-							EndIf
+;							EndIf
 							ResetInput()
 							Crouch = False
 							CanSave = True
@@ -648,4 +648,4 @@ Function UpdateEvent_Room1_Start(e.Events)
 	
 End Function
 ;~IDEal Editor Parameters:
-;~C#Blitz3D
+;~C#Blitz3D TSS

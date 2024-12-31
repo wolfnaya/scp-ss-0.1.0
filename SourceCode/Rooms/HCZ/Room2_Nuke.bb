@@ -91,7 +91,7 @@ Function UpdateEvent_Room2_Nuke(e.Events)
 	If e\EventState[2] = 0 Then
 		n.NPCs = CreateNPC(NPC_Human,EntityX(e\room\Objects[6],True),0.5,EntityZ(e\room\Objects[6],True))
 		RotateEntity n\Collider,0,e\room\angle+90,0
-		n\State[0] = 3
+		n\State[0] = STATE_SCRIPT
 		SetNPCFrame(n,555)
 		n\IsDead = True
 		ChangeNPCTexture(n,"GFX\npcs\body2.jpg")
@@ -101,4 +101,4 @@ Function UpdateEvent_Room2_Nuke(e.Events)
 End Function
 
 ;~IDEal Editor Parameters:
-;~C#Blitz3D
+;~C#Blitz3D TSS

@@ -32,14 +32,14 @@ Const BUTTON_ELEVATOR_3FLOOR = 4
 
 Const KEY_CARD_CAVE_1% = 98
 Const KEY_CARD_CAVE_2% = 99
-Const KEY_CARD_0% = 1
-Const KEY_CARD_1% = 2
-Const KEY_CARD_2% = 3
-Const KEY_CARD_3% = 4
-Const KEY_CARD_4% = 5
-Const KEY_CARD_5% = 6
-Const KEY_CARD_OMNI% = 7
-Const SCP_005% = 8
+Const KEY_CARD_0% = 0
+Const KEY_CARD_1% = 1
+Const KEY_CARD_2% = 2
+Const KEY_CARD_3% = 3
+Const KEY_CARD_4% = 4
+Const KEY_CARD_5% = 5
+Const KEY_CARD_OMNI% = 6
+Const SCP_005% = 7
 
 Const SEVERED_HAND% = -2
 Const SEVERED_HAND_2% = -3
@@ -119,7 +119,7 @@ Type Doors
 	Field DoorHitOBJ%
 End Type
 
-Function CreateDoor.Doors(lvl, x#, y#, z#, angle#, room.Rooms, dopen% = False,  big% = False, keycard% = False, code$="", elevator_type%=1)
+Function CreateDoor.Doors(lvl, x#, y#, z#, angle#, room.Rooms, dopen% = False,  big% = False, keycard% = -1, code$="", elevator_type%=1)
 	Local d.Doors, parent, i%
 	If room <> Null Then parent = room\obj
 	Local d2.Doors
@@ -149,22 +149,13 @@ Function CreateDoor.Doors(lvl, x#, y#, z#, angle#, room.Rooms, dopen% = False,  
 		EndIf
 		d\frameobj = LoadMesh_Strict("GFX\map\props\DoorFrameHCZ.b3d")
 	ElseIf big=DOOR_RCZ Then
-		For d2 = Each Doors
-			If d2 <> d And d2\dir = DOOR_RCZ Then
-				d\obj = CopyEntity(d2\obj)
-				d\obj2 = CopyEntity(d2\obj2)
-				ScaleEntity d\obj, RoomScale, RoomScale, RoomScale
-				ScaleEntity d\obj2, RoomScale, RoomScale, RoomScale
-				Exit
-			EndIf
-		Next
 		If d\obj=0 Then
-			d\obj = LoadMesh_Strict("GFX\map\props\ElevatorDoor.b3d")
-			d\obj2 = CopyEntity(d\obj)
+			d\obj = LoadAnimMesh_Strict("GFX\map\props\DoorRCZ1.b3d")
+			d\obj2 = LoadAnimMesh_Strict("GFX\map\props\DoorRCZ2.b3d")
 			ScaleEntity d\obj, RoomScale, RoomScale, RoomScale
 			ScaleEntity d\obj2, RoomScale, RoomScale, RoomScale
 		EndIf
-		d\frameobj = CopyEntity(d_I\DoorframeOBJ)
+		d\frameobj = LoadAnimMesh_Strict("GFX\map\props\DoorFrameRCZ.b3d")
 	ElseIf big=DOOR_ELEVATOR Lor big=DOOR_ELEVATOR_3FLOOR Then
 		For d2 = Each Doors
 			If d2 <> d And d2\dir = DOOR_ELEVATOR Then
@@ -350,9 +341,9 @@ Function CreateDoor.Doors(lvl, x#, y#, z#, angle#, room.Rooms, dopen% = False,  
 				d\buttons[i]= CopyEntity(d_I\ButtonOBJ[BUTTON_KEYPAD])
 				EntityFX(d\buttons[i], 1)
 			Else
-				If keycard>0 Then
-					d\buttons[i]= CopyEntity(d_I\ButtonOBJ[BUTTON_KEYCARD])
-				ElseIf keycard<0
+				If keycard > -1 Then
+					d\buttons[i] = CopyEntity(d_I\ButtonOBJ[BUTTON_KEYCARD])
+				ElseIf keycard < -1
 					d\buttons[i]= CopyEntity(d_I\ButtonOBJ[BUTTON_SCANNER])	
 				Else
 					If big <> DOOR_OFFICE And big <> DOOR_OFFICE_2 Then
@@ -387,7 +378,7 @@ Function CreateDoor.Doors(lvl, x#, y#, z#, angle#, room.Rooms, dopen% = False,  
 		PositionEntity d\buttons[1], x - 0.6, y + 0.6, z + 0.1
 		RotateEntity d\buttons[1], 0, 180, 0
 	ElseIf big = DOOR_OFFICE And big = DOOR_OFFICE_2
-		If code <> "" Lor keycard <> 0 Then
+		If code <> "" Lor keycard <> -1 Then
 			PositionEntity d\buttons[0], x + 0.6, y + 0.7, z - 0.1
 			PositionEntity d\buttons[1], x - 0.6, y + 0.7, z + 0.1
 			RotateEntity d\buttons[1], 0, 180, 0
@@ -410,7 +401,7 @@ Function CreateDoor.Doors(lvl, x#, y#, z#, angle#, room.Rooms, dopen% = False,  
 			EndIf
 		Next
 	Else
-		If code <> "" Lor keycard <> 0 Then
+		If code <> "" Lor keycard <> -1 Then
 			For i = 0 To 1
 				If d\buttons[i] <> 0 Then
 					EntityParent(d\buttons[i], d\frameobj)
@@ -541,10 +532,15 @@ Function UpdateDoors()
 							If d\dir = DOOR_HCZ Then
 								Animate2(d\obj, AnimTime(d\obj), 1, 20, 0.7, False)
 							EndIf
-						Case DOOR_RCZ, DOOR_CELL
+						Case DOOR_CELL
 							d\openstate = Min(180, d\openstate + FPSfactor * 1.2 * (d\fastopen+1))
 							MoveEntity(d\obj, 0, Sin(d\openstate) * (d\fastopen*2+1) * FPSfactor / 80.0, 0)
-							If d\obj2 <> 0 Then MoveEntity(d\obj2, 0, Sin(d\openstate)* (d\fastopen+1) * FPSfactor / 80.0, 0)	
+							If d\obj2 <> 0 Then MoveEntity(d\obj2, 0, Sin(d\openstate)* (d\fastopen+1) * FPSfactor / 80.0, 0)
+						Case DOOR_RCZ
+							d\openstate = Min(180.0, d\openstate + (FPSfactor * 1.2 * (d\fastopen + 1)))
+							MoveEntity(d\obj, 0.0, Sin(d\openstate) * (d\fastopen + 1) * FPSfactor / 82.0, 0.0)
+							If d\obj2 <> 0 Then MoveEntity(d\obj2, 0.0, -(Sin(d\openstate) * (d\fastopen + 1) * FPSfactor / 82.0), 0.0)
+							Animate2(d\frameobj,AnimTime(d\frameobj), 1, 20, 0.15, False)
 						Case DOOR_CONTAINMENT
 							d\openstate = Min(180, d\openstate + FPSfactor * 0.8)
 							MoveEntity(d\obj, Sin(d\openstate) * FPSfactor / 180.0, 0, 0)
@@ -566,7 +562,9 @@ Function UpdateDoors()
 							Animate2(d\obj,AnimTime(d\obj),1,20,0.75,False)
 					End Select
 				Else
-					If d\dir = DOOR_HCZ Then
+					If d\dir = DOOR_RCZ Then
+						SetAnimTime(d\frameobj, 21)
+					ElseIf d\dir = DOOR_HCZ Then
 						SetAnimTime(d\obj, 21)
 					EndIf
 					d\fastopen = 0
@@ -596,10 +594,15 @@ Function UpdateDoors()
 							If d\dir = DOOR_HCZ Then
 								Animate2(d\obj, AnimTime(d\obj), 21, 50, 0.7, False)
 							EndIf
-						Case DOOR_RCZ, DOOR_CELL
+						Case DOOR_CELL
 							d\openstate = Max(0, d\openstate - FPSfactor * 1.2 * (d\fastopen+1))
 							MoveEntity(d\obj, 0, Sin(d\openstate) * -FPSfactor * (d\fastopen+1) / 80.0, 0)
 							If d\obj2 <> 0 Then MoveEntity(d\obj2, 0, Sin(d\openstate) * (d\fastopen+1) * -FPSfactor / 80.0, 0)
+						Case DOOR_RCZ
+							d\openstate = Max(0.0, d\openstate - (FPSfactor * 1.2 * (d\fastopen + 1)))
+							MoveEntity(d\obj, 0.0, Sin(d\openstate) * (-FPSfactor) * (d\fastopen + 1) / 82.0, 0.0)
+							If d\obj2 <> 0 Then MoveEntity(d\obj2, 0.0, -(Sin(d\openstate) * (-FPSfactor) * (d\fastopen + 1) / 82.0), 0.0)
+							Animate2(d\frameobj,AnimTime(d\frameobj), 21, 40, 0.45, False)
 						Case DOOR_CONTAINMENT
 							d\openstate = Max(0, d\openstate - FPSfactor*0.8)
 							MoveEntity(d\obj, Sin(d\openstate) * -FPSfactor / 180.0, 0, 0)
@@ -664,8 +667,9 @@ Function UpdateDoors()
 						ShowEntity d\DoorHitOBJ
 					EndIf
 				Else
-					
-					If d\dir = DOOR_HCZ Then
+					If d\dir = DOOR_RCZ Then
+						SetAnimTime(d\frameobj, 1)
+					ElseIf d\dir = DOOR_HCZ Then
 						SetAnimTime(d\obj, 1)
 					EndIf
 					
@@ -713,11 +717,11 @@ Function UpdateDoors()
 			
 		EndIf
 		
-		If d\dir = DOOR_OFFICE And d\Code = "" And d\KeyCard = 0 Then
+		If d\dir = DOOR_OFFICE And d\Code = "" And d\KeyCard = -1 Then
 			For i = 0 To 1
 				PositionEntity d\buttons[i], EntityX(FindChild(d\obj,"handle_"+(i+1)),True), EntityY(FindChild(d\obj,"handle_"+(i+1)),True), EntityZ(FindChild(d\obj,"handle_"+(i+1)),True)
 			Next
-		ElseIf d\dir = DOOR_OFFICE_2 And d\Code = "" And d\KeyCard = 0 Then
+		ElseIf d\dir = DOOR_OFFICE_2 And d\Code = "" And d\KeyCard = -1 Then
 			For i = 0 To 1
 				PositionEntity d\buttons[i], EntityX(FindChild(d\obj,"handle_"+(i+1)),True), EntityY(FindChild(d\obj,"handle_"+(i+1)),True), EntityZ(FindChild(d\obj,"handle_"+(i+1)),True)
 			Next
@@ -738,7 +742,7 @@ End Function
 Function UseDoor(d.Doors, showmsg%=True, playsfx%=True)
 	Local temp% = 0
 	
-	If d\KeyCard > 0 Then
+	If d\KeyCard > -1 Then
 		If SelectedItem = Null Then
 			If showmsg = True Then
 				If (Instr(m_msg\Txt,GetLocalString("Doors", "keycard_inserted"))=0 And (Instr(m_msg\Txt,GetLocalString("Doors", "keycard_nothing"))=0 And Instr(m_msg\Txt,GetLocalStringR("Doors", "keycard_required2", d\KeyCard))=0)) Lor (m_msg\Timer<70*3) Then
@@ -820,9 +824,9 @@ Function UseDoor(d.Doors, showmsg%=True, playsfx%=True)
 				EndIf
 			EndIf
 			
-			If temp =-1 Then 
+			If temp = -1 Then 
 				If showmsg = True Then
-					If (Instr(m_msg\Txt,GetLocalString("Doors", "keycard_inserted"))=0 And (Instr(m_msg\Txt,GetLocalString("Doors", "keycard_nothing"))=0 And Instr(m_msg\Txt,GetLocalStringR("Doors", "keycard_required2", d\KeyCard))=0)) Lor (m_msg\Timer<70*3) Then
+					If (Instr(m_msg\Txt,GetLocalString("Doors", "keycard_inserted"))=0 And (Instr(m_msg\Txt,GetLocalString("Doors", "keycard_nothing"))=0 And Instr(m_msg\Txt,GetLocalStringR("Doors", "keycard_required2", d\KeyCard))=-1)) Lor (m_msg\Timer<70*3) Then
 						CreateMsg(GetLocalString("Doors", "keycard_required"))
 					EndIf
 				EndIf
@@ -991,7 +995,7 @@ Function UseDoor(d.Doors, showmsg%=True, playsfx%=True)
 					ElseIf d\IsElevatorDoor = 3 Then
 						CreateMsg(GetLocalString("Doors", "elevator_on_floor"))
 					ElseIf (m_msg\Txt<>GetLocalString("Doors", "elevator_called"))
-						If (CreateMsg(GetLocalString("Doors", "elevator_called2"))) Lor (m_msg\Timer<70*3)	
+						If (CreateMsg(GetLocalString("Doors", "elevator_called2"))) Lor (m_msg\Timer < 70*3)	
 							Select Rand(10)
 								Case 1
 									CreateMsg(GetLocalString("Doors", "elevator_rand_1"))
@@ -1017,7 +1021,7 @@ Function UseDoor(d.Doors, showmsg%=True, playsfx%=True)
 End Function
 
 Function UseDoorNPC(d.Doors, n.NPCs, playsfx%=True)
-	If d\locked Lor d\KeyCard > n\Clearance Lor d\KeyCard < 0 Then Return
+	If d\locked Lor d\KeyCard > n\Clearance Lor d\KeyCard < -1 Then Return
 	OpenCloseDoor(d.Doors, playsfx)
 End Function
 
@@ -1153,4 +1157,4 @@ Function RemoveDoor(d.Doors)
 End Function
 
 ;~IDEal Editor Parameters:
-;~C#Blitz3D
+;~C#Blitz3D TSS

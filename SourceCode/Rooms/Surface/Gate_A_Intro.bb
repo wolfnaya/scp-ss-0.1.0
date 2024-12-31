@@ -396,9 +396,9 @@ Function UpdateEvent_Gate_A_Intro(e.Events)
 		ElseIf e\EventState[0] = 5
 			UnableToMove = False
 			CanPlayerUseGuns% = True
-			If HUDenabled Then
+			;If HUDenabled Then
 				psp\IsShowingHUD = True
-			EndIf
+			;EndIf
 			If opt\PlayerModelEnabled Then
 				mpl\ShowPlayerModel = True
 			EndIf

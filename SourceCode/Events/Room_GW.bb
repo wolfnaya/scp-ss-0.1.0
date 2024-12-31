@@ -20,7 +20,7 @@ Function UpdateEvent_Room_GW(e.Events)
 				e\EventState[0] = 1.0
 				If brokendoor
 					;If DoorSparksSFX <> 0 Then DoorSparksSFX = FreeSound_Strict(DoorSparksSFX)
-					e\SoundCHN[1] = PlaySound2(DoorSparksSFX,Camera,e\room\Objects[1],5)
+	;				e\SoundCHN[1] = PlaySound2(DoorSparksSFX,Camera,e\room\Objects[1],5)
 				EndIf
 				StopChannel e\SoundCHN[0]
 				e\SoundCHN[0] = 0
@@ -31,7 +31,7 @@ Function UpdateEvent_Room_GW(e.Events)
 				e\room\RoomDoors[1]\locked = False
 				UseDoor(e\room\RoomDoors[0])
 				UseDoor(e\room\RoomDoors[1])
-				PlaySound_Strict(AlarmSFX[3])
+				PlaySound_Strict(AlarmSFX[4])
 			ElseIf EntityDistanceSquared(e\room\Objects[0],Collider)>PowTwo(2.4)
 				e\EventState[2] = 0.0
 			EndIf
@@ -101,7 +101,7 @@ Function UpdateEvent_Room_GW(e.Events)
 					e\room\RoomDoors[1]\locked = False
 					UseDoor(e\room\RoomDoors[0])
 					UseDoor(e\room\RoomDoors[1])
-					PlaySound_Strict(AlarmSFX[10])
+					PlaySound_Strict(AlarmSFX[11])
 				EndIf
 			EndIf
 		EndIf
@@ -121,4 +121,4 @@ Function UpdateEvent_Room_GW(e.Events)
 End Function
 
 ;~IDEal Editor Parameters:
-;~C#Blitz3D
+;~C#Blitz3D TSS

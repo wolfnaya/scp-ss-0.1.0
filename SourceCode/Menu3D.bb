@@ -44,9 +44,9 @@ End Type
 
 Function MainLoopMenu()
 	
-	While (ft\accumulator>0.0)
-		ft\accumulator = ft\accumulator-GetTickDuration()
-		If (ft\accumulator<=0.0) Then CaptureWorld()
+	While (ft\Accumulator>0.0)
+		ft\Accumulator = ft\Accumulator-GetTickDuration()
+		If (ft\Accumulator<=0.0) Then CaptureWorld()
 		
 		If Input_ResetTime>0
 			Input_ResetTime = Max(Input_ResetTime-FPSfactor,0.0)
@@ -501,7 +501,7 @@ Function Load3DMenu(customprogress$="")
 				;[End Block]
 			Case "room1_intro"
 				;[Block]
-				m3d\FogColor = FogColor_LCZ
+				m3d\FogColor = FogColor_Outside;LCZ
 				CameraFogRange m_I\Cam, 5,30
 				CameraFogColor (m_I\Cam,200,200,200)
 				CameraClsColor (m_I\Cam,200,200,200)
@@ -510,7 +510,7 @@ Function Load3DMenu(customprogress$="")
 				d_I\DoorOBJ = LoadMesh_Strict("GFX\map\props\WindowedDoor.b3d")
 				HideEntity d_I\DoorOBJ
 				
-			; ~ Door
+				; ~ Door
 				m3d\Objects[0] = CopyEntity(d_I\DoorOBJ,m3d\Scene)
 				ScaleEntity(m3d\Objects[0], (204.0 * RoomScale) / MeshWidth(m3d\Objects[0]), 312.0 * RoomScale / MeshHeight(m3d\Objects[0]), 16.0 * RoomScale / MeshDepth(m3d\Objects[0]))
 				RotateEntity m3d\Objects[0],0,180,0
@@ -521,22 +521,25 @@ Function Load3DMenu(customprogress$="")
 				PositionEntity m3d\Objects[2],0.6,0.7,-0.1
 				EntityParent m3d\Objects[0],m3d\Objects[1]
 				EntityParent m3d\Objects[2],m3d\Objects[1]
-				PositionEntity m3d\Objects[1],-2*RoomScale,-6*RoomScale,-1202*RoomScale
-				RotateEntity m3d\Objects[1],0,0,0
+				PositionEntity m3d\Objects[1],5080.0 * RoomScale,-824*RoomScale,1194*RoomScale
+				RotateEntity m3d\Objects[1],0,90,0
 				MoveEntity(m3d\Objects[0], 0, 0, 8.0 * RoomScale)
 				
-			; ~ Tram
-				m3d\Objects[3] = LoadAnimMesh_Strict("GFX\map\Props\Tram.b3d")
-				PositionEntity m3d\Objects[3],-1716*RoomScale, -84*RoomScale, 1900*RoomScale
-				ScaleEntity m3d\Objects[3],3.3*RoomScale,3.3*RoomScale,3.3*RoomScale
-				RotateEntity m3d\Objects[3],0,0,0
+				; ~ Tram
+				m3d\Objects[3] = LoadMesh_Strict("GFX\map\Props\Tram_scientist.b3d")
+				PositionEntity m3d\Objects[3],7823*RoomScale,-905*RoomScale,2903*RoomScale
+				ScaleEntity m3d\Objects[3],3.5*RoomScale,3.5*RoomScale,3.5*RoomScale
+				RotateEntity m3d\Objects[3],0,90,0
 				EntityParent m3d\Objects[3], m3d\Scene
 				
-				m3d\Objects[5] = LoadRMesh("GFX\Map\rooms\room1_intro\room1_intro_3d_menu.rmesh",Null)
-				ScaleEntity m3d\Objects[5],RoomScale,RoomScale,RoomScale
-				EntityParent m3d\Objects[5], m3d\Scene
-				HideEntity m3d\Objects[5]
-				
+				; ~ Screens
+				m3d\Objects[4] = LoadMesh_Strict("GFX\Map\Rooms\Room1_intro\room1_intro_monitors.b3d")
+				m3d\Objects[5] = LoadAnimTexture("GFX\Map\Textures\tram_station_screen.png",1,1024,512,0,2)
+				PositionEntity m3d\Objects[4],0,0,0
+				ScaleEntity m3d\Objects[4],RoomScale,RoomScale,RoomScale
+				RotateEntity m3d\Objects[4],0,0,0
+				EntityParent m3d\Objects[4], m3d\Scene
+				EntityTexture m3d\Objects[4], m3d\Objects[5]
 				;[End Block]
 			Case "room1_start"
 				;[Block]
@@ -968,16 +971,16 @@ Function Update3DMenu()
 			;[End Block]
 		Case "room1_intro"
 			;[Block]
-			PositionEntity m3d\Pivot,-2755.0*RoomScale,670.0*RoomScale,-3639*RoomScale
-			RotateEntity m3d\Pivot,10,-22,0
+			PositionEntity m3d\Pivot,3273.0*RoomScale,-375*RoomScale,3883*RoomScale
+			RotateEntity m3d\Pivot,0,-105,0
+			
+			If m3d\State[0] = 0 Then PlaySound_Strict(LoadTempSound("SFX\Room\Intro\Ryan\TramArrival.ogg"))
 			
 			m3d\State[0] = m3d\State[0] + FPSfactor
-			;m3d\State[2] = Rand(1,2)
 			
-			;If m3d\State[2] = 1 Then
-			If m3d\State[0] > 0 Then
-				Animate2(m3d\Objects[3],AnimTime(m3d\Objects[3]),1,352,0.1)
-			EndIf
+			EntityTexture m3d\Objects[4], m3d\Objects[5], Floor(((m3d\State[0]-70*5)/(70*5)) Mod 2.0)
+			
+			MoveEntity(m3d\Objects[3],0,0,0.02)
 			
 			If m3d\State[0] >= 70*10 And m3d\State[0] < 70*10.001 Then
 				PlaySound_Strict(LoadTempSound("SFX\Intercom\on.ogg"))
@@ -985,26 +988,6 @@ Function Update3DMenu()
 			If m3d\State[0] >= 70*11 And m3d\State[0] < 70*11.001 Then
 				PlaySound_Strict(LoadTempSound("SFX\Intercom\Facility\Scripted\scripted"+(Rand(1,5))+".ogg"))
 			EndIf
-;			Else
-;				If m3d\State[0] >= 70*14.1 And m3d\State[0] < 70*14.101 Then
-;					PlaySound_Strict(LoadTempSound("SFX\Alarm\ContainmentBreach\ContainmentBreach.ogg"))
-;				EndIf
-;				
-;				If m3d\State[0] > 0 And m3d\State[2] = 2 Then
-;					Animate2(m3d\Objects[3],AnimTime(m3d\Objects[3]),1,101,0.1,False)
-;				EndIf
-;				If AnimTime(m3d\Objects[3]) = 101 And m3d\State[2] = 2 Then
-;					m3d\State[1] = 1
-;					HideEntity m3d\RoomMesh
-;					ShowEntity m3d\Objects[5]
-;				EndIf
-;				If m3d\State[1] = 1 And m3d\State[2] = 2 Then
-;					CameraFogRange m_I\Cam, 1,12
-;					CameraFogColor (m_I\Cam,FogColor_LCZ,FogColor_LCZ,FogColor_LCZ)
-;					CameraClsColor (m_I\Cam,FogColor_LCZ,FogColor_LCZ,FogColor_LCZ)
-;					CameraRange(m_I\Cam, 0.01, 40)
-;				EndIf
-;			EndIf
 			;[End Block]
 		Case "room1_start"
 			;[Block]

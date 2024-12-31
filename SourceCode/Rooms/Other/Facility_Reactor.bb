@@ -583,7 +583,8 @@ Function UpdateEvent_Facility_Reactor(e.Events)
 							
 							psp\NoMove = False
 							psp\NoRotation = False
-							If HUDenabled Then psp\IsShowingHUD = True
+							;If HUDenabled Then psp\IsShowingHUD = True
+							psp\IsShowingHUD = True
 							e\EventState[6] = 2
 							e\EventState[7] = -10
 							e\EventState[0] = 1
@@ -755,24 +756,26 @@ Function UpdateEvent_Facility_Reactor(e.Events)
 					EndIf
 				EndIf
 				
-				If e\EventState[0] = 4 Then
-					If EntityDistanceSquared(Collider,e\room\Objects[REACTOR_CLOSE_TRIGGER]) < PowTwo(0.6) Then
-						SaveGame(SavePath + CurrSave\Name + "\", True)
-						e\EventState[0] = 5
-					EndIf
-				EndIf
-				
-				If e\EventState[0] = 5 Then
-					If EntityDistanceSquared(Collider,e\room\Objects[REACTOR_CLOSE_TRIGGER]) < PowTwo(0.6) Then
-						e\room\RoomDoors[1]\open = False
-						e\room\RoomDoors[1]\locked = True
-					EndIf
+				; ~ Exit Button
+				If e\EventState[0] >= 4 Then
 					UpdateButton(e\room\Objects[REACTOR_EXIT_BUTTON])
 					If d_I\ClosestButton = e\room\Objects[REACTOR_EXIT_BUTTON] Then
 						If KeyHitUse Then
 							e\EventState[5] = 0.1
 							PlaySound_Strict(ButtonSFX[0])
 						EndIf
+					EndIf
+				EndIf
+				
+				If e\EventState[0] = 4 Then
+					If EntityDistanceSquared(Collider,e\room\Objects[REACTOR_CLOSE_TRIGGER]) < PowTwo(0.6) Then
+						SaveGame(SavePath + CurrSave\Name + "\", True)
+						e\EventState[0] = 5
+					EndIf
+				ElseIf e\EventState[0] = 5 Then
+					If EntityDistanceSquared(Collider,e\room\Objects[REACTOR_CLOSE_TRIGGER]) < PowTwo(0.6) Then
+						e\room\RoomDoors[1]\open = False
+						e\room\RoomDoors[1]\locked = True
 					EndIf
 				EndIf
 					
@@ -834,4 +837,4 @@ Function UpdateEvent_Facility_Reactor(e.Events)
 End Function
 
 ;~IDEal Editor Parameters:
-;~C#Blitz3D
+;~C#Blitz3D TSS
