@@ -1,4 +1,4 @@
-Const MAXACHIEVEMENTS% = 57
+Const MAXACHIEVEMENTS% = 51
 
 Type Achievements
 	Field Achievement%[MAXACHIEVEMENTS]
@@ -13,16 +13,16 @@ Global AchievementsMenu%
 
 ; ~ [SCP-CONTAINMENT BREACH]
 Const Achv008%=0, Achv035%=1, Achv049%=2, Achv055=3,  Achv079%=4, Achv096%=5, Achv106%=6, Achv148%=7
-Const Achv294%=8, Achv372%=9, Achv420%=10, Achv427=11, Achv500%=12, Achv513%=13, Achv714%=14, Achv789%=15, Achv860%=16
-Const Achv914%=17, Achv966%=18, Achv1025%=19, Achv1048=20
-Const AchvMaynard%=21, AchvHarp%=22, AchvSNAV%=23, AchvOmni%=24, AchvConsole%=25, AchvTesla%=26, AchvPD%=27
-Const Achv1162% = 28
-Const AchvKeter% = 29
+Const Achv294%=8, Achv372%=9, Achv420%=10, Achv427=11, Achv500%=12, Achv714%=13, Achv789%=14, Achv860%=15
+Const Achv914%=16, Achv966%=17
+Const AchvMaynard%=18, AchvHarp%=19, AchvSNAV%=20, AchvOmni%=21, AchvConsole%=22, AchvTesla%=23, AchvPD%=24
+Const Achv1162% = 25
+Const AchvKeter% = 26
 ; ~ [SCP - SECURITY STORIES]
-Const AchvLWS% = 30,AchvHWS% = 31,AchvWS% = 32,AchvEWS% = 33,AchvSWS% = 34,AchvWeapons% = 35
-Const Achv268% = 36,Achv1033RU% = 37,Achv198% = 38,Achv207% = 39,Achv1079% = 40,Achv109% = 41,Achv059% = 42,Achv016% = 43,Achv357% = 44
-Const Achv402% = 45,AchvVane% = 46,Achv076% = 47,AchvGungame% = 48,AchvEMRP% = 49,AchvHDS% = 50,Achv409% = 51,Achv127% = 52,AchvWolfnaya% = 53,AchvThaumiel% = 54,AchvAppolyon% = 55
-Const Achv1102RU% = 56
+Const AchvLWS% = 27,AchvHWS% = 28,AchvWS% = 29,AchvEWS% = 30,AchvSWS% = 31,AchvWeapons% = 32
+Const Achv268% = 33,Achv1033RU% = 34,Achv198% = 35,Achv207% = 36,Achv109% = 37,Achv016% = 38
+Const AchvVane% = 39,Achv076% = 40,AchvGungame% = 41,AchvEMRP% = 42,AchvHDS% = 43,Achv409% = 44,Achv127% = 45,AchvWolfnaya% = 46,AchvThaumiel% = 47,AchvAppolyon% = 48
+Const Achv173Cont% = 49, Achv457% = 50
 
 For i = 0 To MAXACHIEVEMENTS-1
 	Local Loc2% = GetINISectionLocation(AchvIni, "s"+Str(i))
@@ -170,4 +170,4 @@ Function RenderAchievementMsg%()
 	Next
 End Function
 ;~IDEal Editor Parameters:
-;~C#Blitz3D
+;~C#Blitz3D TSS

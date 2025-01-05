@@ -15,7 +15,7 @@ Function FillRoom_Area_106_Escape(r.Rooms)
 	RotateEntity r\Objects[6],0,90,0
 	EntityPickMode r\Objects[6],2
 	
-	r\RoomDoors[0] = CreateDoor(r\zone,r\x -158.0 * RoomScale, r\y+1110 * RoomScale, r\z+10709 * RoomScale, 180, r, True, 5, False, "", 1)
+	r\RoomDoors[0] = CreateDoor(r\zone,r\x -158.0 * RoomScale, r\y+1110 * RoomScale, r\z+10709 * RoomScale, 180, r, True, 5, -1, "", 1)
 	r\RoomDoors[0]\DisableWaypoint = True
 	
 	ne = CreateNewElevator(r\Objects[6],1,r\RoomDoors[0],1,r,1110.0,4095.0,8190.0)
@@ -91,4 +91,4 @@ Function UpdateEvent_Area_106_Escape(e.Events)
 	
 End Function
 ;~IDEal Editor Parameters:
-;~C#Blitz3D
+;~C#Blitz3D TSS

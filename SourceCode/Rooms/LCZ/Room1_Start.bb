@@ -119,7 +119,7 @@ Function FillRoom_Room1_Start(r.Rooms)
 	PositionEntity(r\Objects[6], r\x -2743.0 * RoomScale, r\y -4847.0 * RoomScale, r\z-1502.0 * RoomScale)
 	EntityParent r\Objects[6],r\obj
 	
-	r\RoomDoors[7] = CreateDoor(r\zone,r\x-2744.0*RoomScale,r\y-4847.0*RoomScale,r\z-1786.0*RoomScale,180,r,True,DOOR_ELEVATOR_3FLOOR,False,"",1)
+	r\RoomDoors[7] = CreateDoor(r\zone,r\x-2744.0*RoomScale,r\y-4847.0*RoomScale,r\z-1786.0*RoomScale,180,r,True,DOOR_ELEVATOR_3FLOOR,-1,"",1)
 	MoveEntity(r\RoomDoors[7]\buttons[0], -25, 0, 0)
 	
 	ne = CreateNewElevator(r\Objects[6],1,r\RoomDoors[7],1,r,-4847,-2747)

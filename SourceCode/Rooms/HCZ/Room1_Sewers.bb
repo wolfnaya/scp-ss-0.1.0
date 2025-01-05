@@ -125,8 +125,8 @@ Function FillRoom_Room1_Sewers(r.Rooms)
 	r\RoomDoors[4] = CreateDoor(r\zone,r\x - 2928.0 * RoomScale, r\y - 5632.0 * RoomScale, r\z - 4016.0 * RoomScale, 0, r)
 	r\RoomDoors[4]\locked = True
 	r\RoomDoors[5] = CreateDoor(r\zone,r\x - 416.0 * RoomScale, r\y - 5632.0 * RoomScale, r\z - 5680.0 * RoomScale, 90, r, True)
-	r\RoomDoors[6] = CreateDoor(r\zone,r\x - 2048.0 * RoomScale, r\y - 5632.0 * RoomScale, r\z - 5424.0 * RoomScale, 0, r, False, False, 2)
-	r\RoomDoors[7] = CreateDoor(r\zone,r\x - 416.0 * RoomScale, r\y - 5632.0 * RoomScale, r\z - 4016.0 * RoomScale, 90, r, False, False, 2)
+	r\RoomDoors[6] = CreateDoor(r\zone,r\x - 2048.0 * RoomScale, r\y - 5632.0 * RoomScale, r\z - 5424.0 * RoomScale, 0, r, False, False, KEY_CARD_2)
+	r\RoomDoors[7] = CreateDoor(r\zone,r\x - 416.0 * RoomScale, r\y - 5632.0 * RoomScale, r\z - 4016.0 * RoomScale, 90, r, False, False, KEY_CARD_2)
 	If Rand(0,1)=1 Then
 		r\RoomDoors[6]\open = True
 	Else
@@ -359,4 +359,4 @@ End Function
 
 
 ;~IDEal Editor Parameters:
-;~C#Blitz3D
+;~C#Blitz3D TSS

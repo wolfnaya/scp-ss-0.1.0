@@ -19,8 +19,8 @@ Function FillRoom_Room2_Maintenance(r.Rooms)
 	EntityType r\Objects[2],HIT_MAP
 	EntityPickMode r\Objects[2],2
 	
-	r\RoomDoors[0] = CreateDoor(r\zone,r\x - 256.0 * RoomScale, r\y, r\z - 640.0 * RoomScale, 270, r, True, 5, False, "", 2)
-	r\RoomDoors[1] = CreateDoor(r\zone,r\x + 256.0 * RoomScale, r\y, r\z + 640.0 * RoomScale, 90, r, True, 5, False, "", 1)
+	r\RoomDoors[0] = CreateDoor(r\zone,r\x - 256.0 * RoomScale, r\y, r\z - 640.0 * RoomScale, 270, r, True, 5, -1, "", 2)
+	r\RoomDoors[1] = CreateDoor(r\zone,r\x + 256.0 * RoomScale, r\y, r\z + 640.0 * RoomScale, 90, r, True, 5, -1, "", 1)
 	r\RoomDoors[0]\DisableWaypoint = True
 	r\RoomDoors[1]\DisableWaypoint = True
 	
@@ -29,7 +29,7 @@ Function FillRoom_Room2_Maintenance(r.Rooms)
 	ne = CreateNewElevator(r\Objects[2],3,r\RoomDoors[0],2,r,-5632.0,-2784.0,0.0)
 	ne\floorlocked[1] = True
 	
-	d.Doors = CreateDoor(0, r\x,r\y,r\z,0, r, False, True, False, AccessCode[2])
+	d.Doors = CreateDoor(0, r\x,r\y,r\z,0, r, False, True, -1, AccessCode[2])
 	PositionEntity(d\buttons[0], r\x + 224.0 * RoomScale, r\y + 0.7, r\z - 360.0 * RoomScale, True)
 	RotateEntity (d\buttons[0], 0,-90,0,True)
 	PositionEntity(d\buttons[1], r\x - 224.0 * RoomScale, r\y + 0.7, r\z + 360.0 * RoomScale, True)		
@@ -347,4 +347,4 @@ Function UpdateEvent_Room2_Maintenance(e.Events)
 End Function
 
 ;~IDEal Editor Parameters:
-;~C#Blitz3D
+;~C#Blitz3D TSS

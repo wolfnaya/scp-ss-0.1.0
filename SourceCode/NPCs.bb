@@ -2353,7 +2353,7 @@ Function SwitchNPCGun%(n.NPCs, WeaponID%)
 			n\Gun\GunType = g\GunType
 			n\Gun\MaxGunshotSounds = g\MaxShootSounds
 			n\Gun\MaxReloadSounds = g\MaxReloadSounds
-			n\Gun\Damage = g\DamageOnEntity
+			n\Gun\Damage = (g\DamageOnEntity/2)
 			n\Gun\ShootFrequency = g\Rate_Of_Fire
 			n\Gun\BulletsPerShot = g\Amount_Of_Bullets
 			gunname = g\name

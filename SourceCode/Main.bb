@@ -187,7 +187,7 @@ End Type
 
 InitController()
 
-Const VersionNumber$ = "0.1.1"
+Const VersionNumber$ = "0.1.2"
 Const CompatibleNumber$ = "0.1.1"
 
 Global ButtonSFX[4]
@@ -832,9 +832,9 @@ Type SCP008
 	Field Timer#
 End Type
 
-;Type SCP016
-;	Field Timer#
-;End Type
+Type SCP016
+	Field Timer#
+End Type
 
 Type SCP035
 	Field Possessed%
@@ -2775,7 +2775,7 @@ Function MovePlayer()
 	ForceMove = False
 	
 	Update008()
-	;Update016()
+	Update016()
 	;Update059()
 	Update409()
 	
@@ -3505,7 +3505,7 @@ Function LoadEntities()
 	
 	I_005 = New SCP005
 	I_008 = New SCP008
-	;I_016 = New SCP016
+	I_016 = New SCP016
 	I_035 = New SCP035
 	;I_059 = New SCP059
 	I_109 = New SCP109
@@ -4540,7 +4540,7 @@ Function NullGame(nomenuload%=False,playbuttonsfx%=True)
 	
 	I_008\Timer = 0
 	
-	;I_016\Timer = 0
+	I_016\Timer = 0
 	
 	I_035\Possessed = 0
 	
@@ -4668,7 +4668,7 @@ Function NullGame(nomenuload%=False,playbuttonsfx%=True)
 	
 	Delete I_005
 	Delete I_008
-	;Delete I_016
+	Delete I_016
 	;Delete I_059
 	Delete I_109
 	Delete I_127

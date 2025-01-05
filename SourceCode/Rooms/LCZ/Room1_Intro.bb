@@ -56,7 +56,7 @@ Function FillRoom_Room1_Intro(r.Rooms)
 	EntityType r\Objects[ROOM1_INTRO_Elevator_Obj],HIT_MAP
 	EntityPickMode r\Objects[ROOM1_INTRO_Elevator_Obj],2
 	
-	r\RoomDoors[ROOM1_INTRO_Elevator_Door] = CreateDoor(r\zone,r\x +7849.0 * RoomScale, r\y+1733*RoomScale, r\z+1227*RoomScale, 90, r, True, 5, False, "", 1)
+	r\RoomDoors[ROOM1_INTRO_Elevator_Door] = CreateDoor(r\zone,r\x +7849.0 * RoomScale, r\y+1733*RoomScale, r\z+1227*RoomScale, 90, r, True, 5, -1, "", 1)
 	r\RoomDoors[ROOM1_INTRO_Elevator_Door]\DisableWaypoint = True
 	
 	ne = CreateNewElevator(r\Objects[ROOM1_INTRO_Elevator_Obj],3,r\RoomDoors[ROOM1_INTRO_Elevator_Door],1,r,-1000.0,-820.0,1779.0)
@@ -859,4 +859,4 @@ End Function
 ;		
 ;End Function
 ;~IDEal Editor Parameters:
-;~C#Blitz3D
+;~C#Blitz3D TSS

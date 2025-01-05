@@ -27,7 +27,7 @@ Function FillRoom_Gate_D_Topside(r.Rooms)
 	EntityType r\Objects[GATE_D_SURFACE_LCZ_Elevator_Obj],HIT_MAP
 	EntityPickMode r\Objects[GATE_D_SURFACE_LCZ_Elevator_Obj],2
 	
-	r\RoomDoors[GATE_D_SURFACE_EZ_Elevator_Door] = CreateDoor(r\zone,r\x + 6422.0 * RoomScale, r\y+222*RoomScale, r\z-2491*RoomScale, 90, r, True, DOOR_ELEVATOR_3FLOOR, False, "", 2)
+	r\RoomDoors[GATE_D_SURFACE_EZ_Elevator_Door] = CreateDoor(r\zone,r\x + 6422.0 * RoomScale, r\y+222*RoomScale, r\z-2491*RoomScale, 90, r, True, DOOR_ELEVATOR_3FLOOR, -1, "", 2)
 	MoveEntity(r\RoomDoors[GATE_D_SURFACE_EZ_Elevator_Door]\buttons[0], -25, 0, 0)
 	r\RoomDoors[GATE_D_SURFACE_EZ_Elevator_Door]\DisableWaypoint = True
 	
@@ -36,7 +36,7 @@ Function FillRoom_Gate_D_Topside(r.Rooms)
 		ne\floorlocked[i] = True
 	Next
 	
-	r\RoomDoors[GATE_D_SURFACE_LCZ_Elevator_Door] = CreateDoor(r\zone,r\x + 6422.0 * RoomScale, r\y+222*RoomScale, r\z+2491*RoomScale, 90, r, True, DOOR_ELEVATOR_3FLOOR, False, "", 1)
+	r\RoomDoors[GATE_D_SURFACE_LCZ_Elevator_Door] = CreateDoor(r\zone,r\x + 6422.0 * RoomScale, r\y+222*RoomScale, r\z+2491*RoomScale, 90, r, True, DOOR_ELEVATOR_3FLOOR, -1, "", 1)
 	MoveEntity(r\RoomDoors[GATE_D_SURFACE_LCZ_Elevator_Door]\buttons[0], -25, 0, 0)
 	r\RoomDoors[GATE_D_SURFACE_LCZ_Elevator_Door]\DisableWaypoint = True
 	
@@ -281,4 +281,4 @@ Function UpdateEvent_Gate_D_Topside(e.Events)
 	EndIf
 End Function
 ;~IDEal Editor Parameters:
-;~C#Blitz3D
+;~C#Blitz3D TSS

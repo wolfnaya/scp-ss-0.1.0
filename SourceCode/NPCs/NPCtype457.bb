@@ -491,7 +491,7 @@ Function UpdateNPCtype457MP(n.NPCs)
 			EntityAlpha n\obj,0.0
 			If (mp_I\Gamemode\Phase/2) = Waves_Long And mp_I\Gamemode\Difficulty = KETER And mp_I\Gamemode\CanSurviveAllWaves = True Then
 				If opt\SteamEnabled Then Steam_Achieve(ACHV_BURNING_MAN)
-				;GiveAchievement(Achv457)
+				GiveAchievement(Achv457)
 			EndIf	
 		Else
 			mp_I\BossNPC = n
@@ -511,4 +511,4 @@ Function UpdateNPCtype457MP(n.NPCs)
 End Function
 
 ;~IDEal Editor Parameters:
-;~C#Blitz3D
+;~C#Blitz3D TSS

@@ -2240,19 +2240,19 @@ Function UpdateGUI()
 					;[End Block]
 ;! ~ SCP - Items
 					
-;				Case "scp016"
-;					PlaySound_Strict LoadTempSound("SFX\SCP\016\DishBreak.ogg")
-;					
-;					If (Not wbl\Hazmat) Then
-;						GiveAchievement(Achv016)
-;						CreateMsg(GetLocalString("Items", "scp016_1"))
-;						DamageSPPlayer(1,True)
-;						I_016\Timer = 10
-;						RemoveItem(SelectedItem)
-;					Else
-;						CreateMsg(GetLocalString("Items", "scp016_2"))
-;					EndIf
-;					;[End Block]
+				Case "scp016"
+					PlaySound_Strict LoadTempSound("SFX\SCP\016\DishBreak.ogg")
+					
+					If (Not Inventory[SLOT_TORSO] <> Null And Left(Inventory[SLOT_TORSO]\itemtemplate\tempname, 6) = "hazmat") Lor (Not Inventory[SLOT_TORSO] <> Null And Left(Inventory[SLOT_TORSO]\itemtemplate\tempname, 3) = "hds") Then
+						GiveAchievement(Achv016)
+						CreateMsg(GetLocalString("Items", "scp016_1"))
+						DamageSPPlayer(1,True)
+						I_016\Timer = 10
+						RemoveItem(SelectedItem)
+					Else
+						CreateMsg(GetLocalString("Items", "scp016_2"))
+					EndIf
+					;[End Block]
 				Case "scp109"
 					;[Block]
 					If (Not Inventory[SLOT_HEAD] <> Null And Left(Inventory[SLOT_HEAD]\itemtemplate\tempname, 6) = "helmet") Lor (Not Inventory[SLOT_HEAD] <> Null And Left(Inventory[SLOT_HEAD]\itemtemplate\tempname, 7) = "gasmask") Lor (Not Inventory[SLOT_TORSO] <> Null And Left(Inventory[SLOT_TORSO]\itemtemplate\tempname, 6) = "hazmat")Lor (Not mpl\HasNTFGasmask) Lor(Not Inventory[SLOT_TORSO] <> Null And Left(Inventory[SLOT_TORSO]\itemtemplate\tempname, 3) = "hds") Then
@@ -2362,7 +2362,7 @@ Function UpdateGUI()
 							;I_1079\Take = 0
 							;I_1079\Foam = 0
 							;I_1079\Trigger = 0
-							;I_016\Timer = 0
+							I_016\Timer = 0
 							;I_059\Timer = 0
 							DeathTimer = 0
 							I_008\Timer = 0
@@ -2529,7 +2529,7 @@ Function UpdateGUI()
 						Sanity = 0
 						
 						I_008\Timer = 0
-						;I_016\Timer = 0
+						I_016\Timer = 0
 						;I_059\Timer = 0
 						I_109\Timer = 0
 						I_109\Used = 0

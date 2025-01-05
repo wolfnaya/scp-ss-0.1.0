@@ -14,8 +14,8 @@ Function FillRoom_Cont_016(r.Rooms)
 	RotateEntity it\collider,90,0,0
 	EntityParent(it\collider, r\obj)
 	
-	;it = CreateItem("SCP-016", "scp016", r\x - 1280.0 * RoomScale, r\y + 160.0 * RoomScale, r\z + 256.0 * RoomScale)
-	;EntityParent(it\collider, r\obj)
+	it = CreateItem("SCP-016", "scp016", r\x - 1280.0 * RoomScale, r\y + 160.0 * RoomScale, r\z + 256.0 * RoomScale)
+	EntityParent(it\collider, r\obj)
 	
 	r\RoomDoors[0] = CreateDoor(r\zone,r\x,r\y,r\z,0,r,True,DOOR_WINDOWED,KEY_CARD_3)
 	

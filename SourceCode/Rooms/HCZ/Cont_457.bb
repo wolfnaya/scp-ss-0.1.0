@@ -16,8 +16,8 @@ Function FillRoom_Cont_457(r.Rooms)
 	EntityType r\Objects[1],HIT_MAP
 	EntityPickMode r\Objects[1],2
 	
-	r\RoomDoors[0] = CreateDoor(r\zone,r\x + 992.0 * RoomScale, r\y, r\z-258*RoomScale, 0, r, True, DOOR_ELEVATOR_3FLOOR, False, "", 1)
-	r\RoomDoors[1] = CreateDoor(r\zone,r\x + 1556.0 * RoomScale, r\y, r\z+608*RoomScale, 90, r, True, DOOR_ELEVATOR_3FLOOR, False, "", 2)
+	r\RoomDoors[0] = CreateDoor(r\zone,r\x + 992.0 * RoomScale, r\y, r\z-258*RoomScale, 0, r, True, DOOR_ELEVATOR_3FLOOR, -1, "", 1)
+	r\RoomDoors[1] = CreateDoor(r\zone,r\x + 1556.0 * RoomScale, r\y, r\z+608*RoomScale, 90, r, True, DOOR_ELEVATOR_3FLOOR, -1, "", 2)
 	r\RoomDoors[0]\DisableWaypoint = True
 	r\RoomDoors[1]\DisableWaypoint = True
 	
@@ -253,4 +253,4 @@ Function UpdateEvent_Cont_457(e.Events)
 End Function
 
 ;~IDEal Editor Parameters:
-;~C#Blitz3D
+;~C#Blitz3D TSS

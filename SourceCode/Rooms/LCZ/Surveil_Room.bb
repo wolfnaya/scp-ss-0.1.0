@@ -94,7 +94,7 @@ Function FillRoom_Surveil_Room(r.Rooms)
 	;FreeEntity r\RoomDoors[1]\obj2 : r\RoomDoors[1]\obj2 = 0
 	d = CreateDoor(r\zone,r\x+1504.0*RoomScale,r\y+480.0*RoomScale,r\z+960.0*RoomScale,0,r)
 	d\AutoClose = False : d\locked = True
-	r\RoomDoors[2] = CreateDoor(r\zone,r\x+410.0*RoomScale,r\y,r\z-74.0*RoomScale,0,r,False,DOOR_WINDOWED,False,AccessCode[3])
+	r\RoomDoors[2] = CreateDoor(r\zone,r\x+410.0*RoomScale,r\y,r\z-74.0*RoomScale,0,r,False,DOOR_WINDOWED,-1,AccessCode[3])
 	r\RoomDoors[2]\AutoClose = False
 	PositionEntity r\RoomDoors[2]\buttons[1],r\x+535.0*RoomScale,EntityY(r\RoomDoors[2]\buttons[1],True),r\z-95*RoomScale,True
 	RotateEntity r\RoomDoors[2]\buttons[1],0,0,0
@@ -216,4 +216,4 @@ Function UpdateEvent_Surveil_Room(e.Events)
 End Function
 
 ;~IDEal Editor Parameters:
-;~C#Blitz3D
+;~C#Blitz3D TSS

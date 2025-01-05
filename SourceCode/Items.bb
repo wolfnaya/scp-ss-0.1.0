@@ -209,6 +209,7 @@ Function InitItemTemplates()
 	;! ~ [SCP ITEMS]
 	
 	it = CreateItemTemplate("SCP-005","scp005", "GFX\items\SCPs\scp_005.b3d", "GFX\items\Icons\Icon_scp_005.png", "", 0.04) : it\sound = 3
+	it = CreateItemTemplate("SCP-016","scp016", "GFX\items\SCPs\scp_016.b3d", "GFX\items\Icons\Icon_scp_016.jpg", "", 0.02) : it\sound = 2
 	it = CreateItemTemplate("SCP-035","scp035", "GFX\items\SCPs\scp_035.b3d", "GFX\items\Icons\Icon_scp_035.jpg", "", 0.02) : it\sound = 2
 	it = CreateItemTemplate("SCP-109","scp109","GFX\items\SCPs\scp_109.b3d","GFX\items\Icons\Icon_scp_109.jpg","",0.0009,"","",1) : it\sound = 4
 	it = CreateItemTemplate("SCP-127","scp127","GFX\weapons\Models\scp127_Worldmodel.b3d","GFX\Weapons\Icons\INVscp127.jpg","", 0.0026) : it\sound = 66 : it\IsGun% = True
@@ -650,44 +651,14 @@ Function PickItem(item.Items)
 									Damage1033RU(100 * I_1033RU\Using)
 								EndIf
 							Case "scp148"
-								GiveAchievement(Achv148)	
-							Case "scp513"
-								GiveAchievement(Achv513)
+								GiveAchievement(Achv148)
 							Case "scp860"
 								GiveAchievement(Achv860)
 							Case "scp207"
-	;							If I_402\Timer > 0 Then
-	;								PlaySound_Strict(HorrorSFX[Rand(0, 3)])
-	;								CreateMsg(Chr(34) + GetLocalString("Singleplayer","i_cant") + Chr(34))
-	;								Exit
-	;							Else
-									GiveAchievement(Achv207)
-	;							EndIf
+								GiveAchievement(Achv207)
 							Case "scp207empty"
 								CreateMsg(GetLocalString("Items", "scp207_empty"))
 								Exit
-	;						Case "scp357"
-	;							;[Block]
-	;							If (Not I_059\Using) Then
-	;								I_357\Using = True
-	;								GiveAchievement(Achv357)
-	;								CreateMsg(GetLocalString("Items", "scp357_2"))
-	;								I_357\Timer = 1.0
-	;							Else
-	;								CreateMsg(GetLocalString("Items", "scp357_3"))
-	;								Exit
-	;							EndIf
-	;							;[End Block]
-	;						Case "scp059"
-	;							If (Not I_357\Using) Then
-	;								I_059\Using = True
-	;								GiveAchievement(Achv059)
-	;								CreateMsg(GetLocalString("Items", "scp059_1"))
-	;								I_059\Timer = 10.0
-	;							Else
-	;								CreateMsg(GetLocalString("Items", "scp059_2"))
-	;								Exit
-	;							EndIf
 							Case "scp198"
 								;[Block]
 								GiveAchievement(Achv198)
@@ -778,11 +749,6 @@ Function PickItem(item.Items)
 								Exit
 							Case "firstaid", "finefirstaid", "veryfinefirstaid", "firstaid2"
 								item\state = 0
-	;							If I_402\Timer > 0 Then
-	;								PlaySound_Strict(HorrorSFX[Rand(0, 3)])
-	;								CreateMsg(Chr(34) + GetLocalString("Singleplayer","i_cant") + Chr(34))
-	;								Exit
-	;							EndIf
 							Case "navigator", "nav"
 								If item\itemtemplate\name = "S-NAV Navigator Ultimate" Then GiveAchievement(AchvSNAV)
 							Case "paper"

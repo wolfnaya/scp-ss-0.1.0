@@ -82,7 +82,9 @@ Function UpdateEvent_Cont_173(e.Events)
 					GiveAchievement(Achv173Cont)
 					If opt\SteamEnabled Then Steam_Achieve(ACHV_173_CONTAINED)
 					SaveGame(SavePath + CurrSave\Name + "\", True)
-					BeginTask(TASK_NTF_GO_TO_ZONE)
+					If (Not ecst\Contained049 Lor (Not ecst\Contained008) Lor (Not ecst\Contained409)) Then
+						BeginTask(TASK_NTF_GO_TO_ZONE)
+					EndIf
 					e\EventState[3] = 2
 				EndIf
 		End Select

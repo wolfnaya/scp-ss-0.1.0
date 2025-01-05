@@ -10,9 +10,9 @@ Function FillRoom_Room1_Sws(r.Rooms)
 	r\RoomDoors[2] = CreateDoor(r\zone, r\x - 2547.0 * RoomScale, 0, r\z+1432*RoomScale, 90, r, True, False, KEY_CARD_5)
 	r\RoomDoors[2]\AutoClose = False : r\RoomDoors[2]\open = False
 	
-	r\RoomDoors[3] = CreateDoor(r\zone, r\x -2796.0 * RoomScale, 0, r\z-729*RoomScale, 90, r, True, DOOR_LCZ, False, "4892")
+	r\RoomDoors[3] = CreateDoor(r\zone, r\x -2796.0 * RoomScale, 0, r\z-729*RoomScale, 90, r, True, DOOR_LCZ, -1, "4892")
 	r\RoomDoors[3]\AutoClose = False : r\RoomDoors[3]\open = False : r\RoomDoors[3]\dir = 1
-	r\RoomDoors[4] = CreateDoor(r\zone, r\x - 3166.0 * RoomScale, 0, r\z+643*RoomScale, 90, r, True, False, False, "2871")
+	r\RoomDoors[4] = CreateDoor(r\zone, r\x - 3166.0 * RoomScale, 0, r\z+643*RoomScale, 90, r, True, False, -1, "2871")
 	r\RoomDoors[4]\AutoClose = False : r\RoomDoors[4]\open = False
 	
 	If gopt\GameMode = GAMEMODE_DEFAULT Then
@@ -124,4 +124,4 @@ Function UpdateEvent_Room1_Sws(e.Events)
 	
 End Function
 ;~IDEal Editor Parameters:
-;~C#Blitz3D
+;~C#Blitz3D TSS

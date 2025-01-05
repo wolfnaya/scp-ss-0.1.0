@@ -29,7 +29,7 @@ Function FillRoom_Personnel_Offices(r.Rooms)
 	r\RoomDoors[0] = CreateDoor(r\zone, r\x +1056 * RoomScale, r\y +384.0 * RoomScale, r\z +733.0 * RoomScale, 90, r, True, DOOR_OFFICE, KEY_CARD_5)
 	r\RoomDoors[0]\AutoClose = False : r\RoomDoors[0]\open = False
 	; ~ [Wolfnaya's Door #2]
-	r\RoomDoors[1] = CreateDoor(r\zone, r\x+1424* RoomScale, r\y +384.0 * RoomScale, r\z +723 * RoomScale, 90, r, True, DOOR_ONE_SIDED, False, "2109")
+	r\RoomDoors[1] = CreateDoor(r\zone, r\x+1424* RoomScale, r\y +384.0 * RoomScale, r\z +723 * RoomScale, 90, r, True, DOOR_ONE_SIDED, -1, "2109")
 	r\RoomDoors[1]\AutoClose = False : r\RoomDoors[1]\open = False : r\RoomDoors[1]\locked = True
 	; ~ [SCP-963-2's Door]
 	r\RoomDoors[2] = CreateDoor(r\zone, r\x -1159 * RoomScale, r\y +384.0 * RoomScale, r\z +637.0 * RoomScale, 270, r, True, DOOR_OFFICE_2, KEY_CARD_5)
@@ -200,4 +200,4 @@ Function UpdateEvent_Personnel_Offices(e.Events)
 End Function
 
 ;~IDEal Editor Parameters:
-;~C#Blitz3D
+;~C#Blitz3D TSS

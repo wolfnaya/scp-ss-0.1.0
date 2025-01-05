@@ -75,7 +75,7 @@ Function FillRoom_Cont_049(r.Rooms)
 	EntityType r\Objects[13],HIT_MAP
 	EntityPickMode r\Objects[13],2
 	
-	r\RoomDoors[0] = CreateDoor(r\zone, r\x - 632.0 * RoomScale, 0.0, r\z - 614.0 * RoomScale, 180, r, False, DOOR_ELEVATOR_3FLOOR,False,"",2)
+	r\RoomDoors[0] = CreateDoor(r\zone, r\x - 632.0 * RoomScale, 0.0, r\z - 614.0 * RoomScale, 180, r, False, DOOR_ELEVATOR_3FLOOR,-1,"",2)
 	r\RoomDoors[0]\DisableWaypoint = True
 	
 	ne = CreateNewElevator(r\Objects[13],1,r\RoomDoors[0],2,r,0.0,2395.0,3500.0)
@@ -354,7 +354,9 @@ Function UpdateEvent_Cont_049(e.Events)
 										SaveGame(SavePath + CurrSave\Name + "\", True)
 										If TaskExists(TASK_NTF_CONTAIN_049) Then
 											EndTask(TASK_NTF_CONTAIN_049)
-											BeginTask(TASK_NTF_GO_TO_ZONE)
+											If (Not Curr173\Contained) Lor (Not ecst\Contained008) Lor (Not ecst\Contained409) Then
+												BeginTask(TASK_NTF_GO_TO_ZONE)
+											EndIf
 										EndIf
 									Else
 										PlayAnnouncement("SFX\Intercom\MTF\NTF\Announc049Contain_2.ogg")
@@ -519,4 +521,4 @@ Function UpdateEvent_Cont_049(e.Events)
 End Function
 
 ;~IDEal Editor Parameters:
-;~C#Blitz3D
+;~C#Blitz3D TSS

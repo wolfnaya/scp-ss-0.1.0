@@ -160,97 +160,97 @@ Function Update008()
 		HideEntity InfectOverlay
 	EndIf
 End Function
-;
-;Function Update016()
-;	Local prev016timer#,Infection016
-;	prev016timer = I_016\Timer
-;	
-;	If I_016\Timer > 0 Then
-;		
-;		If I_016\Timer =< 94.05 Then
-;			If (Not I_427\Using And I_427\Timer < 70*360) Then
-;				I_016\Timer = ((Min(I_016\Timer+FPSfactor*0.004,100)))
-;			EndIf						
-;			BlurTimer = Max(I_016\Timer*3*(2.0-CrouchState),BlurTimer)
-;		ElseIf I_016\Timer > 94.05 And I_016\Timer < 95.26 Then
-;			I_016\Timer = Min(I_016\Timer+FPSfactor*0.004,100)
-;			Playable=False
-;			BlurTimer=4.0
-;			CameraShake = (I_016\Timer-94)*0.5
-;		EndIf
-;		
-;		If I_016\Timer > 95 And prev016timer =< 95 Then
-;			PlaySound_Strict LoadTempSound("SFX\SCP\914\PlayerDeath.ogg")
-;			DamageSPPlayer(Rand(2,3),True)
-;		EndIf
-;		
-;		If I_016\Timer > 93 And prev016timer =< 93 Then
-;			PlaySound_Strict LoadTempSound("SFX\SCP\016\016Death.ogg")
-;			DamageSPPlayer(Rand(2,3),True)
-;		EndIf
-;		
-;		If I_016\Timer > 96 And prev016timer =< 96 Then
-;			PlaySound_Strict LoadTempSound("SFX\Horror\Horror14.ogg")
-;			DamageSPPlayer(Rand(2,3),True)
-;		EndIf
-;		
-;		If I_016\Timer >= 95.26 Then
-;			Infection016 = True
-;		EndIf
-;		
-;		If I_016\Timer > 40 And prev016timer =< 40 Then
-;			CreateMsg(GetLocalString("Singleplayer","scp016_1"))
-;			PlaySound_Strict LoadTempSound("SFX\Character\Player\Cough3.ogg")
-;		EndIf
-;		If I_016\Timer > 55 And prev016timer =< 55 Then
-;			CreateMsg(GetLocalString("Singleplayer","scp016_2"))
-;		EndIf
-;		If I_016\Timer > 70 And prev016timer =< 70 Then
-;			CreateMsg(GetLocalString("Singleplayer","scp016_3"))
-;		EndIf
-;		If I_016\Timer > 85 And prev016timer =< 85 Then
-;			CreateMsg(GetLocalString("Singleplayer","scp016_4"))
-;			DamageSPPlayer(Rand(2,3),True)
-;			BlurTimer = 15
-;		EndIf
-;		If I_016\Timer > 76 And prev016timer =< 76 Then
-;			CreateMsg(GetLocalString("Singleplayer","scp016_5"))
-;			DamageSPPlayer(Rand(2,3),True)
-;			BlurTimer = 15
-;		EndIf
-;		If I_016\Timer > 79 And prev016timer =< 79 Then
-;			CreateMsg(GetLocalString("Singleplayer","scp016_6"))
-;			DamageSPPlayer(Rand(2,3),True)
-;		EndIf
-;		If I_016\Timer > 83 And prev016timer =< 83 Then
-;			CreateMsg(GetLocalString("Singleplayer","scp016_7"))
-;			PlaySound_Strict LoadTempSound("SFX\Character\Player\Cough1.ogg")
-;			DamageSPPlayer(Rand(2,3),True)
-;		EndIf
-;		If I_016\Timer > 86 And prev016timer =< 86 Then
-;			CreateMsg(GetLocalString("Singleplayer","scp016_8"))
-;			PlaySound_Strict LoadTempSound("SFX\Character\Player\Cough3.ogg")
-;			DamageSPPlayer(Rand(2,3),True)
-;			Stamina = 999
-;		EndIf
-;		If I_016\Timer > 89 And prev016timer =< 89 Then
-;			CreateMsg(GetLocalString("Singleplayer","scp016_9"))
-;			DamageSPPlayer(Rand(2,3),True)
-;		EndIf
-;		If I_016\Timer > 93 And prev016timer =< 93 Then
-;			CreateMsg(GetLocalString("Singleplayer","scp016_10"))
-;			DamageSPPlayer(Rand(2,3),True)
-;		EndIf
-;		
-;		If (Infection016 = True) And (KillTimer>=0) Then	
-;			Playable=True
-;			m_msg\DeathTxt = GetLocalStringR("Singleplayer","scp016_death_1",Designation)
-;			m_msg\DeathTxt = m_msg\DeathTxt + GetLocalString("Singleplayer","scp016_death_2")
-;			Kill()
-;		EndIf
-;	EndIf
-;	
-;End Function
+
+Function Update016()
+	Local prev016timer#,Infection016
+	prev016timer = I_016\Timer
+	
+	If I_016\Timer > 0 Then
+		
+		If I_016\Timer =< 94.05 Then
+			If (Not I_427\Using And I_427\Timer < 70*360) Then
+				I_016\Timer = ((Min(I_016\Timer+FPSfactor*0.004,100)))
+			EndIf						
+			BlurTimer = Max(I_016\Timer*3*(2.0-CrouchState),BlurTimer)
+		ElseIf I_016\Timer > 94.05 And I_016\Timer < 95.26 Then
+			I_016\Timer = Min(I_016\Timer+FPSfactor*0.004,100)
+			Playable=False
+			BlurTimer=4.0
+			CameraShake = (I_016\Timer-94)*0.5
+		EndIf
+		
+		If I_016\Timer > 95 And prev016timer =< 95 Then
+			PlaySound_Strict LoadTempSound("SFX\SCP\914\PlayerDeath.ogg")
+			DamageSPPlayer(Rand(2,3),True)
+		EndIf
+		
+		If I_016\Timer > 93 And prev016timer =< 93 Then
+			PlaySound_Strict LoadTempSound("SFX\SCP\016\016Death.ogg")
+			DamageSPPlayer(Rand(2,3),True)
+		EndIf
+		
+		If I_016\Timer > 96 And prev016timer =< 96 Then
+			PlaySound_Strict LoadTempSound("SFX\Horror\Horror14.ogg")
+			DamageSPPlayer(Rand(2,3),True)
+		EndIf
+		
+		If I_016\Timer >= 95.26 Then
+			Infection016 = True
+		EndIf
+		
+		If I_016\Timer > 40 And prev016timer =< 40 Then
+			CreateMsg(GetLocalString("Singleplayer","scp016_1"))
+			PlaySound_Strict LoadTempSound("SFX\Character\Player\Cough3.ogg")
+		EndIf
+		If I_016\Timer > 55 And prev016timer =< 55 Then
+			CreateMsg(GetLocalString("Singleplayer","scp016_2"))
+		EndIf
+		If I_016\Timer > 70 And prev016timer =< 70 Then
+			CreateMsg(GetLocalString("Singleplayer","scp016_3"))
+		EndIf
+		If I_016\Timer > 85 And prev016timer =< 85 Then
+			CreateMsg(GetLocalString("Singleplayer","scp016_4"))
+			DamageSPPlayer(Rand(2,3),True)
+			BlurTimer = 15
+		EndIf
+		If I_016\Timer > 76 And prev016timer =< 76 Then
+			CreateMsg(GetLocalString("Singleplayer","scp016_5"))
+			DamageSPPlayer(Rand(2,3),True)
+			BlurTimer = 15
+		EndIf
+		If I_016\Timer > 79 And prev016timer =< 79 Then
+			CreateMsg(GetLocalString("Singleplayer","scp016_6"))
+			DamageSPPlayer(Rand(2,3),True)
+		EndIf
+		If I_016\Timer > 83 And prev016timer =< 83 Then
+			CreateMsg(GetLocalString("Singleplayer","scp016_7"))
+			PlaySound_Strict LoadTempSound("SFX\Character\Player\Cough1.ogg")
+			DamageSPPlayer(Rand(2,3),True)
+		EndIf
+		If I_016\Timer > 86 And prev016timer =< 86 Then
+			CreateMsg(GetLocalString("Singleplayer","scp016_8"))
+			PlaySound_Strict LoadTempSound("SFX\Character\Player\Cough3.ogg")
+			DamageSPPlayer(Rand(2,3),True)
+			Stamina = 999
+		EndIf
+		If I_016\Timer > 89 And prev016timer =< 89 Then
+			CreateMsg(GetLocalString("Singleplayer","scp016_9"))
+			DamageSPPlayer(Rand(2,3),True)
+		EndIf
+		If I_016\Timer > 93 And prev016timer =< 93 Then
+			CreateMsg(GetLocalString("Singleplayer","scp016_10"))
+			DamageSPPlayer(Rand(2,3),True)
+		EndIf
+		
+		If (Infection016 = True) And (KillTimer>=0) Then	
+			Playable=True
+			m_msg\DeathTxt = GetLocalStringR("Singleplayer","scp016_death_1",Designation)
+			m_msg\DeathTxt = m_msg\DeathTxt + GetLocalString("Singleplayer","scp016_death_2")
+			Kill()
+		EndIf
+	EndIf
+	
+End Function
 ;
 ;Function Update059()
 ;	Local prev059timer#, Infection059

@@ -3,7 +3,7 @@ Function FillRoom_Room1_O5(r.Rooms)
 	Local d.Doors,it.Items,tex
 	
 	tex = LoadTexture_Strict("GFX\map\textures\Door_O5.jpg")
-	r\RoomDoors[0] = CreateDoor(r\zone, r\x, r\y, r\z - 240.0 * RoomScale, 0, r, False, DOOR_LCZ, 0, AccessCode[1])
+	r\RoomDoors[0] = CreateDoor(r\zone, r\x, r\y, r\z - 240.0 * RoomScale, 0, r, False, DOOR_LCZ, -1, AccessCode[1])
 	r\RoomDoors[0]\AutoClose = False : r\RoomDoors[0]\locked = True : r\RoomDoors[0]\dir = 1
 	EntityTexture r\RoomDoors[0]\obj, tex
 	DeleteSingleTextureEntryFromCache(tex)

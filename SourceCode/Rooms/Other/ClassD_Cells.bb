@@ -55,15 +55,15 @@ Function FillRoom_ClassD_Cells_Checkpoint(r.Rooms)
 	
 	d = CreateDoor(r\zone,r\x+1127*RoomScale,r\y+419*RoomScale,r\z,90,r,False,DOOR_CLASSIC)
 	
-	r\RoomDoors[0] = CreateDoor(r\zone,r\x-787.0 * RoomScale, r\y+1*RoomScale, r\z+5040*RoomScale, 270, r, True, DOOR_ELEVATOR_3FLOOR, False, "", 1)
+	r\RoomDoors[0] = CreateDoor(r\zone,r\x-787.0 * RoomScale, r\y+1*RoomScale, r\z+5040*RoomScale, 270, r, True, DOOR_ELEVATOR_3FLOOR, -1, "", 1)
 	r\RoomDoors[0]\DisableWaypoint = True
 	MoveEntity(r\RoomDoors[0]\buttons[0], -25, 0, -2.25)
 	
 	ne = CreateNewElevator(r\Objects[0],3,r\RoomDoors[0],1,r,-12000.0,-9000.0,0.0)
 	ne\floorlocked[0] = True
 	
-	r\RoomDoors[1] = CreateDoor(r\zone,r\x,r\y,r\z - 256.0*RoomScale,180,r,True,DOOR_WINDOWED,False,"1234")
-	r\RoomDoors[2] = CreateDoor(r\zone,r\x,r\y,r\z + 256.0*RoomScale,0,r,False,DOOR_WINDOWED,False,"1234")
+	r\RoomDoors[1] = CreateDoor(r\zone,r\x,r\y,r\z - 256.0*RoomScale,180,r,True,DOOR_WINDOWED,-1,"1234")
+	r\RoomDoors[2] = CreateDoor(r\zone,r\x,r\y,r\z + 256.0*RoomScale,0,r,False,DOOR_WINDOWED,-1,"1234")
 	For i = 0 To 1
 		FreeEntity r\RoomDoors[1]\buttons[i] : r\RoomDoors[1]\buttons[i] = 0
 		FreeEntity r\RoomDoors[2]\buttons[i] : r\RoomDoors[2]\buttons[i] = 0
@@ -396,7 +396,7 @@ Function FillRoom_ClassD_Cells_Zone(r.Rooms)
 	ScaleEntity r\Objects[ClassD_Cells_Screen],RoomScale,RoomScale,RoomScale
 	EntityParent r\Objects[ClassD_Cells_Screen],r\obj
 	
-	r\RoomDoors[ClassD_Cells_Door_Elevator] = CreateDoor(r\zone,r\x-787.0*RoomScale, r\y+4127*RoomScale, r\z+5040*RoomScale, 270, r, True, DOOR_ELEVATOR_3FLOOR, False, "", 1)
+	r\RoomDoors[ClassD_Cells_Door_Elevator] = CreateDoor(r\zone,r\x-787.0*RoomScale, r\y+4127*RoomScale, r\z+5040*RoomScale, 270, r, True, DOOR_ELEVATOR_3FLOOR, -1, "", 1)
 	r\RoomDoors[ClassD_Cells_Door_Elevator]\DisableWaypoint = True
 	MoveEntity(r\RoomDoors[ClassD_Cells_Door_Elevator]\buttons[0], -25, 0, -2.25)
 	
@@ -746,7 +746,7 @@ Function FillRoom_ClassD_Cells_Zone(r.Rooms)
 	
 	d = CreateDoor(r\zone,r\x+2336*RoomScale, r\y+4114*RoomScale, r\z+7203*RoomScale, 90, r, False, DOOR_CLASSIC)
 	
-	d = CreateDoor(r\zone,r\x+3104*RoomScale, r\y+4114*RoomScale, r\z+6218*RoomScale, 180, r, False, DOOR_CLASSIC, False, "3984")
+	d = CreateDoor(r\zone,r\x+3104*RoomScale, r\y+4114*RoomScale, r\z+6218*RoomScale, 180, r, False, DOOR_CLASSIC, -1, "3984")
 	
 	d = CreateDoor(r\zone,r\x+7152*RoomScale, r\y+4114*RoomScale, r\z+2704*RoomScale, 90, r, False, DOOR_CLASSIC)
 	

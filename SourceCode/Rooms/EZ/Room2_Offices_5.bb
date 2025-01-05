@@ -26,9 +26,9 @@ Function FillRoom_Room2_Offices_5(r.Rooms)
 	it = CreateItem(GetLocalString("Item Names","first_aid"), "firstaid", r\x + 630.0 * RoomScale, r\y + 140.0 * RoomScale, r\z + 48.0 * RoomScale)
 	EntityParent(it\collider, r\obj) : RotateEntity(it\collider, 0, 90, 0)
 	
-	r\RoomDoors[0] = CreateDoor(r\zone, r\x + 240.0 * RoomScale, 0.0, r\z-128*RoomScale, 90, r, False,DOOR_OFFICE,False,"7816")
+	r\RoomDoors[0] = CreateDoor(r\zone, r\x + 240.0 * RoomScale, 0.0, r\z-128*RoomScale, 90, r, False,DOOR_OFFICE,-1,"7816")
 	
-	r\RoomDoors[1] = CreateDoor(r\zone, r\x + 240.0 * RoomScale, 0.0, r\z+128*RoomScale, 90, r, False,DOOR_OFFICE,False,AccessCode[0])
+	r\RoomDoors[1] = CreateDoor(r\zone, r\x + 240.0 * RoomScale, 0.0, r\z+128*RoomScale, 90, r, False,DOOR_OFFICE,-1,AccessCode[0])
 	PositionEntity r\RoomDoors[1]\buttons[1], r\x+224*RoomScale,r\y+180*RoomScale,r\z,True
 	
 	r\RoomDoors[2] = CreateDoor(r\zone, r\x - 544.0 * RoomScale, 0.0, r\z+272*RoomScale, 0, r, False,DOOR_OFFICE)
@@ -53,4 +53,4 @@ Function UpdateEvent_Room2_Offices_5(e.Events)
 End Function
 
 ;~IDEal Editor Parameters:
-;~C#Blitz3D
+;~C#Blitz3D TSS

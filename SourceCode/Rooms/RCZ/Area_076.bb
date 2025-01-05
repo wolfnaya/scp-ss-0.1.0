@@ -1,7 +1,7 @@
 
 Function FillRoom_Area_076_Entrance(r.Rooms)
 	
-	r\RoomDoors[0] = CreateDoor(r\zone, r\x + 281.0 * RoomScale, 0.0, r\z + 6.0 * RoomScale, 90, r, False, False, False, "ABCD")
+	r\RoomDoors[0] = CreateDoor(r\zone, r\x + 281.0 * RoomScale, 0.0, r\z + 6.0 * RoomScale, 90, r, False, False, -1, "ABCD")
 	r\RoomDoors[0]\locked = True
 	
 	r\Objects[0] = CreatePivot()
@@ -155,7 +155,7 @@ Function FillRoom_Area_076(r.Rooms)
 	
 	CreateDarkSprite(r, 7)
 	
-	r\RoomDoors[0] = CreateDoor(r\zone, r\x + 244.0 * RoomScale, 0.0, r\z + 656.0 * RoomScale, 90, r, True, DOOR_ELEVATOR_3FLOOR,False,"",1)
+	r\RoomDoors[0] = CreateDoor(r\zone, r\x + 244.0 * RoomScale, 0.0, r\z + 656.0 * RoomScale, 90, r, True, DOOR_ELEVATOR_3FLOOR,-1,"",1)
 	r\RoomDoors[0]\AutoClose = False : r\RoomDoors[0]\open = True
 	
 	Local ElevatorObj = LoadRMesh("GFX\Map\elevators\elevator.rmesh",Null)

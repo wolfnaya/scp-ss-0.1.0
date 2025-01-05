@@ -147,7 +147,7 @@ Function FillRoom_Facility_Reactor(r.Rooms)
 	
 	CreateDarkSprite(r, REACTOR_DARK_SPRITE)
 	
-	r\RoomDoors[REACTOR_STORAGE_ELEVATOR_DOOR] = CreateDoor(r\zone,r\x+1283.0 * RoomScale, r\y, r\z-9540*RoomScale, 0, r, True, DOOR_STORAGE_ELEVATOR, False, "", 1)
+	r\RoomDoors[REACTOR_STORAGE_ELEVATOR_DOOR] = CreateDoor(r\zone,r\x+1283.0 * RoomScale, r\y, r\z-9540*RoomScale, 0, r, True, DOOR_STORAGE_ELEVATOR, -1, "", 1)
 	r\RoomDoors[REACTOR_STORAGE_ELEVATOR_DOOR]\DisableWaypoint = True
 	PositionEntity(r\RoomDoors[REACTOR_STORAGE_ELEVATOR_DOOR]\buttons[0],r\x+910*RoomScale,EntityY(r\RoomDoors[REACTOR_STORAGE_ELEVATOR_DOOR]\buttons[0],True),r\z-9747*RoomScale,True)
 	RotateEntity r\RoomDoors[REACTOR_STORAGE_ELEVATOR_DOOR]\buttons[0],0,90,0

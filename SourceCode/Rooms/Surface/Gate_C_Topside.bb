@@ -110,7 +110,7 @@ Function FillRoom_Gate_C_Topside(r.Rooms)
 	PositionEntity(r\Objects[17], EntityX(FindChild(r\Objects[2],"root2"),True), EntityY(FindChild(r\Objects[2],"root2"),True), EntityZ(FindChild(r\Objects[2],"root2"),True), True)
 	EntityParent r\Objects[17], FindChild(r\Objects[2],"root2")
 	
-	r\RoomDoors[0] = CreateDoor(r\zone,r\x -3237.0 * RoomScale, r\y+382*RoomScale, r\z-6225*RoomScale, 0, r, True, 5, False, "", 2)
+	r\RoomDoors[0] = CreateDoor(r\zone,r\x -3237.0 * RoomScale, r\y+382*RoomScale, r\z-6225*RoomScale, 0, r, True, 5, -1, "", 2)
 	r\RoomDoors[0]\DisableWaypoint = True
 	
 	ne = CreateNewElevator(r\Objects[10],3,r\RoomDoors[0],2,r,-2800.0,0.0,418.0)
@@ -489,4 +489,4 @@ Function UpdateEvent_Gate_C_Topside(e.Events)
 	EndIf
 End Function
 ;~IDEal Editor Parameters:
-;~C#Blitz3D
+;~C#Blitz3D TSS

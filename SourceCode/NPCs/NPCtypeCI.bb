@@ -60,6 +60,7 @@ Global CICHN%
 Function UpdateNPCtypeCI(n.NPCs)
 	Local n2.NPCs, w.WayPoints, g.Guns, it.Items, r.Rooms, v3d.Vector3D
 	Local prevFrame#, temp2%, deathFrame#, bone%, dist#, gr.Grenades
+	Local Random%
 	
 	prevFrame = n\Frame
 	
@@ -132,7 +133,8 @@ Function UpdateNPCtypeCI(n.NPCs)
 				;[End Block]
 			Case CI_GO_TO_ATTACK
 				;[Block]
-				If Rand(0,10) = 9 Then
+				Random = Rand(0,20)
+				If Random = 0 Then
 					n\State[0] = CI_THROW_GRENADE
 				Else
 					n\State[0] = CI_ATTACK

@@ -41,7 +41,7 @@ Function FillRoom_Room2_Tesla(r.Rooms)
 	EntityParent(r\Objects[4], r\obj)
 	HideEntity r\Objects[4]
 	
-	r\RoomDoors[0] = CreateDoor(r\zone,r\x+399*RoomScale,r\y,r\z,0,r,False,DOOR_WINDOWED,False)
+	r\RoomDoors[0] = CreateDoor(r\zone,r\x+399*RoomScale,r\y,r\z,0,r,False,DOOR_WINDOWED,-1)
 	FreeEntity_Strict r\RoomDoors[0]\buttons[0] : r\RoomDoors[0]\buttons[0] = 0
 	FreeEntity_Strict r\RoomDoors[0]\buttons[1] : r\RoomDoors[0]\buttons[1] = 0
 	
@@ -229,4 +229,4 @@ Function UpdateEvent_Room2_Tesla(e.Events)
 End Function
 
 ;~IDEal Editor Parameters:
-;~C#Blitz3D
+;~C#Blitz3D TSS

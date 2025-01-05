@@ -3,17 +3,17 @@ Function FillRoom_Cont_059(r.Rooms)
 	Local d.Doors,d2.Doors,em.Emitters,it.Items
 	Local i,n
 	
-	d = CreateDoor(r\zone, r\x, 0.0, r\z +896.0 * RoomScale, 0, r, False, 2,3)
+	d = CreateDoor(r\zone, r\x, 0.0, r\z +896.0 * RoomScale, 0, r, False, 2,KEY_CARD_3)
 	d\AutoClose = False : d\MTFClose = False : d\DisableWaypoint = True
 	
-	d = CreateDoor(r\zone, r\x, 0.0, r\z +416.0 * RoomScale, 0, r, True, 2,3)
+	d = CreateDoor(r\zone, r\x, 0.0, r\z +416.0 * RoomScale, 0, r, True, 2,KEY_CARD_3)
 	d\AutoClose = False : d\MTFClose = False : d\DisableWaypoint = True
 	
 	;fake doors
-	d = CreateDoor(r\zone, r\x +704.0 * RoomScale, -672.0* RoomScale, r\z +608.0 * RoomScale, 90, r, False, KEY_CARD_2)
+	d = CreateDoor(r\zone, r\x +704.0 * RoomScale, -672.0* RoomScale, r\z +608.0 * RoomScale, 90, r, False, False, KEY_CARD_2)
 	d\locked = True : d\AutoClose = False : d\MTFClose = False 
 	
-	d = CreateDoor(r\zone, r\x +96.0 * RoomScale, -672.0* RoomScale, r\z +1184.0 * RoomScale, 0, r, False, KEY_CARD_2)
+	d = CreateDoor(r\zone, r\x +96.0 * RoomScale, -672.0* RoomScale, r\z +1184.0 * RoomScale, 0, r, False, False, KEY_CARD_2)
 	d\locked = True : d\AutoClose = False : d\MTFClose = False 
 	
 	;main door.
@@ -38,4 +38,4 @@ Function FillRoom_Cont_059(r.Rooms)
 	
 End Function
 ;~IDEal Editor Parameters:
-;~C#Blitz3D
+;~C#Blitz3D TSS

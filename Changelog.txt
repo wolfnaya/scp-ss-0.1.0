@@ -1,3 +1,13 @@
+v0.1.2
+
+`[A small update, featuring fixes for major problems that arose in v0.1.1]
+
+- [Fixes:] >
+* Fixed some regular buttons needed keycards to be accessed.
+* Reduced NPC Gun damage.
+* Reduced CI chance to throw a grenade.
+* Removed unobtainable achievements.
+
 v0.1.1
 
 `[Surprise!]
@@ -8,8 +18,8 @@ v0.1.1
 * Core elevator always breaks after reactor area (Chapter 3 as Ryan).
 * Secondary weapon slot might sometimes bug out.
 - [How to deal with those bugs:] ^
-* Try reloading the game.
-* Try loading zones manually using console command "loadzone" or "lz" and typing index of zone (from 0 to 14).
+1) Try reloading the game.
+2) Try loading zones manually using console command "loadzone" or "lz" and typing index of zone (from 0 to 14).
 - [Fixes:] >
 * Fixed Ryan couldn't use elevator because of NTF units in chapter 4 and beyond.
 * Fixed Communication wheel for NTF in chapter 2 was available even though chapter is literally named "Contact Lost"...

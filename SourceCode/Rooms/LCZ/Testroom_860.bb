@@ -21,9 +21,9 @@ Function FillRoom_Testroom_860(r.Rooms)
 	ScaleEntity r\Objects[4],46.0*RoomScale,45.0*RoomScale,46.0*RoomScale,True
 	EntityParent r\Objects[4],r\obj
 	
-	r\RoomDoors[0] = CreateDoor(r\zone,r\x+928.0*RoomScale,0,r\z+640.0*RoomScale,0,r,True,False,False,"ABCD")
+	r\RoomDoors[0] = CreateDoor(r\zone,r\x+928.0*RoomScale,0,r\z+640.0*RoomScale,0,r,True,False,-1,"ABCD")
 	r\RoomDoors[0]\AutoClose = False
-	d = CreateDoor(r\zone, r\x + 928.0 * RoomScale,0,r\z - 640.0 * RoomScale,0,r,True,False,False,"ABCD")
+	d = CreateDoor(r\zone, r\x + 928.0 * RoomScale,0,r\z - 640.0 * RoomScale,0,r,True,False,-1,"ABCD")
 	d\AutoClose = False
 	
 	;doors to the room itself
@@ -248,4 +248,4 @@ Function UpdateEvent_Testroom_860(e.Events)
 End Function
 
 ;~IDEal Editor Parameters:
-;~C#Blitz3D
+;~C#Blitz3D TSS

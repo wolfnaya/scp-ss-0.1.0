@@ -63,7 +63,7 @@ Function FillRoom_Gate_C_Entrance(r.Rooms)
 	MeshCullBox (r\Objects[10], -MeshWidth(r\Objects[10]), -MeshHeight(r\Objects[10]), -MeshDepth(r\Objects[10]), MeshWidth(r\Objects[10])*2, MeshHeight(r\Objects[10])*2, MeshDepth(r\Objects[10])*2)
 	EntityParent r\Objects[10], r\obj
 	
-	r\RoomDoors[0] = CreateDoor(r\zone,r\x -6.0 * RoomScale, r\y, r\z+4102*RoomScale, 180, r, True, 5, False, "", 2)
+	r\RoomDoors[0] = CreateDoor(r\zone,r\x -6.0 * RoomScale, r\y, r\z+4102*RoomScale, 180, r, True, 5, -1, "", 2)
 	r\RoomDoors[0]\DisableWaypoint = True
 	
 	r\RoomDoors[1] = CreateDoor(r\zone, r\x, 0, r\z + 1008.0 * RoomScale, 0, r, False, True, KEY_CARD_5)
@@ -243,4 +243,4 @@ Function UpdateEvent_Gate_C_Entrance(e.Events)
 End Function
 
 ;~IDEal Editor Parameters:
-;~C#Blitz3D
+;~C#Blitz3D TSS

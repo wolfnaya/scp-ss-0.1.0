@@ -26,7 +26,7 @@ Global hds.HazardousDefenceSuit
 ;! ~ [SCPs]
 Global I_005.SCP005
 Global I_008.SCP008
-;Global I_016.SCP016
+Global I_016.SCP016
 Global I_035.SCP035
 ;Global I_059.SCP059
 Global I_109.SCP109

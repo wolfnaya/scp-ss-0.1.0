@@ -24,9 +24,9 @@ Function FillRoom_Room3_CT(r.Rooms)
 	EntityType r\Objects[5],HIT_MAP
 	EntityPickMode r\Objects[5],2
 	
-	r\RoomDoors[0] = CreateDoor(r\zone,r\x + 638.0 * RoomScale, r\y, r\z, 270, r, True, 5, False, "", 2)
-	r\RoomDoors[1] = CreateDoor(r\zone,r\x - 638.0 * RoomScale, r\y, r\z, 90, r, True, 5, False, "", 1)
-	r\RoomDoors[2] = CreateDoor(r\zone,r\x - 4368.0 * RoomScale, r\y - 4096.0 * RoomScale, r\z +793.0 * RoomScale, 0, r, True, 5, False, "", 3)
+	r\RoomDoors[0] = CreateDoor(r\zone,r\x + 638.0 * RoomScale, r\y, r\z, 270, r, True, 5, -1, "", 2)
+	r\RoomDoors[1] = CreateDoor(r\zone,r\x - 638.0 * RoomScale, r\y, r\z, 90, r, True, 5, -1, "", 1)
+	r\RoomDoors[2] = CreateDoor(r\zone,r\x - 4368.0 * RoomScale, r\y - 4096.0 * RoomScale, r\z +793.0 * RoomScale, 0, r, True, 5, -1, "", 3)
 	r\RoomDoors[0]\DisableWaypoint = True
 	r\RoomDoors[1]\DisableWaypoint = True
 	r\RoomDoors[2]\DisableWaypoint = True

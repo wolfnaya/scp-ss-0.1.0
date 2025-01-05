@@ -18,7 +18,7 @@ Function FillRoom_Room2_Pipes_2(r.Rooms)
 		d\AutoClose = False : d\open = False : d\locked = True
 	EndIf
 	
-	d = CreateDoor(r\zone, r\x-250*RoomScale,r\y, r\z+288*RoomScale, 90, r, False, False, DOOR_DEFAULT, "NULL")
+	d = CreateDoor(r\zone, r\x-250*RoomScale,r\y, r\z+288*RoomScale, 90, r, False, DOOR_DEFAULT, -1, "NULL")
 	d\AutoClose = False : d\open = False : d\locked = True
 	
 	d = CreateDoor(r\zone, r\x+256*RoomScale,r\y, r\z+288*RoomScale, 90, r, False, DOOR_HCZ)
@@ -29,4 +29,4 @@ Function FillRoom_Room2_Pipes_2(r.Rooms)
 	
 End Function
 ;~IDEal Editor Parameters:
-;~C#Blitz3D
+;~C#Blitz3D TSS
